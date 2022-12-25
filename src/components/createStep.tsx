@@ -3,7 +3,7 @@ import { Box } from "@mui/system"
 
 const CreateStep = () => {
     return(
-        <Box maxWidth="sm" sx={{margin:"auto"}}>
+        <Box sx={{margin:"auto", display:"flex", flexDirection:"column"}}>
             <Typography variant="h3" sx={{fontWeight:"bold"}}>Create Your Index</Typography>
             <Box sx={{display:"flex"}}>
                 <Typography variant="h5" sx={{fontWeight:"bold"}}>1</Typography>
