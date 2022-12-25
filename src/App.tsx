@@ -18,6 +18,7 @@ import { ThemeProvider as MaterialThemeProvider } from '@mui/material'
 import theme from './theme';
 import AppRoutes from './Routes';
 import './App.css'
+import bg from './assets/bg.png'
 
 const avalancheChain: Chain = {
   id: 43_114,
@@ -41,12 +42,12 @@ const avalancheChain: Chain = {
 };
 
 const { chains, provider } = configureChains(
-    [chain.mainnet, chain.polygon, avalancheChain],
+    [avalancheChain],
     [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-    appName: 'My RainbowKit App',
+    appName: 'Steady Index',
     chains
 });
 
@@ -59,7 +60,14 @@ const wagmiClient = createClient({
 
 function App() {
   return (
-    <Box sx={{}}>
+    <Box 
+      // sx={{
+      //   backgroundImage: `url(${bg})`, 
+      //   backgroundSize: 'cover', 
+      //   backgroundRepeat: 'no-repeat', 
+      //   backgroundAttachment: 'fixed'
+      // }}
+    >
       <MaterialThemeProvider theme={theme}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider chains={chains} modalSize="compact">
