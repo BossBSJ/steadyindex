@@ -6,7 +6,7 @@ import SetupIndex from "../components/setupIndex";
 
 
 
-const CreateIndexes = () => {
+const CreateIndex = () => {
     const [createIndexCard, setCreateIndexCard] = useState<boolean>(false)
 
     const handleOpenCreateIndexCard = () => {
@@ -24,4 +24,4 @@ const CreateIndexes = () => {
     )
 }
 
-export default CreateIndexes
+export default CreateIndex
