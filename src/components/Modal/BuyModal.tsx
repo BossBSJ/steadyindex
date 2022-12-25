@@ -1,20 +1,27 @@
 import styled from "@emotion/styled";
-import { Button, ButtonGroup, Card, InputBase, Modal, Paper, Switch, TextField, Typography } from "@mui/material"
+import { Button, ButtonGroup, Card, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { ChangeEvent, useEffect, useState } from "react";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 type IProps = {
     open: boolean
     onClose: () => void
+    dcaModal: boolean
 }
 
 
 const BuyModal = (props: IProps) => {
-    const { open, onClose } = props
-    const [checked, setChecked] = useState(false);
+    const { open, onClose, dcaModal } = props
+    const [checked, setChecked] = useState<boolean>(dcaModal);
 
     const handleChangeSwitch = (event: ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked)
+    }
+
+    const [currency, setCurrency] = useState<string>('USD')
+    const handleCurrencyChange = (event: SelectChangeEvent) => {
+        setCurrency(event.target.value)
     }
 
     return(
@@ -22,7 +29,7 @@ const BuyModal = (props: IProps) => {
             open={open}
             onClose={onClose}
         >
-            <Card sx={{width:"30vw", height:"40vh", padding: "20px", borderRadius:"16px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
+            <Card sx={{backgroundColor:"#F3F3FF",width:"25vw", height:"40vh", padding: "20px", borderRadius:"16px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
                 <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>Buy</Typography>
                 <Typography variant="caption">Receive</Typography>
                 <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
@@ -35,9 +42,21 @@ const BuyModal = (props: IProps) => {
                         }}
                     />
                 </Box>
-                    <Typography variant="caption">Pay</Typography>
+                <Typography variant="caption">Pay</Typography>
                 <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                    <Typography>ETH</Typography>
+                    <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} variant="standard"
+                        sx={{float:"right", background:"white", borderRadius:"8px", backgroundColor:"#F3F3FF"}}
+                    >
+                        <MenuItem value={"USD"}>
+                            <Typography>USD</Typography>
+                        </MenuItem>
+                        <MenuItem value={"ETH"}>
+                            <Typography>BTC</Typography>
+                        </MenuItem>
+                        <MenuItem value={"BTC"}>
+                            <Typography>ETH</Typography>
+                        </MenuItem>
+                    </Select>
                     <TextField
                         type="number"
                         placeholder="0.0"
@@ -47,21 +66,24 @@ const BuyModal = (props: IProps) => {
                     />
                 </Box>
                 <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                    <Typography>DCA With DPI</Typography>
+                    <Typography sx={{fontWeight:"bold"}}>DCA With DPI</Typography>
                     <Switch
+                        checked={checked}
                         onChange={handleChangeSwitch}
                     />
                 </Box>
                 {checked?
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                    <ButtonGroup variant="contained">
-                        <Button>Day</Button>
-                        <Button>Weekly</Button>
-                        <Button>Monthly</Button>
+                    <ButtonGroup sx={{borderRadius:"8px"}}>
+                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Day</Button>
+                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Weekly</Button>
+                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Monthly</Button>
                     </ButtonGroup>
                 </Box> : ""}
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                    <Button onClick={onClose} variant="contained">BUY DPI</Button>
+                    <Button onClick={onClose} variant="contained" sx={{width:"320px"}}>
+                        <Typography sx={{fontWeight:"bold"}}>BUY DPI</Typography>
+                    </Button>
                 </Box>
             </Card>
         </Modal>
