@@ -7,8 +7,8 @@ import { mockColorCurrency } from "../constants/mockColorCurrency";
 import MockIndex from "../constants/mockIndex";
 import theme from "../theme";
 import { numberWithCommas } from "../utils/numberWithCommas";
-import BuyModal from "./Modal/BuyModal";
-import SellModal from "./Modal/SellModal";
+import BuyModal from "../components/Modal/BuyModal";
+import SellModal from "../components/Modal/SellModal";
 
 const headers = [
     "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"

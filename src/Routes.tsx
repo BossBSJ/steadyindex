@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import IndexDetail from "./components/indexDetail"
+import IndexDetail from "./pages/indexDetail"
 import CreateIndex from "./pages/createIndex"
 import MyPort from "./pages/myPort"
 import NotFound from "./pages/notFound"
