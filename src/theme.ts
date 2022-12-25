@@ -1,7 +1,31 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-    shape:{
+    palette: {
+        primary: {
+            light: "#669FFF",
+            main: "#005FFF",
+            dark: "#003999"
+        },
+        secondary: {
+            light: "#CECEFD",
+            main: "#9E9EFA",
+            dark: "#6D6DF8"
+        },
+        success: {
+            main: "#86CD42"
+        },
+        warning: {
+            main: "#F9CF52"
+        },
+        error: {
+            main: "#EC522E"
+        },
+        // white: '#ffffff',
+        // gray: '#82858A'
+        
+    },
+    shape: {
         borderRadius: 5
     },
     typography: {
@@ -54,7 +78,20 @@ theme.components = {
     MuiButton: {
         styleOverrides: {
             root:{
-                borderRadius: '5px'
+                borderRadius: '9px',
+                textTransform: 'none',
+                height: '45px',
+                // border: "1px solid"
+            },
+            outlined: {
+                borderColor: "#627DFF",
+            }
+        }
+    },
+    MuiCard: {
+        styleOverrides: {
+            root: {
+                borderRadius: "16px"
             }
         }
     }
