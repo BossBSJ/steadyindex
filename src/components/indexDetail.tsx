@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { NavLink } from 'react-router-dom';
 import { mockColorCurrency } from "../constants/mockColorCurrency";
+import MockIndex from "../constants/mockIndex";
+import theme from "../theme";
 import { numberWithCommas } from "../utils/numberWithCommas";
 import BuyModal from "./Modal/BuyModal";
 import SellModal from "./Modal/SellModal";
-
-const UnderlyingTokens = [{ name: "BTC", percent: 50}, {name:"ETH", percent:25}, {name:"AVAX", percent:25}]
 
 const headers = [
     "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"
@@ -16,12 +16,22 @@ const headers = [
 
 const IndexDetail = () => {
 
+    let { indexId } = useParams()
+
     const [showBuyModal, setShowBuyModal] = useState<boolean>(false)
     const handleOpenBuyModal = () =>{
         setShowBuyModal(true)
     }
     const handleCloseBuyModal = () =>{
         setShowBuyModal(false)
+    }
+
+    const [showDCAModal, setShowDCAModal] = useState<boolean>(false)
+    const handleOpenDCAModal = () =>{
+        setShowDCAModal(true)
+    }
+    const handleCloseDCAModal = () =>{
+        setShowDCAModal(false)
     }
 
     const [showSellModal, setShowSellModal] = useState<boolean>(false)
@@ -32,23 +42,32 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
+    console.log(MockIndex[Number(indexId) - 1])
+
+    const data = MockIndex[Number(indexId) - 1]
 
     return(
         <Container>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
-                &lt; Back to Thematic Exposure Sets
+                &lt; Back to Thematic Exposure Sets 
             </NavLink>
             <Box sx={{display:"flex", justifyContent:"space-between"}}>
-                <Typography  variant="h4" sx={{fontWeight:"bold"}}>DeFi Pulse Index</Typography>
-                <Box sx={{display:"flex"}}>
-                    <Button variant="contained">DCA</Button>
-                    <Button variant="contained" onClick={handleOpenBuyModal}>Buy</Button>
-                    <Button variant="contained" onClick={handleOpenSellModal}>Sell</Button>
+                <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data.name}</Typography>
+                <Box sx={{display:"flex", justifyContent:"space-around"}}>
+                    <Button variant="contained" onClick={handleOpenDCAModal} sx={{marginRight:"20px", width:"110px"}}>
+                        <Typography sx={{fontWeight:"bold"}}>DCA</Typography>
+                    </Button>
+                    <Button variant="contained" onClick={handleOpenBuyModal} sx={{marginRight:"20px", width:"110px"}}>
+                        <Typography sx={{fontWeight:"bold"}}>Buy</Typography>
+                    </Button>
+                    <Button variant="contained" onClick={handleOpenSellModal} sx={{marginRight:"20px", width:"110px"}}>
+                        <Typography sx={{fontWeight:"bold"}}>Sell</Typography>
+                    </Button>
                 </Box>
             </Box>
             <Box sx={{display:"flex", justifyContent:"space-around"}}>
                 <Box>
-                    <Typography variant="h6">{numberWithCommas(21211158.69)}</Typography>
+                    <Typography variant="h6">{numberWithCommas(data.marketCap)}</Typography>
                     <Typography variant="body1">Market Cap</Typography>
                 </Box>
                 <Box>
@@ -65,7 +84,7 @@ const IndexDetail = () => {
                 <Typography variant="body1">Current Price</Typography>
                 <Box sx={{display:"flex"}}>
                     <Typography variant="h2">
-                        $70.41
+                        ${numberWithCommas(data.price)}
                         <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
                     </Typography>
                 </Box>
@@ -91,7 +110,7 @@ const IndexDetail = () => {
                             <Grid item xs={2.4}></Grid>
                             <Grid item xs={2.4}></Grid>
                             <Grid item xs={2.4}>
-                                <Typography sx={{color:"#22AB94"}}>2.06%</Typography>
+                                <Typography sx={{color:"#22AB94"}}>1.9%</Typography>
                             </Grid>
                             <Grid item xs={2.4}>
                                 <Typography sx={{fontWeight:"bold"}}>$70.41</Typography>
@@ -101,20 +120,29 @@ const IndexDetail = () => {
                     <Box sx={{backgroundColor:"#CECEFD"}}>
                         <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px"}}>Underlying Index</Typography>
                     </Box>
-                    {UnderlyingTokens.map((token,idx) => (
+                    {data.tokens.map((token,idx) => (
                         <Grid container key={idx} sx={{padding:"15px"}}>
                             <Grid item xs={3}>
                                 <Typography sx={{fontWeight:"bold"}}>{token.name}</Typography>
                             </Grid>
                             <Grid container item xs={9}>
-                                <Grid item xs={2.4}>mock</Grid>
-                                <Grid item xs={2.4}>mock</Grid>
+                                <Grid item xs={2.4} sx={{display:"flex"}}>
+                                    <Typography>mock &nbsp;</Typography>
+                                    <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
+                                </Grid>
+                                <Grid item xs={2.4}>
+                                    <Typography>$mock</Typography>
+                                </Grid>
                                 <Grid item xs={2.4}>{token.percent}%</Grid>
-                                <Grid item xs={2.4}>mock</Grid>
-                                <Grid item xs={2.4}>mock</Grid>
+                                <Grid item xs={2.4}>
+                                    <Typography>mock%</Typography>
+                                </Grid>
+                                <Grid item xs={2.4}>
+                                    <Typography sx={{fontWeight:"bold"}}>$mock</Typography>
+                                </Grid>
                             </Grid>
                             <Box
-                                sx={{backgroundColor: mockColorCurrency[token.name], width: `${token.percent}%`, height:"5px"}}
+                                sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.percent}%`, height:"6px", borderRadius:"20px"}}
                             />
                         </Grid>
                     ))}
@@ -123,10 +151,16 @@ const IndexDetail = () => {
             <BuyModal
                 open={showBuyModal}
                 onClose={handleCloseBuyModal}
+                dcaModal={false}
             />
             <SellModal
                 open={showSellModal}
                 onClose={handleCloseSellModal}
+            />
+            <BuyModal
+                open={showDCAModal}
+                onClose={handleCloseDCAModal}
+                dcaModal={true}
             />
         </Container>
     )
