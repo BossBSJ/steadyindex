@@ -4,10 +4,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { numberWithCommas } from "../utils/numberWithCommas";
 import { mockColorCurrency } from "../constants/mockColorCurrency";
 import { useNavigate } from "react-router-dom";
+import MockIndex from "../constants/mockIndex";
 
 const priceDownStyle = {
     backgroundColor:"#F23645",
-    borderRadius:"10px",
+    borderRadius:"5px",
     color:"white",
     padding:"10px",
     textAlign:"center",
@@ -15,32 +16,14 @@ const priceDownStyle = {
 
 const priceUpStyle = {
     backgroundColor:"#22AB94",
-    borderRadius:"10px",
+    borderRadius:"5px",
     color:"white",
     padding:"10px",
     textAlign:"center",
 }
 
-function createData(
-    id: number,
-    name: string,
-    marketCap: number,
-    price: number,
-    dayChange: number,
-    weekChange: number,
-    monthChange: number,
-    allTimeChange: number,
-    tokens: Array<{name: string, percent: number}>,
-){
-    return {id, name, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, tokens}
-}
 
-
-const rows = [
-    createData(1, 'DeFi Pulse Index', 21202121, 70.38, 1.9, -0.5, -0.8, -75.4, [{ name: "BTC", percent: 50}, {name:"ETH", percent:25}, {name:"AVAX", percent:25}]),
-    createData(2, 'Sushi DAO House', 100000, 6.58, 2.0, -0.1, 1.2, -55.5, [{name:"BTC", percent:50}, {name:"ETH", percent:20}, {name:"AVAX", percent:15}, {name:"BNB", percent:15}]),
-    createData(3, 'Bankless BED Index', 100000, 44.83, 2.5, 0.5, 0, -68.7, [{name:"BTC", percent:60}, {name:"ETH", percent:40}]),
-]
+const data = MockIndex
 
 const headers = [
     "Market Cap", "Price", "1 Day", "1 Week", "1 Month", "All-time"
@@ -54,13 +37,12 @@ const IndexTable = () => {
         setCurrency(event.target.value)
     }
 
-    const handleOnClickIndex = () => {
-        navigate(`indexDetail`)
-    }
 
     return (
-        <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px"}}>
-            <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} sx={{float:"right"}}>
+        <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", border:"2px solid", borderColor:"white"}}>
+            <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} 
+                sx={{float:"right", background:"white", borderRadius:"8px", borderColor:"white", color:"#82858A", border:"0"}}
+            >
                 <MenuItem value={"USD"}>USD</MenuItem>
                 <MenuItem value={"ETH"}>ETH</MenuItem>
                 <MenuItem value={"BTC"}>BTC</MenuItem>
@@ -78,17 +60,20 @@ const IndexTable = () => {
                 </Grid>
             </Grid>
             <Paper>
-                {rows.map((row, idx) => (
+                {data.map((row, idx) => (
                     <Grid
                         container key={idx}
                         sx={{
                             padding:"15px", 
                             cursor:"pointer", 
-                            '&:hover': { transform: 'scale(1.015)' }, transition: 'all 0.5s'}}
-                            onClick={handleOnClickIndex}
+                            '&:hover': { transform: 'scale(1.015)' }, transition: 'all 0.5s',
+                        }}
+                        // onClick={() => navigate(`indexDetail/${row.name}`)}
+                        onClick={() => navigate(`indexDetail/${row.id}`)}
                     >
                         <Grid item xs={3}>
                             <Typography variant="h6" sx={{fontWeight: 'bold'}}>{row.name}</Typography>
+                            <Typography variant="h6">{row.shortName}</Typography>
                         </Grid>
                         <Grid container item xs={9}>
                             <Grid item xs={2}>${numberWithCommas(row.marketCap)}</Grid>
@@ -112,7 +97,28 @@ const IndexTable = () => {
                                 {(row.tokens).map((token,idx) => (
                                     <Box
                                     key={idx}
-                                    sx={{backgroundColor: mockColorCurrency[token.name], width: `${token.percent}%`, height: "5px"}}
+                                    sx={
+                                        (idx == 0)?
+                                        {
+                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            width: `${token.percent}%`, 
+                                            height: "6px",
+                                            borderTopLeftRadius:"20px",
+                                            borderBottomLeftRadius:"20px"
+                                        } : (idx == row.tokens.length - 1) ?
+                                        {
+                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            width: `${token.percent}%`, 
+                                            height: "6px",
+                                            borderTopRightRadius:"20px",
+                                            borderBottomRightRadius:"20px"
+                                        } : 
+                                        {
+                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            width: `${token.percent}%`, 
+                                            height: "6px",
+                                        }
+                                }
                                     />
                                 ))}
                             </Grid>
