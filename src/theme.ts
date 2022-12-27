@@ -21,8 +21,10 @@ const theme = createTheme({
         error: {
             main: "#EC522E"
         },
-        // white: '#ffffff',
-        // gray: '#82858A'
+        gradient: {
+            primary: "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)",
+            secondary: "linear-gradient(282.09deg, #BDD5FE -68.96%, #3636F9 155.77%)"
+        }
         
     },
     shape: {
@@ -81,10 +83,22 @@ theme.components = {
                 borderRadius: '9px',
                 textTransform: 'none',
                 height: '45px',
-                // border: "1px solid"
             },
             outlined: {
-                borderColor: "#627DFF",
+                borderColor: "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)",
+            },
+            text: {
+                background:"white",
+                color:"#82858A",
+                width:"130px"
+            },
+            contained: {
+                background: "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)",
+                "&:hover": {
+                    // background: "#2A5BDF",
+                    background: "linear-gradient(99.29deg, #2A5BDF -23.14%, #2A5BDF 32.47%, #2A5BDF 79.6%, #2A5BDF 122.55%)",
+                    boxShadow: "0px 19px 15px rgba(20, 25, 39, 0.1)"
+                }
             }
         }
     },
@@ -92,6 +106,16 @@ theme.components = {
         styleOverrides: {
             root: {
                 borderRadius: "16px"
+            }
+        }
+    },
+    MuiTextField: {
+        styleOverrides:{
+            root: {
+                backgroundColor:"white",
+                "& fieldset": { border: 'none' },
+                borderRadius:"8px",
+                
             }
         }
     }
