@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, ButtonGroup, Card, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Typography } from "@mui/material"
+import { Button, ButtonGroup, Card, CardHeader, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { ChangeEvent, useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -23,6 +23,14 @@ const BuyModal = (props: IProps) => {
     const handleCurrencyChange = (event: SelectChangeEvent) => {
         setCurrency(event.target.value)
     }
+
+    const [periodDCA, setPeriodDCA] = useState<string>('')
+    const handleChoosePeriod = (plan:string) => (event: any) => {
+        // console.log(plan)
+        setPeriodDCA(plan)
+    }
+
+    const primaryGradient = "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)"
 
     return(
         <Modal
@@ -75,9 +83,27 @@ const BuyModal = (props: IProps) => {
                 {checked?
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
                     <ButtonGroup sx={{borderRadius:"8px"}}>
-                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Day</Button>
-                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Weekly</Button>
-                        <Button variant="text" sx={{backgroundColor:"white", color:"#82858A", width:"130px"}}>Monthly</Button>
+                        <Button 
+                            variant="text" 
+                            sx={periodDCA == 'Day'?{background:"linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)", color:"white"}:{}}
+                            onClick={handleChoosePeriod('Day')}
+                        >
+                            Day
+                        </Button>
+                        <Button 
+                            variant="text" 
+                            sx={periodDCA == 'Weekly'?{background:"linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)", color:"white"}:{}}
+                            onClick={handleChoosePeriod('Weekly')}
+                        >                            
+                            Weekly
+                        </Button>
+                        <Button 
+                            variant="text" 
+                            sx={periodDCA == 'Monthly'?{background:"linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)", color:"white"}:{}}
+                            onClick={handleChoosePeriod('Monthly')}
+                        >                            
+                            Monthly
+                        </Button>
                     </ButtonGroup>
                 </Box> : ""}
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>

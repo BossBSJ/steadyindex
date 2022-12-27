@@ -1,10 +1,10 @@
 import { Box} from "@mui/material"
 import { Container } from "@mui/system";
 import React, { useState } from "react"
-import DescriptionPaper from "../components/descriptionCard";
-import IndexTable from "../components/indexTable";
+import DescriptionPaper from "./DescriptionCard";
+import IndexTable from "../../IndexTable";
 
-const SelectIndexes = () => {
+const SelectIndex = () => {
     return (
         <Container>
             <DescriptionPaper/>
@@ -13,4 +13,4 @@ const SelectIndexes = () => {
     )
 }
 
-export default SelectIndexes;
+export default SelectIndex;

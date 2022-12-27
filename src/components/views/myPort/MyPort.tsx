@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material"
-import IndexTable from "../components/indexTable"
-import PortCard from "../components/portCard"
+import IndexTable from "../../IndexTable"
+import PortCard from "./PortCard"
 
 const MyPort = () => {
     return(

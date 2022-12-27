@@ -1,7 +1,7 @@
 import { Card, Grid, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { numberWithCommas } from "../utils/numberWithCommas"
-import { PieChart, Pie, Sector, Cell } from "recharts";
+import { numberWithCommas } from "../../../utils/numberWithCommas"
+import { PieChart, Pie, Sector, Cell, Tooltip } from "recharts";
 
 
 const mockDataForChart = [
@@ -13,10 +13,24 @@ const mockDataForChart = [
 
 const mockCOLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
+
+
 const ChartAllocation = () => {
-    
+
+    const CustomToolTip = ({ active, payload, label }: any) => {
+        if(active && payload && payload.length){
+            return(
+                <Box sx={{padding: "10px", borderRadius:"5px", backgroundColor:"rgba(0,0,0,0.6)", color:"white"}}>
+                    <Typography sx={{fontWeight:"bold"}}>{payload[0].name}</Typography>
+                    <Typography>Ratio: {payload[0].value}%</Typography>
+                </Box>
+            )
+        }
+        return null
+    }
+
     return(
-        <PieChart width={170} height={170}>
+        <PieChart width={170} height={170} >
             <Pie
                 data={mockDataForChart}
                 paddingAngle={1}
@@ -24,11 +38,16 @@ const ChartAllocation = () => {
                 innerRadius={65}
                 outerRadius={80}
                 fill="#6B2FEB"
+                
             >
-                {mockDataForChart.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={mockCOLORS[index % mockCOLORS.length]} />
-                ))}
+            {mockDataForChart.map((token, index) => (
+                <Cell
+                    key={index}
+                    fill={mockCOLORS[index % mockCOLORS.length]} 
+                />
+            ))}
             </Pie>
+            <Tooltip content={<CustomToolTip/>}/>
         </PieChart>
     )
 }

@@ -1,8 +1,8 @@
 import { Button, Card, Container } from "@mui/material";
 import { Box } from "@mui/system"
 import React, { useState } from "react";
-import CreateStep from "../components/createStep";
-import SetupIndex from "../components/setupIndex";
+import CreateStep from "./CreateStep";
+import SetupIndex from "./setupIndex/SetupIndex";
 
 
 
@@ -16,10 +16,12 @@ const CreateIndex = () => {
     return (
         <Box>
             <Container sx={{display:"flex"}}>
-                <CreateStep/>
-                {createIndexCard? <SetupIndex/> : ""}
+                <Box>
+                    <CreateStep/>
+                    {!createIndexCard? <Button variant="contained" onClick={handleOpenCreateIndexCard}>Get Started</Button> : null}
+                </Box>
+                {createIndexCard? <SetupIndex/> : null}
             </Container>
-            {!createIndexCard? <Button onClick={handleOpenCreateIndexCard}>Get Started</Button> : ""}
         </Box>
     )
 }

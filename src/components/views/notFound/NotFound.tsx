@@ -9,7 +9,9 @@ const NotFound = () => {
             <Box>
                 <Typography variant="h1" sx={{fontWeight:"bold"}}>O😦ps.</Typography>
                 <Typography sx={{color:"#9B97B3"}}>We can't find the page you're looking for. Check your currently selected network?</Typography>
-                <Button onClick={() => {navigate(`/`)}}>Back to Home</Button>
+                <Button onClick={() => {navigate(`/`)}} variant="contained">
+                    <Typography sx={{fontWeight:"bold"}}>Back to Home</Typography>
+                </Button>
             </Box>
         </Container>
     )

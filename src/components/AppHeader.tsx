@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import logo from '../assets/logo.svg'
+import { RouteName } from '../constants/constants';
 
 const AppHeader = () => {
     const navigate = useNavigate()
@@ -10,24 +11,24 @@ const AppHeader = () => {
             <Container sx={{padding: "10px", display:"flex", justifyContent: "space-between"}}>
                 <Box 
                     sx={{padding: "20px", cursor:"pointer"}} 
-                    onClick={() => {navigate(`/`)}}
+                    onClick={() => {navigate(RouteName.default)}}
                     >
                         <img 
                             src={logo}
                             style={{width:"120px"}}
                         />
                 </Box>
-                <Box sx={{display:"flex", justifyContent:"space-around", width:"500px"}}>
+                <Box sx={{display:"flex", justifyContent:"space-around", width:"600px"}}>
                     <Typography
                         sx={{padding:"40px", cursor:"pointer", color:"#005FFF"}}
-                        onClick={() => {navigate(`myPort`)}}
+                        onClick={() => {navigate(RouteName.myPort)}}
                     >
                         My port
                     </Typography>
                     <Button
                         variant="outlined" 
                         sx={{margin:"auto"}}
-                        onClick={() => {navigate(`createIndex`)}}
+                        onClick={() => {navigate(RouteName.createIndex)}}
                     >
                         <Typography sx={{fontWeight:"bold", color:"#627DFF"}}>Create Indexes</Typography>
                     </Button>

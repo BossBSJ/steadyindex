@@ -3,16 +3,74 @@ import { Box } from "@mui/system"
 import { useState } from "react";
 import { useParams } from "react-router";
 import { NavLink } from 'react-router-dom';
-import { mockColorCurrency } from "../constants/mockColorCurrency";
-import MockIndex from "../constants/mockIndex";
-import theme from "../theme";
-import { numberWithCommas } from "../utils/numberWithCommas";
-import BuyModal from "../components/Modal/BuyModal";
-import SellModal from "../components/Modal/SellModal";
+import { mockColorCurrency } from "../../../constants/mockColorCurrency";
+import MockIndex from "../../../constants/mockIndex";
+import theme from "../../../theme";
+import { numberWithCommas } from "../../../utils/numberWithCommas";
+import BuyModal from "../../Modal/BuyModal";
+import SellModal from "../../Modal/SellModal";
+import {
+    LineChart,
+    AreaChart,
+    Area,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend
+} from "recharts";
 
 const headers = [
     "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"
 ]
+
+const mockHistoryPrice = [
+    {
+        date:"13th Nov",
+        price: 70.8
+    },
+    {
+        date:"14th Nov",
+        price: 80
+    },
+    {
+        date:"15th Nov",
+        price: 90
+    },
+    {
+        date:"16th Nov",
+        price: 85
+    },
+    {
+        date:"17th Nov",
+        price: 87
+    },
+    {
+        date:"18th Nov",
+        price: 95
+    },
+]
+
+const MyLineChart = () => {
+    return(
+        <AreaChart
+            width={1100}
+            height={400}
+            data={mockHistoryPrice}
+        >
+            <XAxis dataKey="date" />
+            <Tooltip />
+            <Legend />
+            <Area
+                type="monotone"
+                dataKey="price"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+            />
+        </AreaChart>
+    )
+}
 
 const IndexDetail = () => {
 
@@ -42,7 +100,7 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    console.log(MockIndex[Number(indexId) - 1])
+    // console.log(MockIndex[Number(indexId) - 1])
 
     const data = MockIndex[Number(indexId) - 1]
 
@@ -65,7 +123,7 @@ const IndexDetail = () => {
                     </Button>
                 </Box>
             </Box>
-            <Box sx={{display:"flex", justifyContent:"space-around"}}>
+            <Box sx={{display:"flex", justifyContent:"space-around", marginTop:"20px"}}>
                 <Box>
                     <Typography variant="h6">{numberWithCommas(data.marketCap)}</Typography>
                     <Typography variant="body1">Market Cap</Typography>
@@ -81,6 +139,7 @@ const IndexDetail = () => {
             </Box>
 
             <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px"}}>
+                
                 <Typography variant="body1">Current Price</Typography>
                 <Box sx={{display:"flex"}}>
                     <Typography variant="h2">
@@ -88,6 +147,7 @@ const IndexDetail = () => {
                         <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
                     </Typography>
                 </Box>
+                <MyLineChart/>
                 <Grid container>
                     <Grid item xs={3}>
                         <Typography sx={{color:"#9B97B3"}}>Token</Typography>

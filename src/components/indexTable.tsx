@@ -5,6 +5,7 @@ import { numberWithCommas } from "../utils/numberWithCommas";
 import { mockColorCurrency } from "../constants/mockColorCurrency";
 import { useNavigate } from "react-router-dom";
 import MockIndex from "../constants/mockIndex";
+import { RouteName } from "../constants/constants";
 
 const priceDownStyle = {
     backgroundColor:"#F23645",
@@ -39,7 +40,7 @@ const IndexTable = () => {
 
 
     return (
-        <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", border:"2px solid", borderColor:"white"}}>
+        <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255, 253, 251, 0.48)", border:"2px solid", borderColor:"white"}}>
             <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} 
                 sx={{float:"right", background:"white", borderRadius:"8px", borderColor:"white", color:"#82858A", border:"0"}}
             >
@@ -51,7 +52,7 @@ const IndexTable = () => {
                 <Grid item xs={3}>
                     <Typography variant="body1" sx={{color:"#82858A"}}>Name</Typography>
                 </Grid>
-                <Grid container item xs={9}>
+                <Grid container item xs={9} spacing={3}>
                     {headers.map((header) => (
                         <Grid key={header} item xs={2}>
                             <Typography variant="body1" sx={{color:"#82858A"}}>{header}</Typography>
@@ -59,40 +60,60 @@ const IndexTable = () => {
                     ))}
                 </Grid>
             </Grid>
-            <Paper>
+            <Paper sx={{backgroundColor:"rgba(255, 255, 255, 0.75)"}}>
                 {data.map((row, idx) => (
                     <Grid
-                        container key={idx}
+                        container
+                        key={idx}
                         sx={{
                             padding:"15px", 
                             cursor:"pointer", 
                             '&:hover': { transform: 'scale(1.015)' }, transition: 'all 0.5s',
                         }}
-                        // onClick={() => navigate(`indexDetail/${row.name}`)}
-                        onClick={() => navigate(`indexDetail/${row.id}`)}
+                        onClick={() => navigate(`${RouteName.indexDetail}/${row.id}`)}
                     >
                         <Grid item xs={3}>
                             <Typography variant="h6" sx={{fontWeight: 'bold'}}>{row.name}</Typography>
                             <Typography variant="h6">{row.shortName}</Typography>
                         </Grid>
-                        <Grid container item xs={9}>
-                            <Grid item xs={2}>${numberWithCommas(row.marketCap)}</Grid>
-                            <Grid item xs={2} sx={{fontWeight:'bold'}}>${numberWithCommas(row.price)}</Grid>
-                            <Grid item xs={2} sx={row.dayChange >= 0? priceUpStyle : priceDownStyle} >
-                                {row.dayChange >= 0? "+":""}{row.dayChange}%
+                        <Grid container item xs={9} spacing={3}>
+                            <Grid item xs={2}>
+                                <Box>
+                                    ${numberWithCommas(row.marketCap)}
+                                </Box>
                             </Grid>
-                            <Grid item xs={2} sx={row.weekChange >= 0? priceUpStyle : priceDownStyle}>
-                                {row.weekChange >= 0? "+":""}{row.weekChange}%
+                            <Grid item xs={2} sx={{fontWeight:'bold'}}>
+                                <Box>
+                                    ${numberWithCommas(row.price)}
+                                </Box>
                             </Grid>
-                            <Grid item xs={2} sx={row.monthChange >= 0? priceUpStyle : priceDownStyle}>
-                                {row.monthChange >= 0? "+":""}{row.monthChange}%
+                            <Grid item xs={2}  >
+                                <Box sx={row.dayChange >= 0? priceUpStyle : priceDownStyle}>
+                                    {row.dayChange >= 0? "+":""}{row.dayChange}%
+                                </Box>
                             </Grid>
-                            <Grid item xs={2} sx={row.allTimeChange >= 0? priceUpStyle : priceDownStyle}>
-                                {row.allTimeChange >= 0? "+":""}{row.allTimeChange}%
+                            <Grid item xs={2} >
+                                <Box sx={row.weekChange >= 0? priceUpStyle : priceDownStyle}>
+                                    {row.weekChange >= 0? "+":""}{row.weekChange}%
+                                </Box>
                             </Grid>
+                            <Grid item xs={2} >
+                                <Box sx={row.monthChange >= 0? priceUpStyle : priceDownStyle}>
+                                    {row.monthChange >= 0? "+":""}{row.monthChange}%
+                                </Box>
+                            </Grid>
+                            <Grid item xs={2} >
+                                <Box sx={row.allTimeChange >= 0? priceUpStyle : priceDownStyle}>
+                                    {row.allTimeChange >= 0? "+":""}{row.allTimeChange}%
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sx={{display:"flex"}}>
                             {(row.tokens).map((token, idx) => (
-                                <Box key={idx} sx={{margin:"5px"}}>{token.name}{" "}{token.percent}%</Box>
+                                <Box key={idx} sx={{margin:"5px"}}>
+                                    {token.symbol}{" "}{token.percent}%
+                                </Box>
                             ))}
+                            </Grid>
                             <Grid item xs={12} sx={{display:"flex"}}>
                                 {(row.tokens).map((token,idx) => (
                                     <Box
