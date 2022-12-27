@@ -1,19 +1,20 @@
 import { Routes, Route } from "react-router-dom"
-import IndexDetail from "./pages/indexDetail"
-import CreateIndex from "./pages/createIndex"
-import MyPort from "./pages/myPort"
-import NotFound from "./pages/notFound"
-import SelectIndexes from "./pages/selectIndexes"
+import IndexDetail from "./components/views/indexDetail/IndexDetail"
+import CreateIndex from "./components/views/createIndex/CreateIndex"
+import MyPort from "./components/views/myPort/MyPort"
+import NotFound from "./components/views/notFound/NotFound"
+import SelectIndex from "./components/views/selectIndex/SelectIndex"
+import { RouteName } from "./constants/constants"
 
 
 const AppRoutes = () => {
     return (
         <Routes>
             <Route path="*" element={<NotFound/>}/>
-            <Route path="/" element={<SelectIndexes/>}/>
-            <Route path="/createIndex" element={<CreateIndex/>}/>
-            <Route path="/myPort" element={<MyPort/>}/>
-            <Route path="/indexDetail/:indexId" element={<IndexDetail/>}/>
+            <Route path={RouteName.default} element={<SelectIndex/>}/>
+            <Route path={RouteName.createIndex} element={<CreateIndex/>}/>
+            <Route path={RouteName.myPort} element={<MyPort/>}/>
+            <Route path={`${RouteName.indexDetail}/:indexId`} element={<IndexDetail/>}/>
         </Routes>
     )
 }
