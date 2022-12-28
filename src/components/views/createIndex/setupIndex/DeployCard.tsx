@@ -20,7 +20,7 @@ const DeployCard = () => {
     console.log(indexCover)
 
     return (
-        <Box sx={{padding: "20px"}}>
+        <Box sx={{padding: "40px"}}>
             <Typography variant="h5" sx={{fontWeight:"bold"}}>Deploy smart contract</Typography>
             <Box sx={{display:"flex", justifyContent:"space-between"}}>
                 <Box>

@@ -31,7 +31,7 @@ const SetupIndexCard = () => {
     
 
     return(
-        <Box sx={{padding:"20px"}}>
+        <Box sx={{padding:"40px"}}>
             <Typography variant="h5" sx={{fontWeight:"bold"}}>Setup Your Index</Typography>
             <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                 <Box sx={{py:"20px"}}>
