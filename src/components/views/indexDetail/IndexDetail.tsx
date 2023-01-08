@@ -10,13 +10,9 @@ import { numberWithCommas } from "../../../utils/numberWithCommas";
 import BuyModal from "../../Modal/BuyModal";
 import SellModal from "../../Modal/SellModal";
 import {
-    LineChart,
     AreaChart,
     Area,
-    Line,
     XAxis,
-    YAxis,
-    CartesianGrid,
     Tooltip,
     Legend
 } from "recharts";
@@ -52,21 +48,36 @@ const mockHistoryPrice = [
     },
 ]
 
+const areaColor = "rgba(0, 95, 255, 0.5)"
+
 const MyLineChart = () => {
+
+    const CustomToolTip = ({ active, payload, label }: any) => {
+        if(active && payload && payload.length){
+            return(
+                <Box sx={{padding: "10px", borderRadius:"10.5px", backgroundColor:"#005FFF", color:"white"}}>
+                    <Typography>{payload[0].value}</Typography>
+                </Box>
+            )
+        }
+        return null
+    }
+
     return(
         <AreaChart
-            width={1100}
+            width={1123}
             height={400}
             data={mockHistoryPrice}
         >
             <XAxis dataKey="date" />
-            <Tooltip />
+            <Tooltip content={<CustomToolTip/>}/>
             <Legend />
             <Area
                 type="monotone"
                 dataKey="price"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
+                stroke={areaColor}
+                fill={areaColor}
+                activeDot={{ r: 3 }}
             />
         </AreaChart>
     )
@@ -100,12 +111,10 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    // console.log(MockIndex[Number(indexId) - 1])
-
     const data = MockIndex[Number(indexId) - 1]
 
     return(
-        <Container>
+        <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
                 &lt; Back to Thematic Exposure Sets 
             </NavLink>
@@ -138,7 +147,7 @@ const IndexDetail = () => {
                 </Box>
             </Box>
 
-            <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px"}}>
+            <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
                 
                 <Typography variant="body1">Current Price</Typography>
                 <Box sx={{display:"flex"}}>
@@ -177,8 +186,8 @@ const IndexDetail = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Box sx={{backgroundColor:"#CECEFD"}}>
-                        <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px"}}>Underlying Index</Typography>
+                    <Box sx={{backgroundColor:theme.palette.secondary.light, height:"29px", display:"flex", alignItems:"center"}}>
+                        <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px", color:"gray"}}>Underlying Index</Typography>
                     </Box>
                     {data.tokens.map((token,idx) => (
                         <Grid container key={idx} sx={{padding:"15px"}}>
