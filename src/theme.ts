@@ -83,6 +83,7 @@ theme.components = {
                 borderRadius: '9px',
                 textTransform: 'none',
                 height: '45px',
+                
             },
             outlined: {
                 borderColor: "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)",
@@ -95,17 +96,21 @@ theme.components = {
             contained: {
                 background: "linear-gradient(99.29deg, #004FD0 -23.14%, #3280FF 32.47%, #5E7DFF 79.6%, #7A7AFF 122.55%)",
                 "&:hover": {
-                    // background: "#2A5BDF",
                     background: "linear-gradient(99.29deg, #2A5BDF -23.14%, #2A5BDF 32.47%, #2A5BDF 79.6%, #2A5BDF 122.55%)",
                     boxShadow: "0px 19px 15px rgba(20, 25, 39, 0.1)"
+                },
+                "&.Mui-disabled": {
+                    background: "#E9E9F0",
+                    color: "#A0A5B6"
                 }
-            }
+            },
         }
     },
     MuiCard: {
         styleOverrides: {
             root: {
-                borderRadius: "16px"
+                borderRadius: "16px",
+                boxShadow:"none"
             }
         }
     },
@@ -118,7 +123,22 @@ theme.components = {
                 
             }
         }
-    }
+    },
+    MuiPaper: {
+        styleOverrides: {
+            root: {
+                borderRadius: "16px"
+            }
+        }
+    },
+    MuiLinearProgress: {
+        styleOverrides: {
+            root: {
+                height:"13px",
+                borderRadius:"11px"
+            }
+        }
+    },
 }
 
 export default theme
