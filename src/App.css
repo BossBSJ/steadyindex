@@ -2,7 +2,7 @@
 .App {
   text-align: center;
 }
-
+/* 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,7 +36,8 @@
   to {
     transform: rotate(360deg);
   }
-} 
+}  */
+
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -51,7 +52,7 @@ input[type=number] {
 }
 
 body {
-  background-image: url("./assets/bg.png");
+  background-image: url("./assets/images/bg.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
