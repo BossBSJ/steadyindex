@@ -4,7 +4,8 @@ import '@rainbow-me/rainbowkit/styles.css';
 import {
     getDefaultWallets,
     RainbowKitProvider,
-    Chain
+    Chain,
+    Theme
 } from '@rainbow-me/rainbowkit';
 import {
     chain,
@@ -18,7 +19,8 @@ import { ThemeProvider as MaterialThemeProvider } from '@mui/material'
 import theme from './theme';
 import AppRoutes from './Routes';
 import './App.css'
-import bg from './assets/bg.png'
+import bg from './assets/images/bg.png'
+import AppFooter from './components/AppFooter';
 
 const avalancheChain: Chain = {
   id: 43_114,
@@ -57,7 +59,6 @@ const wagmiClient = createClient({
     provider
 })
 
-
 function App() {
   return (
     <Box 
@@ -70,9 +71,10 @@ function App() {
     >
       <MaterialThemeProvider theme={theme}>
         <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains} modalSize="compact">
+          <RainbowKitProvider coolMode chains={chains} modalSize="compact">
             <AppHeader/>
             <AppRoutes/>
+            {/* <AppFooter/> */}
           </RainbowKitProvider>
         </WagmiConfig>
       </MaterialThemeProvider>
