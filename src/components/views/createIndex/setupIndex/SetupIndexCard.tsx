@@ -1,13 +1,30 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 
-const SetupIndexCard = () => {
-    const [indexName, setIndexName] = useState<string>('');
-    const [indexSymbol, setIndexSymbol] = useState<string>('');
-    const [startPrice, setStartPrice] = useState<string>('')
+type IProps = {
+    indexName: string
+    setIndexName: Dispatch<SetStateAction<string>>
+    indexSymbol: string
+    setIndexSymbol: Dispatch<SetStateAction<string>>
+    startPrice: string
+    setStartPrice: Dispatch<SetStateAction<string>>
+    streamingFee: string
+    setStreamingFee: Dispatch<SetStateAction<string>>
+    issuanceFee: string
+    setIssuanceFee: Dispatch<SetStateAction<string>>
+}
 
-    const [streamingFee, setStreamingFee] = useState<string>('')
-    const [issuanceFee, setIssuanceFee] = useState<string>('')
+const SetupIndexCard = (props:IProps) => {
+    const {
+        indexName, indexSymbol, startPrice, streamingFee, issuanceFee,
+        setIndexName, setIndexSymbol, setStartPrice, setStreamingFee, setIssuanceFee
+    } = props
+
+    // const [indexName, setIndexName] = useState<string>('');
+    // const [indexSymbol, setIndexSymbol] = useState<string>('');
+    // const [startPrice, setStartPrice] = useState<string>('')
+    // const [streamingFee, setStreamingFee] = useState<string>('')
+    // const [issuanceFee, setIssuanceFee] = useState<string>('')
 
     const handleChangeIndexName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIndexName(event.target.value);
@@ -31,7 +48,7 @@ const SetupIndexCard = () => {
     
 
     return(
-        <Box sx={{padding:"40px"}}>
+        <Box>
             <Typography variant="h5" sx={{fontWeight:"bold"}}>Setup Your Index</Typography>
             <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                 <Box sx={{py:"20px"}}>
