@@ -24,7 +24,7 @@ const SellModal = (props: IProps) => {
             open={open}
             onClose={onClose}
         >
-            <Card sx={{backgroundColor:"#F3F3FF",width:"25vw", height:"40vh", padding: "20px", borderRadius:"16px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
+            <Card sx={{backgroundColor:"#F3F3FF",width:"25vw", padding: "20px", borderRadius:"16px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
                 <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>Sell</Typography>
                 <Typography variant="caption">Sell</Typography>
                 <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
@@ -61,7 +61,9 @@ const SellModal = (props: IProps) => {
                     />
                 </Box>
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                    <Button onClick={onClose} variant="contained">SELL DPI</Button>
+                    <Button onClick={onClose} variant="contained" sx={{width:"320px"}}>
+                        <Typography sx={{fontWeight:"bold"}}>SELL DPI</Typography>
+                    </Button>
                 </Box>
             </Card>
         </Modal>

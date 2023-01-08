@@ -58,12 +58,18 @@ const PortCard = () => {
             <Box>
                 <Grid container>
                     <Grid item xs={8}>
-                        <Typography variant="h6">Net worth</Typography>
+                        <Typography variant="h6" sx={{textDecoration:"underline #005FFF 2px"}}>Net worth</Typography>
                     </Grid>
                     <Grid container item xs={4}>
-                        <Grid item xs={4}>Indexes</Grid>
-                        <Grid item xs={4}>DCA / Month</Grid>
-                        <Grid item xs={4}>NPL</Grid>
+                        <Grid item xs={4}>
+                            <Typography sx={{textDecoration:"underline #4A47FA 2px"}}>Indexes</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography sx={{textDecoration:"underline #07A6FF 2px"}}>DCA / Month</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography sx={{textDecoration:"underline #3CDCFF 2px"}}>NPL</Typography>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid container>

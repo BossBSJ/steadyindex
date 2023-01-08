@@ -41,11 +41,9 @@ const DescriptionPaper = () => {
                 Bring your crypto strategies to life with STEADY index's leading portfolio management tool
             </Typography>
             </Box>
-            <img src={pieChart} width="150px"/>
+            <img style={{position:"relative"}} src={pieChart} width="170px"/>
         </Card>
     )
 }
-
-// src=`url(${pieChart})
 
 export default DescriptionPaper
