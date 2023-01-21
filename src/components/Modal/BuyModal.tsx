@@ -26,7 +26,7 @@ const BuyModal = (props: IProps) => {
 
     const [periodDCA, setPeriodDCA] = useState<string>('')
     const handleChoosePeriod = (plan:string) => {
-        if(periodDCA == plan){
+        if(periodDCA === plan){
             setPeriodDCA('')
         }else {
             setPeriodDCA(plan)
@@ -95,21 +95,21 @@ const BuyModal = (props: IProps) => {
                     <ButtonGroup sx={{borderRadius:"8px",}}>
                         <Button 
                             variant="text" 
-                            sx={periodDCA == 'Day'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                            sx={periodDCA === 'Day'?{background:theme.palette.gradient.primary, color:"white"}:{}}
                             onClick={() => handleChoosePeriod('Day')}
                         >
                             Day
                         </Button>
                         <Button 
                             variant="text" 
-                            sx={periodDCA == 'Weekly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                            sx={periodDCA === 'Weekly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
                             onClick={() => handleChoosePeriod('Weekly')}
                         >                            
                             Weekly
                         </Button>
                         <Button 
                             variant="text" 
-                            sx={periodDCA == 'Monthly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                            sx={periodDCA === 'Monthly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
                             onClick={() => handleChoosePeriod('Monthly')}
                         >                            
                             Monthly

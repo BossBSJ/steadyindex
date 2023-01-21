@@ -34,7 +34,7 @@ const CreateStep = (props: IProps) => {
         <Box sx={{margin:"auto", display:"flex", flexDirection:"column", height:"400px", justifyContent:"space-evenly"}}>
             <Typography variant="h3" sx={{fontWeight:"bold", color:"#1D144F"}}>Create Your Index</Typography>
             <Box sx={{display:"flex"}}>
-                <Box sx={page==1 || page==0? activeColorStyle: inActiveColorStyle}>
+                <Box sx={page===1 || page===0? activeColorStyle: inActiveColorStyle}>
                     <Typography variant="h5" sx={{fontWeight:"bold", color:"white"}}>1</Typography>
                 </Box>
                 <Box sx={{marginLeft:"15px"}}>
@@ -43,7 +43,7 @@ const CreateStep = (props: IProps) => {
                 </Box>
             </Box>
             <Box sx={{display:"flex"}}>
-                <Box sx={page==2 || page==0? activeColorStyle: inActiveColorStyle}>
+                <Box sx={page===2 || page===0? activeColorStyle: inActiveColorStyle}>
                     <Typography variant="h5" sx={{fontWeight:"bold", color:"white"}}>2</Typography>
                 </Box>
                 <Box sx={{marginLeft:"15px"}}>
@@ -52,7 +52,7 @@ const CreateStep = (props: IProps) => {
                 </Box>
             </Box>
             <Box sx={{display:"flex"}}>
-                <Box sx={page==3 || page==0? activeColorStyle: inActiveColorStyle}>
+                <Box sx={page===3 || page===0? activeColorStyle: inActiveColorStyle}>
                     <Typography variant="h5" sx={{fontWeight:"bold", color:"white"}}>3</Typography>
                 </Box>
                 <Box sx={{marginLeft:"15px"}}>
