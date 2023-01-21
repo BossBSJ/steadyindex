@@ -16,6 +16,7 @@ import {
     Tooltip,
     Legend
 } from "recharts";
+import { useIndexDetail } from "../../../hooks/useIndexDetail";
 
 const headers = [
     "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"
@@ -111,10 +112,15 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    const data = MockIndex[Number(indexId) - 1]
+    // const data = MockIndex[Number(indexId)]
+
+    const { index } = useIndexDetail(Number(indexId))
+    const data = index
+    // console.log(data)
 
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
+            {data && <Box>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
                 &lt; Back to Thematic Exposure Sets 
             </NavLink>
@@ -172,14 +178,14 @@ const IndexDetail = () => {
                 <Paper>
                     <Grid container sx={{padding:"15px"}}>
                         <Grid item xs={3}>
-                            <Typography sx={{fontWeight:"bold"}}>DeFi Pulse Index</Typography>
+                            <Typography sx={{fontWeight:"bold"}}>{data.name}</Typography>
                         </Grid>
                         <Grid container item xs={9}>
                             <Grid item xs={2.4}></Grid>
                             <Grid item xs={2.4}></Grid>
-                            <Grid item xs={2.4}></Grid>
+                            <Grid item xs={2.4}></Grid> 
                             <Grid item xs={2.4}>
-                                <Typography sx={{color:"#22AB94"}}>1.9%</Typography>
+                                <Typography sx={{color:"#22AB94"}}>mock%</Typography>
                             </Grid>
                             <Grid item xs={2.4}>
                                 <Typography sx={{fontWeight:"bold"}}>$70.41</Typography>
@@ -189,7 +195,7 @@ const IndexDetail = () => {
                     <Box sx={{backgroundColor:theme.palette.secondary.light, height:"29px", display:"flex", alignItems:"center"}}>
                         <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px", color:"gray"}}>Underlying Index</Typography>
                     </Box>
-                    {data.tokens.map((token,idx) => (
+                    {data.components.map((token,idx) => (
                         <Grid container key={idx} sx={{padding:"15px"}}>
                             <Grid item xs={3}>
                                 <Typography sx={{fontWeight:"bold"}}>{token.name}</Typography>
@@ -231,6 +237,7 @@ const IndexDetail = () => {
                 onClose={handleCloseDCAModal}
                 dcaModal={true}
             />
+            </Box>}
         </Container>
     )
 }
