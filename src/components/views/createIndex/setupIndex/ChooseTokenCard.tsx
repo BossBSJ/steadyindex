@@ -2,7 +2,7 @@ import { Autocomplete, Box, Button, Card, Chip, Grid, Input, List, Slider, TextF
 import { useState, useCallback, Dispatch, SetStateAction, useEffect } from "react"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { Token } from "../../../../interfaces/token.interface";
+import { TokenList } from "../../../../interfaces/token.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
 
@@ -20,15 +20,14 @@ const unLockedStyle = {
 }
 
 type IProps = {
-    tokenList : Token[]
-    setTokenList:  Dispatch<SetStateAction<Token[]>>
+    tokenList : TokenList[]
+    setTokenList:  Dispatch<SetStateAction<TokenList[]>>
 }
 
 const ChooseTokenCard = (props:IProps) => {
 
     const { tokenList, setTokenList } = props
 
-    // const [tokenList, setTokenList] = useState<Token[]>([])
     const [assets, setAssets] = useState<Asset[]>([])
 
     useEffect(() => {
@@ -38,7 +37,7 @@ const ChooseTokenCard = (props:IProps) => {
                 .then(function(response){
                     const tmp:Asset[] = response.data.tokens
                     const asset = tmp.filter(function(elem){
-                        return elem.chainId == 43114 //Avalanche's chainId (mainnet)
+                        return elem.chainId === 43113 //43113 = AVAX Testnet
                     })
                     setAssets(asset)
                 })
@@ -49,13 +48,14 @@ const ChooseTokenCard = (props:IProps) => {
         getTokenList()
     }, [])
 
+    // console.log(assets)
 
     const handleAddToken = (event: React.SyntheticEvent, newValue:Asset[], reason:string) => {
         // console.log(reason)
-        if(reason == 'removeOption'){
+        if(reason === 'removeOption'){
             const length = newValue.length
             const newAllocation:number = 100 / (length)
-            let newTokenList:Token[] = []
+            let newTokenList:TokenList[] = []
             for(let i = 0; i < length ; i++){
                 newTokenList.push({
                     asset: newValue[i],
@@ -65,7 +65,7 @@ const ChooseTokenCard = (props:IProps) => {
             }
             setTokenList(newTokenList)
         }
-        else if(reason == 'selectOption') {
+        else if(reason === 'selectOption') {
             const newToken = newValue[newValue.length - 1]
             let newTokenList = [...tokenList]
             
@@ -85,7 +85,7 @@ const ChooseTokenCard = (props:IProps) => {
                 locked: false
             })))
         }
-        else if(reason == 'clear') {
+        else if(reason === 'clear') {
             setTokenList([])
         }
     }
@@ -117,7 +117,7 @@ const ChooseTokenCard = (props:IProps) => {
                     continue
                 }
             }
-            if(diff == 0) break // if no need to dicount any allocation will break the loop
+            if(diff === 0) break // if no need to dicount any allocation will break the loop
         }
         setTokenList(newTokenList)
     }
@@ -178,10 +178,10 @@ const ChooseTokenCard = (props:IProps) => {
                     >
                         <Box sx={{display:"flex", justifyContent:"space-between", width:"530px"}}>
                             <Box sx={{display:"flex"}}>
-                                {/* <img 
+                                <img 
                                     src={option.logoURI}
                                     style={{width:"24px", height:"24px", borderRadius:"50%"}}
-                                /> */}
+                                />
                                 <Typography sx={{fontWeight:"bold"}}>
                                     {option.name}
                                 </Typography>
@@ -194,7 +194,7 @@ const ChooseTokenCard = (props:IProps) => {
                 )}
             />
 
-            <Button 
+            {/* <Button 
                 onClick={()=> {
                     let allAllocation:number = 0
                     tokenList.forEach((elem,i) => {
@@ -204,7 +204,7 @@ const ChooseTokenCard = (props:IProps) => {
                 }}
             >
                 Test Button
-            </Button>
+            </Button> */}
 
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"500px"}}>
                 {tokenList.length > 0 && <Grid container sx={{padding:"10px"}}>
@@ -214,7 +214,7 @@ const ChooseTokenCard = (props:IProps) => {
                         <Typography variant="caption" sx={{fontWeight:"bold", color:"gray"}}>Lock/Remove</Typography>
                     </Grid>
                 </Grid>}
-                {tokenList.map((token:Token, idx:number) => (
+                {tokenList.map((token:TokenList, idx:number) => (
                     <Card key={idx} sx={{padding:"10px", backgroundColor:"rgba(255,255,255,0.75)"}}>
                         <Grid container>
                             <Grid item xs={7} sx={{display:"flex", justifyContent:""}}>

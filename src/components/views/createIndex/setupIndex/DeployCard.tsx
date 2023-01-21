@@ -2,7 +2,7 @@ import { Box, Button, Card, Grid, Input, LinearProgress, Typography } from "@mui
 import { useState } from "react"
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { Token } from "../../../../interfaces/token.interface";
+import { TokenList } from "../../../../interfaces/token.interface";
 
 const mockTokenAllocation = [
     {name: "A", allocation: 30},
@@ -17,12 +17,13 @@ type IProps = {
     startPrice: string
     streamingFee: string
     issuanceFee: string
-    tokenList: Token[]
+    tokenList: TokenList[]
+    onwerAddress: `0x${string}`| undefined
 }
 
 const DeployCard = (props: IProps) => {
 
-    const {indexName, indexSymbol, startPrice, streamingFee, issuanceFee, tokenList} = props
+    const {indexName, indexSymbol, startPrice, streamingFee, issuanceFee, tokenList, onwerAddress} = props
 
     return (
         <Box>
@@ -36,7 +37,7 @@ const DeployCard = (props: IProps) => {
                     </Box>
                     <Box sx={{display:"flex", flexDirection:"column"}}>
                         <Typography variant="caption" sx={{fontWeight:"bold"}}>Owner Address</Typography>
-                        <Typography variant="caption" sx={{color:"gray"}}>0x75Aa63D42AA56F08F42aa5deB8d5892358D942c1</Typography>
+                        <Typography variant="caption" sx={{color:"gray"}}>{onwerAddress}</Typography>
                     </Box>
                 </Card>
                 
@@ -75,7 +76,7 @@ const DeployCard = (props: IProps) => {
                 </Grid>
             </Grid>
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"400px"}}>
-                {tokenList.map((token:any, idx:number) => (
+                {tokenList.map((token, idx:number) => (
                     <Box key={idx} sx={{display:"flex", margin:"15px 0 15px 0"}}>
                         <img
                             src={token.asset?.logoURI}

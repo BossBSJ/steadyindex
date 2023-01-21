@@ -1,5 +1,7 @@
+import { Address } from "wagmi"
+
 export interface Asset  {
-    address: string
+    address: Address
     chainId: number
     decimal: number
     logoURI: string
