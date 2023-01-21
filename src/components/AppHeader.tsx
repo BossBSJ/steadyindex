@@ -7,6 +7,7 @@ import theme from '../theme';
 
 const AppHeader = () => {
     const navigate = useNavigate()
+
     return (
         <Box sx={{backgroundColor:"rgba(255,255,255,0.40)"}}>
             <Container sx={{display:"flex", justifyContent: "space-between"}}>
@@ -19,7 +20,7 @@ const AppHeader = () => {
                             style={{width:"125px", height:"51px"}}
                         />
                 </Box>
-                <Box sx={{display:"flex", justifyContent:"space-around", width:"600px"}}>
+                <Box sx={{display:"flex", justifyContent:"space-around", width:"750px"}}>
                     <Typography
                         sx={{padding:"40px", cursor:"pointer", color:theme.palette.primary.main}}
                         onClick={() => {navigate(RouteName.myPort)}}

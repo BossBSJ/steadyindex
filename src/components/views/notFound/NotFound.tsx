@@ -6,7 +6,7 @@ const NotFound = () => {
     const navigate = useNavigate()
     return(
         <Container>
-            <Box sx={{display:"flex",flexDirection:"column",alignItems:"center", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
+            <Box sx={{display:"flex",flexDirection:"column",justifyContent:"space-around",alignItems:"center", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)", height:"400px"}}>
                 <Typography variant="h1" sx={{fontWeight:"bold"}}>O😦ps.</Typography>
                 <Typography sx={{color:"#9B97B3", width:"350px", textAlign:"center"}}>We can't find the page you're looking for. Check your currently selected network?</Typography>
                 <Button 
