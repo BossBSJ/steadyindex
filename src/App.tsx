@@ -5,22 +5,28 @@ import {
     getDefaultWallets,
     RainbowKitProvider,
     Chain,
-    Theme
+    Theme,
+    connectorsForWallets
 } from '@rainbow-me/rainbowkit';
-import {
-    chain,
-    configureChains,
-    createClient,
-    WagmiConfig,
-} from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
 import avaxLogo from './assets/avaxLogo.svg'
 import { ThemeProvider as MaterialThemeProvider } from '@mui/material'
 import theme from './theme';
 import AppRoutes from './Routes';
 import './App.css'
-import bg from './assets/images/bg.png'
 import AppFooter from './components/AppFooter';
+import {
+  configureChains,
+  createClient,
+  WagmiConfig,
+} from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import { infuraProvider } from 'wagmi/providers/infura'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { chain as wagmiChain } from 'wagmi'
+import { goerli } from '@wagmi/chains';
+
+
+const INFURA_API_KEY = process.env.REACT_APP_INFURA_API_KEY || ''
 
 const avalancheChain: Chain = {
   id: 43_114,
@@ -40,45 +46,69 @@ const avalancheChain: Chain = {
     default: { name: 'SnowTrace', url: 'https://snowtrace.io' },
     etherscan: { name: 'SnowTrace', url: 'https://snowtrace.io' },
   },
-  testnet: true,
 };
 
-const { chains, provider } = configureChains(
-    [avalancheChain],
-    [publicProvider()]
+const avalancheFujiChain: Chain = {
+  id: 43_113,
+  name: 'Fuji',
+  network: 'avalancheFuji',
+  iconUrl: avaxLogo,
+  iconBackground: '#fff',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Avalanche',
+    symbol: 'AVAX',
+  },
+  rpcUrls: {
+    default: 'https://api.avax-test.network/ext/bc/C/rpc',
+  },
+  blockExplorers: {
+    default: { name: 'SnowTrace', url: 'https://testnet.snowtrace.io/' },
+    etherscan: { name: 'SnowTrace', url: 'https://testnet.snowtrace.io/' },
+  },
+};
+
+
+const { chains, provider, webSocketProvider } = configureChains(
+    // [ avalancheChain, avalancheFujiChain, ],
+    [ avalancheFujiChain, avalancheChain, wagmiChain.goerli ],
+    [
+      infuraProvider({
+        apiKey: INFURA_API_KEY
+      }),
+      publicProvider(),
+      jsonRpcProvider({
+        rpc: (chain) => ({
+          http: chain.rpcUrls.default
+        }),
+      }),
+    ],
 );
 
-const { connectors } = getDefaultWallets({
+const { wallets } = getDefaultWallets({
     appName: 'Steady Index',
     chains
 });
 
+const connectors = connectorsForWallets(wallets)
+
 const wagmiClient = createClient({
-    autoConnect: false,
+    autoConnect: true,
     connectors,
-    provider
+    provider,
+    webSocketProvider
 })
 
 function App() {
   return (
-    <Box 
-      // sx={{
-      //   backgroundImage: `url(${bg})`, 
-      //   backgroundSize: 'cover', 
-      //   backgroundRepeat: 'no-repeat', 
-      //   backgroundAttachment: 'fixed'
-      // }}
-    >
-      <MaterialThemeProvider theme={theme}>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider coolMode chains={chains} modalSize="compact">
-            <AppHeader/>
-            <AppRoutes/>
-            {/* <AppFooter/> */}
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </MaterialThemeProvider>
-    </Box>
+    <MaterialThemeProvider theme={theme}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider coolMode chains={chains}>
+          <AppHeader/>
+          <AppRoutes/>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </MaterialThemeProvider>
 
   );
 }
