@@ -8,7 +8,7 @@ const SelectIndex = () => {
     return (
         <Container>
             <DescriptionPaper/>
-            <IndexTable/>
+            <IndexTable isMyPortPage={false}/>
         </Container>
     )
 }

@@ -6,7 +6,7 @@ const MyPort = () => {
     return(
         <Container>
             <PortCard/>
-            <IndexTable/>
+            <IndexTable isMyPortPage={true}/>
         </Container>
     )
 }
