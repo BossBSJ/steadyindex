@@ -3313,6 +3313,11 @@
   "resolved" "https://registry.npmjs.org/@vanilla-extract/sprinkles/-/sprinkles-1.5.0.tgz"
   "version" "1.5.0"
 
+"@wagmi/chains@^0.1.9":
+  "integrity" "sha512-q3qAq1MIksHut95gCHefA037FPXJGNlkGc6POYlwhVd42bLq+WaVZTxKYMsdfRrJ00UfTYjMisxrXVHDl7tGKA=="
+  "resolved" "https://registry.npmjs.org/@wagmi/chains/-/chains-0.1.9.tgz"
+  "version" "0.1.9"
+
 "@wagmi/core@0.7.9":
   "integrity" "sha512-97KCELUP5Q1AagRyE7SmpLh4/v3xdcy/XMbybLvvtQbgmi3y5oEzy4h/wJMY1hEZlmicqyWZAHHm6xIr1tP5HA=="
   "resolved" "https://registry.npmjs.org/@wagmi/core/-/core-0.7.9.tgz"
