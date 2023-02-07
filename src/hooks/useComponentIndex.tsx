@@ -5,7 +5,7 @@ import { BigNumber } from "ethers"
 
 
 interface token {
-    address: string
+    address: Address
     decimals: number
     name: string
     symbol: string
@@ -15,16 +15,17 @@ interface token {
     }
 }
 
-export const useComponentIndex = (tokenAddress: Address | undefined ) => {
+//get component from Index
+export const useComponentIndex = (indexAddress: Address | undefined ) => {
 
     const [componentData, setComponentData] = useState<token[]>()
 
     useEffect(() => {
         const getComponentData = async () => {
-            if(!tokenAddress) return
+            if(!indexAddress) return
             
             const componentAddresses = await readContract({
-                address: tokenAddress,
+                address: indexAddress,
                 abi: INDEX_TOKEN_CONTRACT_ABI,
                 functionName: "getComponents"
             })

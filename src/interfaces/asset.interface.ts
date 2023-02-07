@@ -3,7 +3,7 @@ import { Address } from "wagmi"
 export interface Asset  {
     address: Address
     chainId: number
-    decimal: number
+    decimals: number
     logoURI: string
     name: string
     symbol: string

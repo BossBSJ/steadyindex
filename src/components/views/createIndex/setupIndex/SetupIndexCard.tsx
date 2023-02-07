@@ -20,12 +20,6 @@ const SetupIndexCard = (props:IProps) => {
         setIndexName, setIndexSymbol, setStartPrice, setStreamingFee, setIssuanceFee
     } = props
 
-    // const [indexName, setIndexName] = useState<string>('');
-    // const [indexSymbol, setIndexSymbol] = useState<string>('');
-    // const [startPrice, setStartPrice] = useState<string>('')
-    // const [streamingFee, setStreamingFee] = useState<string>('')
-    // const [issuanceFee, setIssuanceFee] = useState<string>('')
-
     const handleChangeIndexName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIndexName(event.target.value);
     };

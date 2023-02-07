@@ -39,25 +39,21 @@ const BuyModal = (props: IProps) => {
             open={open}
             onClose={onClose}
         >
-            <Card sx={{backgroundColor:"#F3F3FF",width:"25vw", padding: "20px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)"}}>
-                <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>
-                    {/* {dcaModal? "But with DCA":"Buy"} */}
-                    Buy
-                </Typography>
-                <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
-                    <Box>
-                        <Typography variant="caption">Receive</Typography>
-                        <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                            <Typography>DPI</Typography>
-                            <TextField
-                                type="number"
-                                placeholder="0.0"
-                                inputProps={{
-                                    sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
-                                }}
-                            />
-                        </Box>
+            <Card sx={{backgroundColor:"#F3F3FF", padding: "20px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)", minHeight:"40vh", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+                <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>Buy</Typography>
+                <Box>
+                    <Typography variant="caption">Receive</Typography>
+                    <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
+                        <Typography>DPI</Typography>
+                        <TextField
+                            type="number"
+                            placeholder="0.0"
+                            inputProps={{
+                                sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
+                            }}
+                        />
                     </Box>
+                </Box>
                 <Box>
                     <Typography variant="caption">Pay</Typography>
                     <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
@@ -134,9 +130,7 @@ const BuyModal = (props: IProps) => {
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
                     <Button onClick={onClose} variant="contained" sx={{width:"320px"}}>
                         <Typography sx={{fontWeight:"bold"}}>BUY DPI</Typography>
-                        
                     </Button>
-                </Box>
                 </Box>
             </Card>
         </Modal>

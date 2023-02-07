@@ -2,11 +2,13 @@ import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
 import { useContractRead, useToken } from "wagmi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
+import { mockPriceOfComponents } from "../constants/mock"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { useComponentIndex } from "./useComponentIndex"
+import { usePriceIndex } from "./usePriceIndex"
 
 export const useIndexDetail = (idx: number) => {
-    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x2Fd19F285c47D0B2e84fAa23Fe0B61A649F3C3E2'
+    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
     const [index, setIndex] = useState<IndexOnTable>()
 
 
@@ -24,8 +26,14 @@ export const useIndexDetail = (idx: number) => {
     })
     // console.log(data)
 
+    const { priceIndex, unitsNum } = usePriceIndex(address)
+    // console.log(priceIndex)
+    // console.log(unitsNum)
+
     const { componentData } = useComponentIndex(address)
     // console.log(componentData)
+
+    
 
     function createIndexOnTable(
         id: number,
@@ -37,19 +45,22 @@ export const useIndexDetail = (idx: number) => {
         weekChange: number,
         monthChange: number,
         allTimeChange: number,
-        components: Array<{name: string, symbol:string, percent: number}>,
+        components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
     ){
         return { id, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
     }
 
     useEffect(() => {
-        if(!componentData || !data) return
+        if(!componentData || !data || !priceIndex || !unitsNum) return
         let components = []
         for(let i = 0; i < componentData.length; i++){
             components.push({
                 name: componentData[i].name,
                 symbol: componentData[i].symbol,
-                percent: 50
+                ratio: unitsNum[i] * mockPriceOfComponents[i] / priceIndex * 100,
+                unit: unitsNum[i],
+                price: mockPriceOfComponents[i],
+                pricePerSet: unitsNum[i] * mockPriceOfComponents[i]
             })
         }
         const indexDetail = 
@@ -57,8 +68,8 @@ export const useIndexDetail = (idx: number) => {
                 idx, 
                 data.name, 
                 data.symbol, 
-                0,
-                0,
+                2100000,
+                priceIndex,
                 0,
                 0,
                 0,
@@ -66,7 +77,8 @@ export const useIndexDetail = (idx: number) => {
                 components
             )
         setIndex(indexDetail)
-    },[componentData])
+    },[componentData, data, priceIndex, unitsNum])
+
 
     return { index }
 }

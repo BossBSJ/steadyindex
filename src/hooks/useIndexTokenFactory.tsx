@@ -5,9 +5,11 @@ import { ERC20_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTR
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { useTokens } from "./useTokens"
 import { useComponentIndexes } from "./useComponentIndexes"
+import { BigNumber } from "ethers"
+import { usePriceIndex } from "./usePriceIndex"
 
 export const useIndexTokenFactory = () => {
-    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x2Fd19F285c47D0B2e84fAa23Fe0B61A649F3C3E2'
+    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
     const [index, setIndex] = useState<IndexOnTable[]>([])
 
     const getIndexTokensRead  = useContractRead({
@@ -15,6 +17,8 @@ export const useIndexTokenFactory = () => {
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "getIndexTokens"
     })
+
+    // const { priceIndex } = usePriceIndex('0x9b093776F0D3A3A9B1b541A4c63ee237FEe63a46')
 
     const indexTokenAddress = getIndexTokensRead.data
     // console.log(indexTokenAddress)
@@ -35,7 +39,7 @@ export const useIndexTokenFactory = () => {
         weekChange: number,
         monthChange: number,
         allTimeChange: number,
-        components: Array<{name: string, symbol:string, percent: number}>,
+        components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet: number}>,
     ){
         return { id, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
     }
@@ -49,7 +53,10 @@ export const useIndexTokenFactory = () => {
                 components.push({
                     name: componentDatas[i][j].name,
                     symbol: componentDatas[i][j].symbol,
-                    percent: 50
+                    ratio: 50,
+                    unit: 0,
+                    price: 0,
+                    pricePerSet: 0
                 })
             }
             indexArr.push(
@@ -57,8 +64,8 @@ export const useIndexTokenFactory = () => {
                     i, 
                     tokenDatas[i].name, 
                     tokenDatas[i].symbol, 
-                    0,
-                    0,
+                    2130000,
+                    10000,
                     0,
                     0,
                     0,

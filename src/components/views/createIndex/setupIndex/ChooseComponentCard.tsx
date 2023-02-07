@@ -2,7 +2,7 @@ import { Autocomplete, Box, Button, Card, Chip, Grid, Input, List, Slider, TextF
 import { useState, useCallback, Dispatch, SetStateAction, useEffect } from "react"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TokenList } from "../../../../interfaces/token.interface";
+import { ComponentList } from "../../../../interfaces/component.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
 
@@ -20,13 +20,13 @@ const unLockedStyle = {
 }
 
 type IProps = {
-    tokenList : TokenList[]
-    setTokenList:  Dispatch<SetStateAction<TokenList[]>>
+    componentList : ComponentList[]
+    setComponentList:  Dispatch<SetStateAction<ComponentList[]>>
 }
 
-const ChooseTokenCard = (props:IProps) => {
+const ChooseComponentCard = (props:IProps) => {
 
-    const { tokenList, setTokenList } = props
+    const { componentList, setComponentList } = props
 
     const [assets, setAssets] = useState<Asset[]>([])
 
@@ -37,7 +37,7 @@ const ChooseTokenCard = (props:IProps) => {
                 .then(function(response){
                     const tmp:Asset[] = response.data.tokens
                     const asset = tmp.filter(function(elem){
-                        return elem.chainId === 43113 //43113 = AVAX Testnet
+                        return elem.chainId === 43113 //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
                     })
                     setAssets(asset)
                 })
@@ -48,85 +48,83 @@ const ChooseTokenCard = (props:IProps) => {
         getTokenList()
     }, [])
 
-    // console.log(assets)
-
     const handleAddToken = (event: React.SyntheticEvent, newValue:Asset[], reason:string) => {
         // console.log(reason)
         if(reason === 'removeOption'){
             const length = newValue.length
             const newAllocation:number = 100 / (length)
-            let newTokenList:TokenList[] = []
+            let newComponentList:ComponentList[] = []
             for(let i = 0; i < length ; i++){
-                newTokenList.push({
+                newComponentList.push({
                     asset: newValue[i],
                     allocation: newAllocation,
                     locked: false
                 })
             }
-            setTokenList(newTokenList)
+            setComponentList(newComponentList)
         }
         else if(reason === 'selectOption') {
             const newToken = newValue[newValue.length - 1]
-            let newTokenList = [...tokenList]
+            let newComponentList = [...componentList]
             
-            newTokenList.push({
+            newComponentList.push({
                     asset: newToken,
                     allocation: 0,
                     locked: false
             })
 
             //change allocation in every token
-            const length = newTokenList.length
+            const length = newComponentList.length
             const newAllocation:number = 100 / (length)
 
-            setTokenList( newTokenList.map((elem) => ({
+            setComponentList( newComponentList.map((elem) => ({
                 ...elem,
                 allocation : newAllocation,
                 locked: false
             })))
         }
         else if(reason === 'clear') {
-            setTokenList([])
+            setComponentList([])
         }
     }
 
 
     const handleOnAllocation = (idx:number, value:string) => {
-        let newTokenList = [...tokenList]
-        let diff = +value - newTokenList[idx].allocation
-        const length = newTokenList.length
+        let newComponentList = [...componentList]
+        let diff = +value - newComponentList[idx].allocation
+        const length = newComponentList.length
         
-        // newTokenList[idx].allocation = +value
-        newTokenList[idx].allocation += diff
+        // newComponentList[idx].allocation = +value
+        newComponentList[idx].allocation += diff
         // idx + length + 1 ->  +1 for popourse dicount current idx is case of cant dicount another token
         for(let _i = idx+1; _i < idx + length + 1; _i++){
             const i = _i%length
-            if(newTokenList[i].locked) // skip if locked
+            if(newComponentList[i].locked) // skip if locked
                 continue
             else {
                 // if discuout allocation only next token (nextToken allocation > diff)
-                if(newTokenList[i].allocation - diff >= 1){ 
-                    newTokenList[i].allocation -= diff
+                if(newComponentList[i].allocation - diff >= 1){ 
+                    newComponentList[i].allocation -= diff
                     diff -= diff
                 } 
                 // if need more than 1 token to discout allocation, so nexttoken allocation is will 1 for sure
                 else {
-                    let nextDiff = diff - (newTokenList[i].allocation - 1) // -1 is mean nextToken allocation will be eql 1
-                    newTokenList[i].allocation -= (diff - nextDiff) // same meaning as above
+                    let nextDiff = diff - (newComponentList[i].allocation - 1) // -1 is mean nextToken allocation will be eql 1
+                    newComponentList[i].allocation -= (diff - nextDiff) // same meaning as above
                     diff = nextDiff // new diff for discout next of nextToken
                     continue
                 }
             }
             if(diff === 0) break // if no need to dicount any allocation will break the loop
         }
-        setTokenList(newTokenList)
+        setComponentList(newComponentList)
     }
 
     function canSlide () {
         let countLocked:number = 0
-        const length = tokenList.length
+        const length = componentList.length
         for(let i = 0; i < length; i++){
-            if(tokenList[i].locked)
+            if(componentList[i].locked)
                 countLocked += 1
         }
         if(countLocked >= length - 1) 
@@ -135,21 +133,21 @@ const ChooseTokenCard = (props:IProps) => {
     }
 
     const toggleLock = (idx:number) => {
-        let newTokenList = [...tokenList]
-        newTokenList[idx].locked = !newTokenList[idx].locked
+        let newComponentList = [...componentList]
+        newComponentList[idx].locked = !newComponentList[idx].locked
 
-        setTokenList(newTokenList)
+        setComponentList(newComponentList)
     }
 
     const toggleRemove = (idx:number) => {
-        let newTokenList = [...tokenList]
+        let newComponentList = [...componentList]
         //give allocation to other token
 
-        newTokenList.splice(idx,1)
+        newComponentList.splice(idx,1)
 
-        const length = newTokenList.length
+        const length = newComponentList.length
         const newAllocation:number = 100 / (length)
-        setTokenList( newTokenList.map((elem) => ({
+        setComponentList( newComponentList.map((elem) => ({
             ...elem,
             allocation : newAllocation,
             locked: false
@@ -197,24 +195,24 @@ const ChooseTokenCard = (props:IProps) => {
             {/* <Button 
                 onClick={()=> {
                     let allAllocation:number = 0
-                    tokenList.forEach((elem,i) => {
+                    componentList.forEach((elem,i) => {
                         allAllocation += elem.allocation
                     })
-                    console.log(tokenList, allAllocation)
+                    console.log(componentList, allAllocation)
                 }}
             >
                 Test Button
             </Button> */}
 
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"500px"}}>
-                {tokenList.length > 0 && <Grid container sx={{padding:"10px"}}>
+                {componentList.length > 0 && <Grid container sx={{padding:"10px"}}>
                     <Grid item xs={7}></Grid>
                     <Grid item xs={5} sx={{display:"flex", justifyContent:"space-between"}}>
                         <Typography variant="caption" sx={{fontWeight:"bold", color:"gray"}}>Allocation</Typography>
                         <Typography variant="caption" sx={{fontWeight:"bold", color:"gray"}}>Lock/Remove</Typography>
                     </Grid>
                 </Grid>}
-                {tokenList.map((token:TokenList, idx:number) => (
+                {componentList.map((token:ComponentList, idx:number) => (
                     <Card key={idx} sx={{padding:"10px", backgroundColor:"rgba(255,255,255,0.75)"}}>
                         <Grid container>
                             <Grid item xs={7} sx={{display:"flex", justifyContent:""}}>
@@ -268,4 +266,4 @@ const ChooseTokenCard = (props:IProps) => {
     )
 }
 
-export default ChooseTokenCard
+export default ChooseComponentCard

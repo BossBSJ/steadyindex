@@ -1,10 +1,8 @@
 import { Button, Card, Container, Grid, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { NavLink } from 'react-router-dom';
-import { mockColorCurrency } from "../../../constants/mockColorCurrency";
-import MockIndex from "../../../constants/mockIndex";
 import theme from "../../../theme";
 import { numberWithCommas } from "../../../utils/numberWithCommas";
 import BuyModal from "../../Modal/BuyModal";
@@ -14,9 +12,11 @@ import {
     Area,
     XAxis,
     Tooltip,
-    Legend
+    Legend,
 } from "recharts";
 import { useIndexDetail } from "../../../hooks/useIndexDetail";
+import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
+import { mockColorCurrency } from "../../../constants/mock";
 
 const headers = [
     "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"
@@ -45,13 +45,15 @@ const mockHistoryPrice = [
     },
     {
         date:"18th Nov",
-        price: 95
+        price: 500
     },
 ]
 
-const areaColor = "rgba(0, 95, 255, 0.5)"
 
-const MyLineChart = () => {
+
+const MyAreaChart = () => {
+
+    const areaColor = "rgba(0, 95, 255, 0.5)"
 
     const CustomToolTip = ({ active, payload, label }: any) => {
         if(active && payload && payload.length){
@@ -67,8 +69,9 @@ const MyLineChart = () => {
     return(
         <AreaChart
             width={1123}
-            height={400}
+            height={300}
             data={mockHistoryPrice}
+            
         >
             <XAxis dataKey="date" />
             <Tooltip content={<CustomToolTip/>}/>
@@ -115,17 +118,21 @@ const IndexDetail = () => {
     // const data = MockIndex[Number(indexId)]
 
     const { index } = useIndexDetail(Number(indexId))
-    const data = index
-    // console.log(data)
+    // const data = index
+    const [data, setData] = useState<IndexOnTable | undefined>(index)
+
+    useEffect(() => {
+        setData(index)
+    },[index])
 
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
-            {data && <Box>
+            <Box>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
                 &lt; Back to Thematic Exposure Sets 
             </NavLink>
             <Box sx={{display:"flex", justifyContent:"space-between"}}>
-                <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data.name}</Typography>
+                <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
                     <Button variant="contained" onClick={handleOpenDCAModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>DCA</Typography>
@@ -140,7 +147,7 @@ const IndexDetail = () => {
             </Box>
             <Box sx={{display:"flex", justifyContent:"space-around", marginTop:"20px"}}>
                 <Box>
-                    <Typography variant="h6">{numberWithCommas(data.marketCap)}</Typography>
+                    <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
                     <Typography variant="body1">Market Cap</Typography>
                 </Box>
                 <Box>
@@ -158,12 +165,12 @@ const IndexDetail = () => {
                 <Typography variant="body1">Current Price</Typography>
                 <Box sx={{display:"flex"}}>
                     <Typography variant="h2">
-                        ${numberWithCommas(data.price)}
+                        ${numberWithCommas(data?.price)}
                         <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
                     </Typography>
                 </Box>
-                <MyLineChart/>
-                <Grid container>
+                <MyAreaChart/>
+                <Grid container sx={{marginTop: '20px'}}>
                     <Grid item xs={3}>
                         <Typography sx={{color:"#9B97B3"}}>Token</Typography>
                     </Grid>
@@ -178,7 +185,7 @@ const IndexDetail = () => {
                 <Paper>
                     <Grid container sx={{padding:"15px"}}>
                         <Grid item xs={3}>
-                            <Typography sx={{fontWeight:"bold"}}>{data.name}</Typography>
+                            <Typography sx={{fontWeight:"bold"}}>{data?.name}</Typography>
                         </Grid>
                         <Grid container item xs={9}>
                             <Grid item xs={2.4}></Grid>
@@ -188,36 +195,36 @@ const IndexDetail = () => {
                                 <Typography sx={{color:"#22AB94"}}>mock%</Typography>
                             </Grid>
                             <Grid item xs={2.4}>
-                                <Typography sx={{fontWeight:"bold"}}>$70.41</Typography>
+                                <Typography sx={{fontWeight:"bold"}}>${index?.price}</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Box sx={{backgroundColor:theme.palette.secondary.light, height:"29px", display:"flex", alignItems:"center"}}>
                         <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px", color:"gray"}}>Underlying Index</Typography>
                     </Box>
-                    {data.components.map((token,idx) => (
+                    {data?.components.map((token,idx) => (
                         <Grid container key={idx} sx={{padding:"15px"}}>
                             <Grid item xs={3}>
                                 <Typography sx={{fontWeight:"bold"}}>{token.name}</Typography>
                             </Grid>
                             <Grid container item xs={9}>
                                 <Grid item xs={2.4} sx={{display:"flex"}}>
-                                    <Typography>mock &nbsp;</Typography>
+                                    <Typography>{token.unit} &nbsp;</Typography>
                                     <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography>$mock</Typography>
+                                    <Typography>${token.price}</Typography>
                                 </Grid>
-                                <Grid item xs={2.4}>{token.percent}%</Grid>
+                                <Grid item xs={2.4}>{token.ratio}%</Grid>
                                 <Grid item xs={2.4}>
                                     <Typography>mock%</Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography sx={{fontWeight:"bold"}}>$mock</Typography>
+                                    <Typography sx={{fontWeight:"bold"}}>${token.pricePerSet}</Typography>
                                 </Grid>
                             </Grid>
                             <Box
-                                sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.percent}%`, height:"6px", borderRadius:"20px"}}
+                                sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
                             />
                         </Grid>
                     ))}
@@ -237,7 +244,7 @@ const IndexDetail = () => {
                 onClose={handleCloseDCAModal}
                 dcaModal={true}
             />
-            </Box>}
+            </Box>
         </Container>
     )
 }

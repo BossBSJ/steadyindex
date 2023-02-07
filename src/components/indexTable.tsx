@@ -2,12 +2,11 @@ import { Box, Card, Grid, Typography, Container, Paper, SelectChangeEvent, Selec
 import React, { useEffect, useState } from "react"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { numberWithCommas } from "../utils/numberWithCommas";
-import { mockColorCurrency } from "../constants/mockColorCurrency";
 import { useNavigate } from "react-router-dom";
-import mockIndex from "../constants/mockIndex";
 import { RouteName } from "../constants/constants";
 import theme from "../theme";
 import { useIndexTokenFactory } from "../hooks/useIndexTokenFactory";
+import { mockColorCurrency } from "../constants/mock";
 
 const priceDownStyle = {
     backgroundColor:"#F23645",
@@ -149,7 +148,7 @@ const IndexTable = (props: IProps) => {
                             {(row.components.slice(0,4)).map((token, idx) => (
                                 <Box key={idx} sx={{marginRight:"15px", display:"flex"}}>
                                     <Typography>
-                                        {token.symbol}{" "}{token.percent}%
+                                        {token.symbol}{" "}{token.ratio}%
                                     </Typography>
                                 </Box>
                             ))}
@@ -166,21 +165,21 @@ const IndexTable = (props: IProps) => {
                                         (idx === 0)?
                                         {
                                             backgroundColor: mockColorCurrency[token.symbol], 
-                                            width: `${token.percent}%`, 
+                                            width: `${token.ratio}%`, 
                                             height: "6px",
                                             borderTopLeftRadius:"20px",
                                             borderBottomLeftRadius:"20px"
                                         } : (idx === row.components.length - 1) ?
                                         {
                                             backgroundColor: mockColorCurrency[token.symbol], 
-                                            width: `${token.percent}%`, 
+                                            width: `${token.ratio}%`, 
                                             height: "6px",
                                             borderTopRightRadius:"20px",
                                             borderBottomRightRadius:"20px"
                                         } : 
                                         {
                                             backgroundColor: mockColorCurrency[token.symbol], 
-                                            width: `${token.percent}%`, 
+                                            width: `${token.ratio}%`, 
                                             height: "6px",
                                         }
                                 }

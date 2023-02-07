@@ -19,7 +19,7 @@ interface token {
 //     address: components[j]
 // })
 
-
+// get component from Indexes
 export const useComponentIndexes = (tokenAddresses: readonly Address[] | undefined) => {
 
     const [componentDatas, setComponentDatas] = useState<token[][] | undefined>(undefined)

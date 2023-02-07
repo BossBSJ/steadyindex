@@ -8,5 +8,5 @@ export interface IndexOnTable {
     weekChange: number,
     monthChange: number,
     allTimeChange: number,
-    components: Array<{name: string, symbol:string, percent: number}>,
+    components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
 }

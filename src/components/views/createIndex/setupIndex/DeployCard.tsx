@@ -1,8 +1,8 @@
 import { Box, Button, Card, Grid, Input, LinearProgress, Typography } from "@mui/material"
-import { useState } from "react"
+import React, { useState } from "react"
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { TokenList } from "../../../../interfaces/token.interface";
+import { ComponentList } from "../../../../interfaces/component.interface";
 
 const mockTokenAllocation = [
     {name: "A", allocation: 30},
@@ -17,13 +17,20 @@ type IProps = {
     startPrice: string
     streamingFee: string
     issuanceFee: string
-    tokenList: TokenList[]
+    componentList: ComponentList[]
     onwerAddress: `0x${string}`| undefined
 }
 
 const DeployCard = (props: IProps) => {
 
-    const {indexName, indexSymbol, startPrice, streamingFee, issuanceFee, tokenList, onwerAddress} = props
+    const {indexName, indexSymbol, startPrice, streamingFee, issuanceFee, componentList, onwerAddress} = props
+    const [pictureToken, setPictureToken] = useState<any>(undefined)
+    
+    const handleChangePicture = (event:React.ChangeEvent<HTMLInputElement>) => {
+        if(!event.target.files?.[0]) return
+        setPictureToken(URL.createObjectURL(event.target.files?.[0]))
+    }
+
 
     return (
         <Box>
@@ -33,7 +40,7 @@ const DeployCard = (props: IProps) => {
                     <Typography sx={{fontWeight:"bold"}}>{indexName}</Typography>
                     <Box sx={{display:"flex", justifyContent:"space-between"}}>
                         <Typography>{indexSymbol}</Typography>
-                        <Typography sx={{fontWeight:"bold"}}>${startPrice}</Typography>
+                        <Typography sx={{fontWeight:"bold"}}> ${startPrice}</Typography>
                     </Box>
                     <Box sx={{display:"flex", flexDirection:"column"}}>
                         <Typography variant="caption" sx={{fontWeight:"bold"}}>Owner Address</Typography>
@@ -42,23 +49,16 @@ const DeployCard = (props: IProps) => {
                 </Card>
                 
                 <Card sx={{padding:"10px", width:"123px"}}>
-                    <Box sx={{border: 1,borderStyle:"dashed", borderRadius:"16px", borderColor:"#666666", display:"flex", flexDirection:"column", textAlign:"center", alignItems:"center"}}>
+                    {/* <Box sx={{border: 1,borderStyle:"dashed", borderRadius:"16px", borderColor:"#666666", display:"flex", flexDirection:"column", textAlign:"center", alignItems:"center"}}>
                         <MonetizationOnIcon sx={{fontSize:"46px", color:"#666666"}}/>
                         <Typography variant="caption" sx={{color:"gray"}}>
                             Drag {'&'} Drop or browse your index cover
                         </Typography>
-                    </Box>
-                    {/* <Input type="file" /> */}
+                    </Box> */}
+                    <input type="file" accept="image/*" onChange={handleChangePicture}/>
+                    <img src={pictureToken} style={{width:"70px"}}/>
                 </Card>
             </Box>
-            {/* <Box sx={{display:"flex", justifyContent:"space-between", padding:"0 15px 0 15px"}}>
-                <Typography variant="caption">Streming Fee</Typography>
-                <Typography variant="caption">{10}%</Typography>
-            </Box>
-            <Box sx={{display:"flex", justifyContent:"space-between", padding:"0 15px 0 15px"}}>
-                <Typography variant="caption">Issuance Fee</Typography>
-                <Typography variant="caption">{5}%</Typography>
-            </Box> */}
             <Grid container sx={{padding:"0 15px 0 15px"}}>
                 <Grid item xs={6.5}>
                     <Typography variant="caption">Streming Fee</Typography>
@@ -76,16 +76,16 @@ const DeployCard = (props: IProps) => {
                 </Grid>
             </Grid>
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"400px"}}>
-                {tokenList.map((token, idx:number) => (
+                {componentList.map((component, idx:number) => (
                     <Box key={idx} sx={{display:"flex", margin:"15px 0 15px 0"}}>
                         <img
-                            src={token.asset?.logoURI}
+                            src={component.asset?.logoURI}
                             style={{width:"45px", height:"45px", borderRadius:"50%"}}
                         />
                         <Box sx={{width:"100%"}}>
-                            <Typography>{token.asset?.name}</Typography>
-                            <Typography>{token.allocation} %</Typography>
-                            <LinearProgress variant="determinate" value={token.allocation}/>
+                            <Typography>{component.asset?.name}</Typography>
+                            <Typography>{component.allocation} %</Typography>
+                            <LinearProgress variant="determinate" value={component.allocation}/>
                         </Box>
                     </Box>
                 ))}
