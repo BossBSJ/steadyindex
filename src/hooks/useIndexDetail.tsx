@@ -24,7 +24,7 @@ export const useIndexDetail = (idx: number) => {
     const { data } = useToken({
         address: address
     })
-    // console.log(data)
+    // console.log(typeof data?.totalSupply.formatted)
 
     const { priceIndex, unitsNum } = usePriceIndex(address)
     // console.log(priceIndex)
@@ -50,6 +50,9 @@ export const useIndexDetail = (idx: number) => {
 
     useEffect(() => {
         if(!componentData || !data || !priceIndex || !unitsNum) return
+        const totalSupply = Number(data?.totalSupply.formatted)
+        const marketCap = totalSupply * priceIndex
+
         let components = []
         for(let i = 0; i < componentData.length; i++){
             components.push({
@@ -66,7 +69,7 @@ export const useIndexDetail = (idx: number) => {
                 idx, 
                 data.name, 
                 data.symbol, 
-                2100000,
+                marketCap,
                 priceIndex,
                 0,
                 0,

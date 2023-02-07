@@ -52,6 +52,9 @@ export const useIndexTokenFactory = () => {
         if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
         let indexArr = []
         for(let i = 0; i < tokenDatas.length; i++){
+            const totalSupply = Number(tokenDatas[i].totalSupply.formatted)
+            const marketCap = totalSupply * priceIndexes[i]
+
             let components = []
             for(let j = 0; j < componentDatas[i].length; j++){
                 components.push({
@@ -68,7 +71,7 @@ export const useIndexTokenFactory = () => {
                     i, 
                     tokenDatas[i].name, 
                     tokenDatas[i].symbol, 
-                    2130000,
+                    marketCap,
                     priceIndexes[i],
                     0,
                     0,
