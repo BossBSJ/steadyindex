@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { BigNumber } from "ethers"
 
-
 interface token {
     address: Address
     decimals: number

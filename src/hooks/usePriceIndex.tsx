@@ -6,8 +6,6 @@ import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { BigNumber } from "ethers";
 import { mockPriceOfComponents } from "../constants/mock";
 
-
-
 export const usePriceIndex = (indexAddress: Address | undefined) => {
 
     const [priceIndex, setPriceIndex] = useState<number>()
@@ -20,17 +18,17 @@ export const usePriceIndex = (indexAddress: Address | undefined) => {
 
             if(!componentData || !indexAddress) return
             
-            const prepareGetPostionUnit = []
+            const prepareGetPositionUnit = []
             for(let i = 0; i < componentData?.length; i++){
-                const unit = readContract({
+                const unit = await readContract({
                     address: indexAddress,
                     abi: INDEX_TOKEN_CONTRACT_ABI,
                     functionName: "getPostionUnit",
                     args: [componentData[i].address]
                 })
-                prepareGetPostionUnit.push(unit)
+                prepareGetPositionUnit.push(unit)
             }
-            const units = await Promise.all(prepareGetPostionUnit)
+            const units = await Promise.all(prepareGetPositionUnit)
 
             let price = 0
             let unitsNum = []

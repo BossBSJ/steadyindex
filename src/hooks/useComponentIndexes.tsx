@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi"
 
 interface token {
-    address: string
+    address: Address
     decimals: number
     name: string
     symbol: string
@@ -13,11 +13,6 @@ interface token {
         value: BigNumber
     }
 }
-
-//await Promise.all[A(), B()] => gotArr
-// fetchToken({
-//     address: components[j]
-// })
 
 // get component from Indexes
 export const useComponentIndexes = (tokenAddresses: readonly Address[] | undefined) => {

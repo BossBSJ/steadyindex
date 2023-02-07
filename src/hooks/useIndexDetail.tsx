@@ -33,8 +33,6 @@ export const useIndexDetail = (idx: number) => {
     const { componentData } = useComponentIndex(address)
     // console.log(componentData)
 
-    
-
     function createIndexOnTable(
         id: number,
         name: string,

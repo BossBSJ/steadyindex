@@ -7,10 +7,12 @@ import { useTokens } from "./useTokens"
 import { useComponentIndexes } from "./useComponentIndexes"
 import { BigNumber } from "ethers"
 import { usePriceIndex } from "./usePriceIndex"
+import { usePriceIndexes } from "./usePriceIndexes"
+import { mockPriceOfComponents } from "../constants/mock"
 
 export const useIndexTokenFactory = () => {
     const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
-    const [index, setIndex] = useState<IndexOnTable[]>([])
+    const [index, setIndex] = useState<IndexOnTable[]>()
 
     const getIndexTokensRead  = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
@@ -29,6 +31,8 @@ export const useIndexTokenFactory = () => {
     const { componentDatas } = useComponentIndexes(indexTokenAddress)
     // console.log(componentDatas)
 
+    const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress)
+
     function createIndexOnTable(
         id: number,
         name: string,
@@ -45,7 +49,7 @@ export const useIndexTokenFactory = () => {
     }
 
     useEffect(() => {
-        if(!componentDatas) return
+        if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
         let indexArr = []
         for(let i = 0; i < tokenDatas.length; i++){
             let components = []
@@ -53,10 +57,10 @@ export const useIndexTokenFactory = () => {
                 components.push({
                     name: componentDatas[i][j].name,
                     symbol: componentDatas[i][j].symbol,
-                    ratio: 50,
-                    unit: 0,
-                    price: 0,
-                    pricePerSet: 0
+                    ratio: unitsNumArr[i][j] * mockPriceOfComponents[j] / priceIndexes[i] * 100,
+                    unit: unitsNumArr[i][j],
+                    price: mockPriceOfComponents[j],
+                    pricePerSet: unitsNumArr[i][j] * mockPriceOfComponents[j]
                 })
             }
             indexArr.push(
@@ -65,7 +69,7 @@ export const useIndexTokenFactory = () => {
                     tokenDatas[i].name, 
                     tokenDatas[i].symbol, 
                     2130000,
-                    10000,
+                    priceIndexes[i],
                     0,
                     0,
                     0,
@@ -75,7 +79,7 @@ export const useIndexTokenFactory = () => {
             )
         }
         setIndex(indexArr)
-    },[tokenDatas, componentDatas])
+    },[tokenDatas, componentDatas, priceIndexes, unitsNumArr])
 
     // console.log(index)
 
