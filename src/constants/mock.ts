@@ -27,4 +27,4 @@ export const mockIndex = [
     createMockData(2, 'Bankless BED Index', 'BBI', 100000, 44.83, 2.5, 0.5, 0, -68.7, [{name:"Bitcoin", symbol:"BTC", ratio:60}, {name:"Ethereum", symbol:"ETH", ratio:40}]),
 ]
 
-export const mockPriceOfComponents = [20, 1] //price of usd [1]WAVAX, [2]USDC 
+export const mockPriceOfComponents = [17.8, 1] //price of usd [1]WAVAX, [2]USDC 

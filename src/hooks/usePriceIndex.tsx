@@ -14,10 +14,8 @@ export const usePriceIndex = (indexAddress: Address | undefined) => {
     const { componentData } = useComponentIndex(indexAddress)
     
     useEffect(() => {
+        if(!componentData || !indexAddress) return
         const getPrice = async () => {
-
-            if(!componentData || !indexAddress) return
-            
             const prepareGetPositionUnit = []
             for(let i = 0; i < componentData?.length; i++){
                 const unit = await readContract({
@@ -41,7 +39,7 @@ export const usePriceIndex = (indexAddress: Address | undefined) => {
             setUnitsNum(unitsNum)
         }
         getPrice()
-    }, [componentData])
+    }, [componentData,indexAddress])
 
     return { priceIndex, unitsNum }
 }

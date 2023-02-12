@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { numberWithCommas } from "../utils/numberWithCommas";
 import { useNavigate } from "react-router-dom";
-import { RouteName } from "../constants/constants";
+import { paletteColorCode, RouteName } from "../constants/constants";
 import theme from "../theme";
 import { useIndexTokenFactory } from "../hooks/useIndexTokenFactory";
 import { mockColorCurrency } from "../constants/mock";
@@ -38,7 +38,8 @@ const IndexTable = (props: IProps) => {
     const [currency, setCurrency] = useState<string>('USD')
     const [typeTable, setTypeTable] = useState<string>('All')
 
-    const { index } = useIndexTokenFactory() //data
+    const { index } = useIndexTokenFactory()
+
     // const [index, setIndex] = useState(data)
 
     // useEffect(() => {
@@ -74,13 +75,13 @@ const IndexTable = (props: IProps) => {
                 </ButtonGroup>:
                 <Box></Box>
                 }
-                <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} 
+                {/* <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} 
                     sx={{ background:"white", borderRadius:"8px", color:"#82858A", '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
                 >
                     <MenuItem value={"USD"}>USD</MenuItem>
                     <MenuItem value={"ETH"}>ETH</MenuItem>
                     <MenuItem value={"BTC"}>BTC</MenuItem>
-                </Select> 
+                </Select>  */}
             </Box>
             <Grid container>
                 <Grid item xs={3}>
@@ -147,8 +148,12 @@ const IndexTable = (props: IProps) => {
                             <Grid item xs={12} sx={{display:"flex"}}>
                             {(row.components.slice(0,4)).map((token, idx) => (
                                 <Box key={idx} sx={{marginRight:"15px", display:"flex"}}>
-                                    <Typography>
-                                        {token.symbol}{" "}{token.ratio}%
+                                    <img 
+                                        src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
+                                        style={{width:"20px", height:"20px", borderRadius:"50%"}}
+                                    />
+                                    <Typography sx={{paddingLeft:"5px"}}>
+                                        {token.symbol}{" "}{token.ratio.toFixed(2)}%
                                     </Typography>
                                 </Box>
                             ))}
@@ -164,21 +169,21 @@ const IndexTable = (props: IProps) => {
                                     sx={
                                         (idx === 0)?
                                         {
-                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            backgroundColor: paletteColorCode[idx % 6], 
                                             width: `${token.ratio}%`, 
                                             height: "6px",
                                             borderTopLeftRadius:"20px",
                                             borderBottomLeftRadius:"20px"
                                         } : (idx === row.components.length - 1) ?
                                         {
-                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            backgroundColor: paletteColorCode[idx % 6], 
                                             width: `${token.ratio}%`, 
                                             height: "6px",
                                             borderTopRightRadius:"20px",
                                             borderBottomRightRadius:"20px"
                                         } : 
                                         {
-                                            backgroundColor: mockColorCurrency[token.symbol], 
+                                            backgroundColor: paletteColorCode[idx % 6], 
                                             width: `${token.ratio}%`, 
                                             height: "6px",
                                         }

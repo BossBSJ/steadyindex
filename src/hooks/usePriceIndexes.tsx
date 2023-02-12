@@ -13,9 +13,8 @@ export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) 
     // console.log(componentDatas)
 
     useEffect(() => {
+        if(!indexAddresses || !componentDatas) return
         const getPrices = async () => {
-            if(!indexAddresses || !componentDatas) return
-
             let priceArr = []
             let unitsNumArr = []
             for(let i = 0; i < indexAddresses?.length; i++) {

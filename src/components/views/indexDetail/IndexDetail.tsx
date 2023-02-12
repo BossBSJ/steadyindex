@@ -17,9 +17,10 @@ import {
 import { useIndexDetail } from "../../../hooks/useIndexDetail";
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { mockColorCurrency } from "../../../constants/mock";
+import { paletteColorCode } from "../../../constants/constants";
 
 const headers = [
-    "Quantity per Set", "Token Price", "Currnet Price Allocation", "Percent Change", "Total Price per Set"
+    "Quantity per Set", "Token Price", "Current Allocation / Strategic Allocation", "Percent Change", "Total Price per Set"
 ]
 
 const mockHistoryPrice = [
@@ -195,7 +196,7 @@ const IndexDetail = () => {
                                 <Typography sx={{color:"#22AB94"}}>mock%</Typography>
                             </Grid>
                             <Grid item xs={2.4}>
-                                <Typography sx={{fontWeight:"bold"}}>${index?.price}</Typography>
+                                <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -205,26 +206,37 @@ const IndexDetail = () => {
                     {data?.components.map((token,idx) => (
                         <Grid container key={idx} sx={{padding:"15px"}}>
                             <Grid item xs={3}>
-                                <Typography sx={{fontWeight:"bold"}}>{token.name}</Typography>
+                                <Box sx={{display:"flex"}}>
+                                    <img 
+                                        src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
+                                        style={{width:"20px", height:"20px", borderRadius:"50%"}}
+                                    />
+                                    <Typography sx={{fontWeight:"bold", paddingLeft: "20px"}}>
+                                        {token.name}
+                                    </Typography>
+                                </Box>
                             </Grid>
                             <Grid container item xs={9}>
                                 <Grid item xs={2.4} sx={{display:"flex"}}>
-                                    <Typography>{token.unit} &nbsp;</Typography>
+                                    <Typography>{token.unit.toFixed(2)} &nbsp;</Typography>
                                     <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography>${token.price}</Typography>
+                                    <Typography>${numberWithCommas(token.price)}</Typography>
                                 </Grid>
-                                <Grid item xs={2.4}>{token.ratio}%</Grid>
+                                <Grid item xs={2.4}>
+                                    <Typography>{token.ratio.toFixed(2)}%</Typography>
+                                </Grid>
                                 <Grid item xs={2.4}>
                                     <Typography>mock%</Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography sx={{fontWeight:"bold"}}>${token.pricePerSet}</Typography>
+                                    <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(token.pricePerSet)}</Typography>
                                 </Grid>
                             </Grid>
                             <Box
-                                sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
+                                // sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
+                                sx={{backgroundColor: paletteColorCode[idx % 6], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
                             />
                         </Grid>
                     ))}

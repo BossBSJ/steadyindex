@@ -20,9 +20,8 @@ export const useComponentIndex = (indexAddress: Address | undefined ) => {
     const [componentData, setComponentData] = useState<token[]>()
 
     useEffect(() => {
+        if(!indexAddress) return
         const getComponentData = async () => {
-            if(!indexAddress) return
-            
             const componentAddresses = await readContract({
                 address: indexAddress,
                 abi: INDEX_TOKEN_CONTRACT_ABI,
@@ -39,7 +38,7 @@ export const useComponentIndex = (indexAddress: Address | undefined ) => {
             setComponentData(tokenArr)
         }
         getComponentData()
-    },[])
+    },[indexAddress])
 
     return { componentData }
 }

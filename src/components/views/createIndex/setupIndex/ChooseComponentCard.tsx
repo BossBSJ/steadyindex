@@ -1,15 +1,11 @@
-import { Autocomplete, Box, Button, Card, Chip, Grid, Input, List, Slider, TextField, Typography } from "@mui/material"
-import { useState, useCallback, Dispatch, SetStateAction, useEffect } from "react"
+import { Autocomplete, Box, Button, Card, Chip, Grid, Input, List, ListItem, ListItemButton, Modal, Slider, TextField, Typography } from "@mui/material"
+import React, { useState, useCallback, Dispatch, SetStateAction, useEffect } from "react"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { ComponentList } from "../../../../interfaces/component.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
-
-
-const mockToken:string[] = [
-    "A", "B", "C", "D", "E", "F"
-]
+import { useColor } from 'color-thief-react'
 
 const lockedStyle = {
     cursor: "pointer"
@@ -26,9 +22,25 @@ type IProps = {
 
 const ChooseComponentCard = (props:IProps) => {
 
-    const { componentList, setComponentList } = props
+    const { componentList, setComponentList } = props 
 
     const [assets, setAssets] = useState<Asset[]>([])
+    const [showChooseComponentModal, setShowChooseComponentModal] = useState<boolean>(false)
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchResults, setSearchResults] = useState<Asset[]>([]);
+    const [filterAssets, setFilterAssets] = useState<Asset[]>([])
+
+    const handelOpenChooseCompoentModal = () => {
+        setSearchTerm('')
+        setShowChooseComponentModal(true)
+    }
+
+    const handelCloseChooseCompoentModal = () => {
+        setShowChooseComponentModal(false)
+    }
+
+    const CHAIN_FUJI = 43113
+    const CHAIN_AVALANCE = 43114
 
     useEffect(() => {
         async function getTokenList() {
@@ -37,7 +49,7 @@ const ChooseComponentCard = (props:IProps) => {
                 .then(function(response){
                     const tmp:Asset[] = response.data.tokens
                     const asset = tmp.filter(function(elem){
-                        return elem.chainId === 43113 //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
+                        return elem.chainId === CHAIN_FUJI //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
                     })
                     setAssets(asset)
                 })
@@ -48,44 +60,51 @@ const ChooseComponentCard = (props:IProps) => {
         getTokenList()
     }, [])
 
-    const handleAddToken = (event: React.SyntheticEvent, newValue:Asset[], reason:string) => {
-        // console.log(reason)
-        if(reason === 'removeOption'){
-            const length = newValue.length
-            const newAllocation:number = 100 / (length)
-            let newComponentList:ComponentList[] = []
-            for(let i = 0; i < length ; i++){
-                newComponentList.push({
-                    asset: newValue[i],
-                    allocation: newAllocation,
-                    locked: false
-                })
-            }
-            setComponentList(newComponentList)
+    useEffect(() => {
+        function removeSmallArrayElements(big:Asset[], small:Asset[]) {
+            return big.filter(function(bigElement) {
+                return !small.some(function(smallElement) {
+                    return bigElement.address === smallElement.address && bigElement.address === smallElement.address;
+                });
+            });
         }
-        else if(reason === 'selectOption') {
-            const newToken = newValue[newValue.length - 1]
-            let newComponentList = [...componentList]
-            
-            newComponentList.push({
-                    asset: newToken,
-                    allocation: 0,
-                    locked: false
-            })
 
-            //change allocation in every token
-            const length = newComponentList.length
-            const newAllocation:number = 100 / (length)
+        const componentAssets = componentList.map(item => item.asset)
 
-            setComponentList( newComponentList.map((elem) => ({
-                ...elem,
-                allocation : newAllocation,
-                locked: false
-            })))
-        }
-        else if(reason === 'clear') {
-            setComponentList([])
-        }
+        const filterAssets = removeSmallArrayElements(assets, componentAssets)
+
+        setFilterAssets(filterAssets)
+    },[componentList, assets,])
+
+    useEffect(() => {
+        const results = filterAssets.filter(asset =>
+            asset.name.toLowerCase().includes(searchTerm)
+        )
+        setSearchResults(results)
+    },[searchTerm, filterAssets])
+
+    const handleChangeSearchAsset = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value.toLowerCase());
+    };
+
+    const handleAddToken = (asset:Asset) => {
+        let newComponentList = [...componentList]
+        newComponentList.push({
+            asset: asset,
+            allocation: 0,
+            locked: false
+        })
+        
+        //change allocation in every token
+        const length = newComponentList.length
+        const newAllocation = 100 / (length)
+
+        setComponentList( newComponentList.map((elem) => ({
+            ...elem,
+            allocation : newAllocation,
+            locked: false
+        })))
+        setShowChooseComponentModal(false)
     }
 
 
@@ -154,43 +173,47 @@ const ChooseComponentCard = (props:IProps) => {
         })))
     }
 
+
     return(
         <Box>
             <Typography variant="h5" sx={{fontWeight:"bold"}}>Choose Token List</Typography>
-            <Autocomplete
-                limitTags={3}
-                onChange={handleAddToken}
-                multiple
-                options={assets}
-                getOptionLabel={(option:Asset) => (option.name)} 
-                renderInput={(props) => (
-                    <TextField
-                        {...props}
-                        placeholder="Search for token"
+
+            <Button sx={{width:"100%"}} onClick={handelOpenChooseCompoentModal}>Search for token</Button>
+            <Modal 
+                open={showChooseComponentModal} 
+                onClose={handelCloseChooseCompoentModal}
+            >   
+                <Card sx={{position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)", maxHeight:"60vh", minWidth:"40vh", overflow:"auto", padding:"20px"}}>
+                    <Input
+                        onChange={handleChangeSearchAsset}
+                        placeholder="Search by name"
+                        sx={{width: "100%"}}
                     />
-                    )}
-                renderOption={(props, option) => (
-                    <li 
-                        key={option.address}
-                        {...props}
-                    >
-                        <Box sx={{display:"flex", justifyContent:"space-between", width:"530px"}}>
-                            <Box sx={{display:"flex"}}>
-                                <img 
-                                    src={option.logoURI}
-                                    style={{width:"24px", height:"24px", borderRadius:"50%"}}
-                                />
-                                <Typography sx={{fontWeight:"bold"}}>
-                                    {option.name}
+                    <List>
+                        {searchResults.map((asset, idx) => (
+                            <ListItemButton 
+                                key={idx} 
+                                sx={{display:"flex", justifyContent:"space-between", padding:"10px"}}
+                                onClick={() => handleAddToken(asset)}    
+                            >
+                                <Box sx={{display:"flex"}}>
+                                    <img 
+                                        // src={option.logoURI}
+                                        src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${asset.address}/logo.png`}
+                                        style={{width:"24px", height:"24px", borderRadius:"50%"}}
+                                    />
+                                    <Typography sx={{fontWeight:"bold", paddingLeft: "15px"}}>
+                                        {asset.name}
+                                    </Typography>
+                                </Box>
+                                <Typography>
+                                    {asset.symbol}
                                 </Typography>
-                            </Box>
-                            <Typography>
-                                {option.symbol}
-                            </Typography>
-                        </Box>
-                    </li>
-                )}
-            />
+                            </ListItemButton>
+                        ))}
+                    </List>
+                </Card>
+            </Modal>
 
             {/* <Button 
                 onClick={()=> {
@@ -199,13 +222,17 @@ const ChooseComponentCard = (props:IProps) => {
                         allAllocation += elem.allocation
                     })
                     console.log(componentList, allAllocation)
+                    
+                    // const src = componentList[0].asset.logoURI
+                    // console.log(src)
                 }}
             >
                 Test Button
             </Button> */}
 
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"500px"}}>
-                {componentList.length > 0 && <Grid container sx={{padding:"10px"}}>
+                {componentList.length > 0 && 
+                <Grid container sx={{padding:"10px"}}>
                     <Grid item xs={7}></Grid>
                     <Grid item xs={5} sx={{display:"flex", justifyContent:"space-between"}}>
                         <Typography variant="caption" sx={{fontWeight:"bold", color:"gray"}}>Allocation</Typography>
@@ -215,9 +242,10 @@ const ChooseComponentCard = (props:IProps) => {
                 {componentList.map((token:ComponentList, idx:number) => (
                     <Card key={idx} sx={{padding:"10px", backgroundColor:"rgba(255,255,255,0.75)"}}>
                         <Grid container>
-                            <Grid item xs={7} sx={{display:"flex", justifyContent:""}}>
+                            <Grid item xs={7} sx={{display:"flex"}}>
                                 <img 
                                     src={token.asset?.logoURI}
+                                    // src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.asset.address}/logo.png`}
                                     style={{width:"45px", height:"45px", borderRadius:"50%"}}
                                 />
                                 <Box sx={{marginLeft:"10px"}}>

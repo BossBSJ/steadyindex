@@ -1,4 +1,4 @@
-import { Button, Card, Container, Typography } from "@mui/material";
+import { Alert, Button, Card, Container, Snackbar, Typography } from "@mui/material";
 import { Box } from "@mui/system"
 import React, { useState } from "react";
 import { ComponentList } from "../../../interfaces/component.interface";
@@ -7,15 +7,16 @@ import ChooseComponentCard from "./setupIndex/ChooseComponentCard";
 import DeployCard from "./setupIndex/DeployCard";
 import SetupIndexCard from "./setupIndex/SetupIndexCard";
 import { useEffect } from "react";
-import { usePrepareContractWrite, useProvider, useAccount, useContractWrite, Address } from "wagmi";
+import { usePrepareContractWrite, useProvider, useAccount, useContractWrite, Address, useWaitForTransaction } from "wagmi";
 import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { useNavigate } from "react-router-dom";
 import { RouteName } from "../../../constants/constants";
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { BigNumber, ethers } from "ethers";
 import { mockPriceOfComponents } from "../../../constants/mock";
+import { LoadingButton } from "@mui/lab";
 
-const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
+const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
 const CreateIndex = () => {
     const navigate = useNavigate()
@@ -35,43 +36,67 @@ const CreateIndex = () => {
     const account = useAccount()
     const address = account.address ?? '0x'
 
-
-    const prepareUnits = () => { 
-        let unitList:BigNumber[] = []
-        for(let i = 0; i < componentList.length; i++){
-            const amount = (+startPrice) * (componentList[i].allocation / 100) / mockPriceOfComponents[i] //price of component is mocking
-            const unit = ethers.utils.parseUnits(amount.toString(), componentList[i].asset.decimals)
-            unitList.push(unit)
+    useEffect(() => {
+        const prepareUnits = () => { 
+            let unitList:BigNumber[] = []
+            for(let i = 0; i < componentList.length; i++){
+                let amount = 0
+                if(startPrice === ""){
+                    continue
+                }
+                else {
+                    amount = (+startPrice) * (componentList[i].allocation / 100) / mockPriceOfComponents[i] //price of component is mocking
+                }
+                const unit = ethers.utils.parseUnits(amount.toString(), componentList[i].asset.decimals)
+                unitList.push(unit)
+            }
+            setUnitList(unitList)
         }
-        setUnitList(unitList)
-    }
-
-    const prepareAddresses = () => {
-        let addressList:Address[] = []
-        for(let i = 0; i < componentList.length; i++){
-            addressList.push(componentList[i].asset.address)
+    
+        const prepareAddresses = () => {
+            let addressList:Address[] = []
+            for(let i = 0; i < componentList.length; i++){
+                addressList.push(componentList[i].asset.address)
+            }
+            setAddressList(addressList)
         }
-        setAddressList(addressList)
-    }
-
-    const createIndexToken = async () => {
         prepareUnits()
         prepareAddresses()
-        const config = await prepareWriteContract({
-            address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
-            abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
-            functionName: "createIndexToken",
-            args: [addressList, unitList, address, indexName, indexSymbol]
-        })
-        const data = await writeContract(config)
-    }
+    
+    }, [componentList, startPrice])
 
+    const { config } = usePrepareContractWrite({
+        address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
+        abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
+        functionName: "createIndexToken",
+        args: [addressList, unitList, address, indexName, indexSymbol],
+        enabled: (addressList.length !== 0 &&  startPrice !== '' && page === 3)
+    })
+
+    const { data, write } = useContractWrite(config)
+
+    const [openSnackBar, setOpenSnackBar] = useState(false)
+    const handleCloseSnackBar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+    
+        setOpenSnackBar(false);
+    };
+
+    const { isLoading } = useWaitForTransaction({
+        hash: data?.hash,
+        onSuccess(data) {
+            console.log('create index succesful', data)
+            setOpenSnackBar(true)
+        }
+    })
 
     const handleOnNext = async () => {
         
         if(page === 3) 
         {
-            createIndexToken()
+            write?.()
             // navigate(RouteName.default)
             return
         }
@@ -147,7 +172,8 @@ const CreateIndex = () => {
                             <Button onClick={handleOnBack} variant="outlined" sx={{width:"240px"}}>
                                 <Typography sx={{fontWeight:"bold"}}>Back</Typography>
                             </Button>
-                            <Button 
+                            <LoadingButton
+                                loading={isLoading}
                                 onClick={handleOnNext} 
                                 variant="contained" 
                                 sx={{width:"240px"}}
@@ -157,10 +183,15 @@ const CreateIndex = () => {
                                 <Typography sx={{fontWeight:"bold"}}>Deploy Contract</Typography>: 
                                 <Typography sx={{fontWeight:"bold"}}>Next</Typography>
                                 }
-                            </Button>
+                            </LoadingButton>
                         </Box>
                     </Card>
                 }
+                <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={handleCloseSnackBar}>
+                    <Alert severity="success">
+                        Your Index Token has been created
+                    </Alert>
+                </Snackbar>
             </Container>
         </Box>
     )

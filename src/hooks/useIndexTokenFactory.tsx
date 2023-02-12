@@ -5,13 +5,13 @@ import { ERC20_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTR
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { useTokens } from "./useTokens"
 import { useComponentIndexes } from "./useComponentIndexes"
-import { BigNumber } from "ethers"
-import { usePriceIndex } from "./usePriceIndex"
 import { usePriceIndexes } from "./usePriceIndexes"
 import { mockPriceOfComponents } from "../constants/mock"
+import { createIndexOnTable } from "../utils/createIndexOnTable"
+
+const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
 export const useIndexTokenFactory = () => {
-    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
     const [index, setIndex] = useState<IndexOnTable[]>()
 
     const getIndexTokensRead  = useContractRead({
@@ -19,8 +19,6 @@ export const useIndexTokenFactory = () => {
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "getIndexTokens"
     })
-
-    // const { priceIndex } = usePriceIndex('0x9b093776F0D3A3A9B1b541A4c63ee237FEe63a46')
 
     const indexTokenAddress = getIndexTokensRead.data
     // console.log(indexTokenAddress)
@@ -33,20 +31,12 @@ export const useIndexTokenFactory = () => {
 
     const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress)
 
-    function createIndexOnTable(
-        id: number,
-        name: string,
-        symbol: string,
-        marketCap: number,
-        price: number,
-        dayChange: number,
-        weekChange: number,
-        monthChange: number,
-        allTimeChange: number,
-        components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet: number}>,
-    ){
-        return { id, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
-    }
+    // const { data } = useContractRead({
+    //     address: "0x94696130b9ebb0bd512097e63c642ebdb3c62c43",
+    //     abi: INDEX_TOKEN_CONTRACT_ABI,
+    //     functionName: "manager"
+    // })
+    // console.log(data)
 
     useEffect(() => {
         if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
@@ -58,6 +48,7 @@ export const useIndexTokenFactory = () => {
             let components = []
             for(let j = 0; j < componentDatas[i].length; j++){
                 components.push({
+                    address: componentDatas[i][j].address,
                     name: componentDatas[i][j].name,
                     symbol: componentDatas[i][j].symbol,
                     ratio: unitsNumArr[i][j] * mockPriceOfComponents[j] / priceIndexes[i] * 100,

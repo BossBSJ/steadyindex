@@ -1,16 +1,18 @@
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
-import { useContractRead, useToken } from "wagmi"
+import { useContractRead, useToken, useTransaction } from "wagmi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
 import { mockPriceOfComponents } from "../constants/mock"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
+import { createIndexOnTable } from "../utils/createIndexOnTable"
 import { useComponentIndex } from "./useComponentIndex"
 import { usePriceIndex } from "./usePriceIndex"
 
-export const useIndexDetail = (idx: number) => {
-    const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = '0x8B13431EB604D4DeE7FC5D53ce8bB48cB67fF5B0'
-    const [index, setIndex] = useState<IndexOnTable>()
+const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
+export const useIndexDetail = (idx: number) => {
+    
+    const [index, setIndex] = useState<IndexOnTable>()
 
     const getAddressIndex = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
@@ -21,41 +23,36 @@ export const useIndexDetail = (idx: number) => {
 
     const address = getAddressIndex.data
 
-    const { data } = useToken({
+    const token = useToken({
         address: address
     })
-    // console.log(typeof data?.totalSupply.formatted)
+    const tokenData = token.data
 
     const { priceIndex, unitsNum } = usePriceIndex(address)
-    // console.log(priceIndex)
-    // console.log(unitsNum)
 
     const { componentData } = useComponentIndex(address)
-    // console.log(componentData)
 
-    function createIndexOnTable(
-        id: number,
-        name: string,
-        symbol: string,
-        marketCap: number,
-        price: number,
-        dayChange: number,
-        weekChange: number,
-        monthChange: number,
-        allTimeChange: number,
-        components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
-    ){
-        return { id, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
-    }
+    // console.log(" ")
+    // console.log('componentData', componentData)
+    // console.log('tokenData', tokenData)
+    // console.log('priceIndex', priceIndex)
+    // console.log('unitsNum', unitsNum)
+    // console.log('address', address)
 
+    // const { data } = useTransaction({
+    //     hash: "0xc5a510eb4532183d6abaa542a8bb13fa6d89e59648613f79e3574df2ea7fb3ed"
+    // })
+    // console.log(data)
+    
     useEffect(() => {
-        if(!componentData || !data || !priceIndex || !unitsNum) return
-        const totalSupply = Number(data?.totalSupply.formatted)
+        if(!componentData || !tokenData || !priceIndex || !unitsNum) return
+        const totalSupply = Number(tokenData?.totalSupply.formatted)
         const marketCap = totalSupply * priceIndex
 
         let components = []
         for(let i = 0; i < componentData.length; i++){
             components.push({
+                address: componentData[i].address,
                 name: componentData[i].name,
                 symbol: componentData[i].symbol,
                 ratio: unitsNum[i] * mockPriceOfComponents[i] / priceIndex * 100,
@@ -67,8 +64,8 @@ export const useIndexDetail = (idx: number) => {
         const indexDetail = 
             createIndexOnTable(
                 idx, 
-                data.name, 
-                data.symbol, 
+                tokenData.name, 
+                tokenData.symbol, 
                 marketCap,
                 priceIndex,
                 0,
@@ -78,7 +75,7 @@ export const useIndexDetail = (idx: number) => {
                 components
             )
         setIndex(indexDetail)
-    },[componentData, data, priceIndex, unitsNum])
+    },[componentData, tokenData, priceIndex, unitsNum, address])
 
 
     return { index }

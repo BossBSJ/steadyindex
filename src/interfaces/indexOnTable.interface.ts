@@ -1,3 +1,5 @@
+import { Address } from "wagmi";
+
 export interface IndexOnTable {
     id: number,
     name: string,
@@ -8,5 +10,5 @@ export interface IndexOnTable {
     weekChange: number,
     monthChange: number,
     allTimeChange: number,
-    components: Array<{name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
+    components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
 }
