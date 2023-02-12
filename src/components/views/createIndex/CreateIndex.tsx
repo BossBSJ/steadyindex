@@ -47,7 +47,7 @@ const CreateIndex = () => {
                 else {
                     amount = (+startPrice) * (componentList[i].allocation / 100) / mockPriceOfComponents[i] //price of component is mocking
                 }
-                const unit = ethers.utils.parseUnits(amount.toString(), componentList[i].asset.decimals)
+                const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
                 unitList.push(unit)
             }
             setUnitList(unitList)
@@ -70,7 +70,7 @@ const CreateIndex = () => {
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "createIndexToken",
         args: [addressList, unitList, address, indexName, indexSymbol],
-        enabled: (addressList.length !== 0 &&  startPrice !== '' && page === 3)
+        enabled: (page === 3)
     })
 
     const { data, write } = useContractWrite(config)
