@@ -222,9 +222,6 @@ const ChooseComponentCard = (props:IProps) => {
                         allAllocation += elem.allocation
                     })
                     console.log(componentList, allAllocation)
-                    
-                    // const src = componentList[0].asset.logoURI
-                    // console.log(src)
                 }}
             >
                 Test Button

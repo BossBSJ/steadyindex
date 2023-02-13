@@ -22,7 +22,6 @@ class ERC20Service {
             params: {chain: "avalanche"}
         })
 
-        // console.log(response.data)
         return response.data.usdPrice
     }
 

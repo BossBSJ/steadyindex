@@ -31,18 +31,6 @@ export const useIndexDetail = (idx: number) => {
     const { priceIndex, unitsNum } = usePriceIndex(address)
 
     const { componentData } = useComponentIndex(address)
-
-    // console.log(" ")
-    // console.log('componentData', componentData)
-    // console.log('tokenData', tokenData)
-    // console.log('priceIndex', priceIndex)
-    // console.log('unitsNum', unitsNum)
-    // console.log('address', address)
-
-    // const { data } = useTransaction({
-    //     hash: "0xc5a510eb4532183d6abaa542a8bb13fa6d89e59648613f79e3574df2ea7fb3ed"
-    // })
-    // console.log(data)
     
     useEffect(() => {
         if(!componentData || !tokenData || !priceIndex || !unitsNum) return

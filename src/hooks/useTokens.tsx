@@ -34,7 +34,6 @@ export const useTokens = (tokens: readonly `0x${string}`[] | undefined) => { //f
                 prepareFetchToken.push(token)
             }
             const tokenArr = await Promise.all(prepareFetchToken)
-            // console.log(tokenArr)
             setTokenDatas(tokenArr)
         }
         fetchTokens()

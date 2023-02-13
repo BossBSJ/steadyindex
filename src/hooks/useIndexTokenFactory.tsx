@@ -21,22 +21,12 @@ export const useIndexTokenFactory = () => {
     })
 
     const indexTokenAddress = getIndexTokensRead.data
-    // console.log(indexTokenAddress)
 
     const { tokenDatas } = useTokens(indexTokenAddress)
-    // console.log(tokenDatas)
 
     const { componentDatas } = useComponentIndexes(indexTokenAddress)
-    // console.log(componentDatas)
 
     const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress)
-
-    // const { data } = useContractRead({
-    //     address: "0x94696130b9ebb0bd512097e63c642ebdb3c62c43",
-    //     abi: INDEX_TOKEN_CONTRACT_ABI,
-    //     functionName: "manager"
-    // })
-    // console.log(data)
 
     useEffect(() => {
         if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
@@ -75,7 +65,6 @@ export const useIndexTokenFactory = () => {
         setIndex(indexArr)
     },[tokenDatas, componentDatas, priceIndexes, unitsNumArr])
 
-    // console.log(index)
 
     return { index }
 }

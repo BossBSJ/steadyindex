@@ -8,7 +8,6 @@ type IProps = {
 
 const CreateStep = (props: IProps) => {
     const {page} = props
-    // console.log(page)
     
     const activeColorStyle = {
         background:theme.palette.gradient.secondary, 

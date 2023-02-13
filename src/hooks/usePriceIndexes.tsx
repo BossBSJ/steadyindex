@@ -10,7 +10,6 @@ export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) 
     const [unitsNumArr, setUnitsNumArr] = useState<number[][]>()
 
     const { componentDatas } = useComponentIndexes(indexAddresses)
-    // console.log(componentDatas)
 
     useEffect(() => {
         if(!indexAddresses || !componentDatas) return
