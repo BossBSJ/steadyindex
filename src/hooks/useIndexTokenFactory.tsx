@@ -8,6 +8,7 @@ import { useComponentIndexes } from "./useComponentIndexes"
 import { usePriceIndexes } from "./usePriceIndexes"
 import { mockPriceOfComponents } from "../constants/mock"
 import { createIndexOnTable } from "../utils/createIndexOnTable"
+import { erc20Service } from "../services/erc20Service"
 
 const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
@@ -30,39 +31,43 @@ export const useIndexTokenFactory = () => {
 
     useEffect(() => {
         if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
-        let indexArr = []
-        for(let i = 0; i < tokenDatas.length; i++){
-            const totalSupply = Number(tokenDatas[i].totalSupply.formatted)
-            const marketCap = totalSupply * priceIndexes[i]
+        const getIndexTokens = async () => {
+            let indexArr = []
+            for(let i = 0; i < tokenDatas.length; i++){
+                const totalSupply = Number(tokenDatas[i].totalSupply.formatted)
+                const marketCap = totalSupply * priceIndexes[i]
 
-            let components = []
-            for(let j = 0; j < componentDatas[i].length; j++){
-                components.push({
-                    address: componentDatas[i][j].address,
-                    name: componentDatas[i][j].name,
-                    symbol: componentDatas[i][j].symbol,
-                    ratio: unitsNumArr[i][j] * mockPriceOfComponents[j] / priceIndexes[i] * 100,
-                    unit: unitsNumArr[i][j],
-                    price: mockPriceOfComponents[j],
-                    pricePerSet: unitsNumArr[i][j] * mockPriceOfComponents[j]
-                })
-            }
-            indexArr.push(
-                createIndexOnTable(
-                    i, 
-                    tokenDatas[i].name, 
-                    tokenDatas[i].symbol, 
-                    marketCap,
-                    priceIndexes[i],
-                    0,
-                    0,
-                    0,
-                    0,
-                    components
+                let components = []
+                for(let j = 0; j < componentDatas[i].length; j++){
+                    const tokenPrice:number = await erc20Service.fetchERC20Price(componentDatas[i][j].address)
+                    components.push({
+                        address: componentDatas[i][j].address,
+                        name: componentDatas[i][j].name,
+                        symbol: componentDatas[i][j].symbol,
+                        ratio: unitsNumArr[i][j] * tokenPrice / priceIndexes[i] * 100,
+                        unit: unitsNumArr[i][j],
+                        price: tokenPrice,
+                        pricePerSet: unitsNumArr[i][j] * tokenPrice
+                    })
+                }
+                indexArr.push(
+                    createIndexOnTable(
+                        i, 
+                        tokenDatas[i].name, 
+                        tokenDatas[i].symbol, 
+                        marketCap,
+                        priceIndexes[i],
+                        0,
+                        0,
+                        0,
+                        0,
+                        components
+                    )
                 )
-            )
+            }
+            setIndex(indexArr)
         }
-        setIndex(indexArr)
+        getIndexTokens()
     },[tokenDatas, componentDatas, priceIndexes, unitsNumArr])
 
 

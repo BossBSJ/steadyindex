@@ -15,6 +15,7 @@ import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { BigNumber, ethers } from "ethers";
 import { mockPriceOfComponents } from "../../../constants/mock";
 import { LoadingButton } from "@mui/lab";
+import { erc20Service } from "../../../services/erc20Service";
 
 const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
@@ -37,7 +38,7 @@ const CreateIndex = () => {
     const address = account.address ?? '0x'
 
     useEffect(() => {
-        const prepareUnits = () => { 
+        const prepareUnits = async () => { 
             let unitList:BigNumber[] = []
             for(let i = 0; i < componentList.length; i++){
                 let amount = 0
@@ -45,7 +46,8 @@ const CreateIndex = () => {
                     continue
                 }
                 else {
-                    amount = (+startPrice) * (componentList[i].allocation / 100) / mockPriceOfComponents[i] //price of component is mocking
+                    const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
+                    amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice
                 }
                 const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
                 unitList.push(unit)

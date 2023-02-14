@@ -5,6 +5,7 @@ import { useComponentIndex } from "./useComponentIndex";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { BigNumber } from "ethers";
 import { mockPriceOfComponents } from "../constants/mock";
+import { erc20Service } from "../services/erc20Service";
 
 export const usePriceIndex = (indexAddress: Address | undefined) => {
 
@@ -31,9 +32,10 @@ export const usePriceIndex = (indexAddress: Address | undefined) => {
             let price = 0
             let unitsNum = []
             for(let i = 0; i < units.length; i++){
+                const tokenPrice:number = await erc20Service.fetchERC20Price(componentData[i].address)
                 const unit = Number(units[i]._hex) / 10**componentData[i].decimals
                 unitsNum.push(unit)
-                price = price + unit * mockPriceOfComponents[i]
+                price = price + unit * tokenPrice
             }
             setPriceIndex(price)
             setUnitsNum(unitsNum)

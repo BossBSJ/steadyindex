@@ -16,9 +16,16 @@ class ERC20Service {
     }
     
     fetchERC20Price = async (erc20address: Address) => {
+        let address = erc20address
+        if(erc20address == "0xd00ae08403B9bbb9124bB305C09058E32C39A48c"){
+            address = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        }
+        else if(erc20address == "0xB6076C93701D6a07266c31066B298AeC6dd65c2d"){
+            address = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+        }
         const response = await this.axios.request({
             method: "GET",
-            url: `/erc20/${erc20address}/price`,
+            url: `/erc20/${address}/price`,
             params: {chain: "avalanche"}
         })
 

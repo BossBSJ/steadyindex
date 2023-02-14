@@ -4,6 +4,7 @@ import { readContract } from '@wagmi/core'
 import { useComponentIndexes } from "./useComponentIndexes";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { mockPriceOfComponents } from "../constants/mock";
+import { erc20Service } from "../services/erc20Service";
 
 export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) => {
     const [priceIndexes, setPriceIndexes] = useState<number[]>()
@@ -32,9 +33,10 @@ export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) 
                 let price = 0
                 let unitsNum = []
                 for(let j = 0; j < units.length; j++){
+                    const tokenPrice:number = await erc20Service.fetchERC20Price(componentDatas[i][j].address)
                     const unit = Number(units[j]._hex) / 10**componentDatas[i][j].decimals
                     unitsNum.push(unit)
-                    price = price + unit * mockPriceOfComponents[j]
+                    price = price + unit * tokenPrice
                 }
                 priceArr.push(price)
                 unitsNumArr.push(unitsNum)
