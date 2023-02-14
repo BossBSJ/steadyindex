@@ -7,6 +7,7 @@ import { paletteColorCode, RouteName } from "../constants/constants";
 import theme from "../theme";
 import { useIndexTokenFactory } from "../hooks/useIndexTokenFactory";
 import { mockColorCurrency } from "../constants/mock";
+import { IndexOnTable } from "../interfaces/indexOnTable.interface";
 
 const priceDownStyle = {
     backgroundColor:"#F23645",
@@ -29,22 +30,15 @@ const headers = [
 ]
 
 type IProps = {
+    index: IndexOnTable[] | undefined
     isMyPortPage: boolean
 }
 
 const IndexTable = (props: IProps) => {
-    const { isMyPortPage } = props
+    const { isMyPortPage, index } = props
     const navigate = useNavigate()
     const [currency, setCurrency] = useState<string>('USD')
     const [typeTable, setTypeTable] = useState<string>('All')
-
-    const { index } = useIndexTokenFactory()
-
-    // const [index, setIndex] = useState(data)
-
-    // useEffect(() => {
-    //     setIndex(data)
-    // },[data])
 
     const handleCurrencyChange = (event: SelectChangeEvent) => {
         setCurrency(event.target.value)
@@ -56,7 +50,7 @@ const IndexTable = (props: IProps) => {
 
     return (
         <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255, 253, 251, 0.48)", border:"2px solid", borderColor:"white", marginBottom:"40px"}}>
-            <Box sx={{display:"flex", justifyContent:"space-between"}}>
+            {/* <Box sx={{display:"flex", justifyContent:"space-between"}}>
                 {isMyPortPage? <ButtonGroup sx={{borderRadius:"8px",}}>
                     <Button 
                         variant="text" 
@@ -75,14 +69,7 @@ const IndexTable = (props: IProps) => {
                 </ButtonGroup>:
                 <Box></Box>
                 }
-                {/* <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} 
-                    sx={{ background:"white", borderRadius:"8px", color:"#82858A", '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
-                >
-                    <MenuItem value={"USD"}>USD</MenuItem>
-                    <MenuItem value={"ETH"}>ETH</MenuItem>
-                    <MenuItem value={"BTC"}>BTC</MenuItem>
-                </Select>  */}
-            </Box>
+            </Box> */}
             <Grid container>
                 <Grid item xs={3}>
                     <Typography variant="body1" sx={{color:"#82858A"}}>Name</Typography>

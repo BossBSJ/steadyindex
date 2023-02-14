@@ -4,13 +4,16 @@ import React, { useEffect, useState } from "react"
 import DescriptionPaper from "./DescriptionCard";
 import IndexTable from "../../IndexTable";
 import { erc20Service } from "../../../services/erc20Service";
+import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory";
 
 const SelectIndex = () => {
+    const { index } = useIndexTokenFactory()
+
     return (
 
         <Container>
             <DescriptionPaper/>
-            <IndexTable isMyPortPage={false}/>
+            <IndexTable index={index} isMyPortPage={false}/>
         </Container>
     )
 }
