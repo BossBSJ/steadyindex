@@ -25,8 +25,6 @@ const CreateIndex = () => {
     const [indexName, setIndexName] = useState<string>('');
     const [indexSymbol, setIndexSymbol] = useState<string>('');
     const [startPrice, setStartPrice] = useState<string>('')
-    const [streamingFee, setStreamingFee] = useState<string>('')
-    const [issuanceFee, setIssuanceFee] = useState<string>('')
 
     const [addressList, setAddressList] = useState<Address[]>([])
     const [unitList, setUnitList] = useState<BigNumber[]>([])
@@ -75,6 +73,7 @@ const CreateIndex = () => {
     const { data, write } = useContractWrite(config)
 
     const [openSnackBar, setOpenSnackBar] = useState(false)
+    
     const handleCloseSnackBar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -115,7 +114,7 @@ const CreateIndex = () => {
             else
                 return false
         }else if(page===2){
-            if(indexName!=='' && indexSymbol!=='' && startPrice!=='' && streamingFee!=='' && issuanceFee!=='')
+            if(indexName!=='' && indexSymbol!=='' && startPrice!=='')
                 return true
             else
                 return false
@@ -149,21 +148,15 @@ const CreateIndex = () => {
                             indexName={indexName}
                             indexSymbol={indexSymbol}
                             startPrice={startPrice}
-                            streamingFee={streamingFee}
-                            issuanceFee={issuanceFee}
                             setIndexName={setIndexName}
                             setIndexSymbol={setIndexSymbol}
                             setStartPrice={setStartPrice}
-                            setStreamingFee={setStreamingFee}
-                            setIssuanceFee={setIssuanceFee}
                         />}
                         {page===3 && 
                         <DeployCard
                             indexName={indexName}
                             indexSymbol={indexSymbol}
                             startPrice={startPrice}
-                            streamingFee={streamingFee}
-                            issuanceFee={issuanceFee}
                             componentList={componentList}
                             onwerAddress={address}
                         />}

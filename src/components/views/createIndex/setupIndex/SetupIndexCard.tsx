@@ -8,16 +8,12 @@ type IProps = {
     setIndexSymbol: Dispatch<SetStateAction<string>>
     startPrice: string
     setStartPrice: Dispatch<SetStateAction<string>>
-    streamingFee: string
-    setStreamingFee: Dispatch<SetStateAction<string>>
-    issuanceFee: string
-    setIssuanceFee: Dispatch<SetStateAction<string>>
 }
 
 const SetupIndexCard = (props:IProps) => {
     const {
-        indexName, indexSymbol, startPrice, streamingFee, issuanceFee,
-        setIndexName, setIndexSymbol, setStartPrice, setStreamingFee, setIssuanceFee
+        indexName, indexSymbol, startPrice,
+        setIndexName, setIndexSymbol, setStartPrice,
     } = props
 
     const handleChangeIndexName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,20 +27,11 @@ const SetupIndexCard = (props:IProps) => {
     const handleChangeStartPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
         setStartPrice(event.target.value);
     };
-
-    const handleChangeStreamingFee = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setStreamingFee(event.target.value);
-    };
-
-    const handleChangeIssuanceFee = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIssuanceFee(event.target.value);
-    };
     
-
     return(
         <Box>
             <Typography variant="h5" sx={{fontWeight:"bold"}}>Setup Your Index</Typography>
-            <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+            <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between", height:"100%"}}>
                 <Box sx={{py:"20px"}}>
                     <Typography>Index Name</Typography>
                     <TextField 
@@ -72,29 +59,6 @@ const SetupIndexCard = (props:IProps) => {
                         onChange={handleChangeStartPrice}
                         sx={{width:"100%"}}
                     />
-                </Box>
-            </Box>
-            <Box sx={{py:"20px"}}>
-                <Typography sx={{fontWeight:"bold"}}>Set Fees</Typography>
-                <Box sx={{display:"flex", justifyContent:"space-between"}}>
-                    <Box>
-                        <Typography variant="body2">Streaming Fee</Typography>
-                        <TextField
-                            type="number"
-                            placeholder="100.00"
-                            value={streamingFee}
-                            onChange={handleChangeStreamingFee}
-                        />
-                    </Box>
-                    <Box>
-                        <Typography variant="body2">Issuance Fee</Typography>
-                        <TextField
-                            type="number"
-                            placeholder="100.00"
-                            value={issuanceFee}
-                            onChange={handleChangeIssuanceFee}
-                        />
-                    </Box>
                 </Box>
             </Box>
         </Box>

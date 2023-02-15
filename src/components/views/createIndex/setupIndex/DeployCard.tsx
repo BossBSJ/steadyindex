@@ -15,15 +15,13 @@ type IProps = {
     indexName: string
     indexSymbol: string
     startPrice: string
-    streamingFee: string
-    issuanceFee: string
     componentList: ComponentList[]
     onwerAddress: `0x${string}`| undefined
 }
 
 const DeployCard = (props: IProps) => {
 
-    const {indexName, indexSymbol, startPrice, streamingFee, issuanceFee, componentList, onwerAddress} = props
+    const {indexName, indexSymbol, startPrice, componentList, onwerAddress} = props
     const [pictureToken, setPictureToken] = useState<any>(undefined)
     
     const handleChangePicture = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -59,22 +57,6 @@ const DeployCard = (props: IProps) => {
                     <img src={pictureToken} style={{width:"70px"}}/>
                 </Card>
             </Box>
-            <Grid container sx={{padding:"0 15px 0 15px"}}>
-                <Grid item xs={6.5}>
-                    <Typography variant="caption">Streming Fee</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                    <Typography variant="caption">{streamingFee}%</Typography>
-                </Grid>
-            </Grid>
-            <Grid container sx={{padding:"0 15px 0 15px"}}>
-                <Grid item xs={6.5}>
-                    <Typography variant="caption">Issuance Fee</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                    <Typography variant="caption">{issuanceFee}%</Typography>
-                </Grid>
-            </Grid>
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"400px"}}>
                 {componentList.map((component, idx:number) => (
                     <Box key={idx} sx={{display:"flex", margin:"15px 0 15px 0"}}>
