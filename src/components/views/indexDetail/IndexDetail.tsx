@@ -144,45 +144,37 @@ const IndexDetail = () => {
                 {data ? (
                     <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
                 ) : (
-                    <Skeleton animation="wave" width={230} height={60}/>
+                    <Skeleton animation="wave" variant="rounded" width={230} height={60}/>
                 )}
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
                     {data? (
                     <Button variant="contained" onClick={handleOpenDCAModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>DCA</Typography>
                     </Button>) : (
-                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                        <Skeleton animation="wave" variant="rounded" sx={{marginRight:"20px"}} width={110} height={60}/>
                     )}
                     {data? (
                     <Button variant="contained" onClick={handleOpenBuyModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>Buy</Typography>
                     </Button>) : (
-                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                        <Skeleton animation="wave" variant="rounded" sx={{marginRight:"20px"}} width={110} height={60}/>
                     )}
                     {data? (
                     <Button variant="contained" onClick={handleOpenSellModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>Sell</Typography>
                     </Button>) : (
-                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                        <Skeleton animation="wave" variant="rounded" sx={{marginRight:"20px"}} width={110} height={60}/>
                     )}
                 </Box>
             </Box>
-            <Box sx={{display:"flex", justifyContent:"space-around", marginTop:"20px"}}>
+            <Box sx={{display:"flex", justifyContent:"space-around", py:"20px"}}>
                 {data? (
                     <Box>
                         <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
                         <Typography variant="body1">Market Cap</Typography>
                     </Box>
                 ) : (
-                    <Skeleton animation="wave" width={150} height={60}/>
-                )}
-                {data? (
-                    <Box>
-                        <Typography variant="h6">0.95%</Typography>
-                        <Typography variant="body1">Streaming Fee</Typography>
-                    </Box>
-                ) : (
-                    <Skeleton animation="wave" width={150} height={60}/>
+                    <Skeleton animation="wave" variant="rounded" width={150} height={60}/>
                 )}
                 {data? (
                     <Box>
@@ -190,12 +182,12 @@ const IndexDetail = () => {
                         <Typography variant="body1">Inception Date</Typography>
                     </Box>
                 ) : (
-                    <Skeleton animation="wave" width={150} height={60}/>
+                    <Skeleton animation="wave" variant="rounded" width={150} height={60}/>
                 )}
             </Box>
 
             {data && componentPriceChange? (
-                <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
+                <Card sx={{padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
                     <Typography variant="body1">Current Price</Typography>
                     <Box sx={{display:"flex"}}>
                         <Typography variant="h2">
@@ -283,7 +275,7 @@ const IndexDetail = () => {
                     </Paper>
                 </Card>
             ) : (
-                <Skeleton animation="wave" variant="rounded" height={300}/>
+                <Skeleton animation="wave" variant="rounded" height={600}/>
             )}
             <BuyModal
                 open={showBuyModal}
