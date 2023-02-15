@@ -1,4 +1,4 @@
-import { Button, Card, Container, Grid, Paper, Typography } from "@mui/material";
+import { Button, Card, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -20,7 +20,7 @@ import { mockColorCurrency } from "../../../constants/mock";
 import { paletteColorCode } from "../../../constants/constants";
 
 const headers = [
-    "Quantity per Set", "Token Price", "Current Allocation / Strategic Allocation", "Percent Change", "Total Price per Set"
+    "Quantity per Set", "Token Price", "Current Alloc / Strategic Alloc", "1 Day Percent Change", "Total Price per Set"
 ]
 
 const mockHistoryPrice = [
@@ -75,7 +75,8 @@ const MyAreaChart = () => {
             
         >
             <XAxis dataKey="date" />
-            <Tooltip content={<CustomToolTip/>}/>
+            {/* <Tooltip content={<CustomToolTip/>}/> */}
+            <Tooltip/>
             <Legend />
             <Area
                 type="monotone"
@@ -86,6 +87,14 @@ const MyAreaChart = () => {
             />
         </AreaChart>
     )
+}
+
+const priceUpStyle = {
+    color: "#22AB94"
+}
+
+const priceDownStyle = {
+    color: "#DF4857"
 }
 
 const IndexDetail = () => {
@@ -116,132 +125,166 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    // const data = MockIndex[Number(indexId)]
+    const { index, componentPercentChange } = useIndexDetail(Number(indexId))
 
-    const { index } = useIndexDetail(Number(indexId))
-    // const data = index
     const [data, setData] = useState<IndexOnTable | undefined>(index)
+    const [componentPriceChange, setComponentPriceChange] = useState<number[] | undefined>()
 
     useEffect(() => {
         setData(index)
-    },[index])
+        setComponentPriceChange(componentPercentChange)
+    },[index, componentPercentChange])
 
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
-            <Box>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
                 &lt; Back to Thematic Exposure Sets 
             </NavLink>
             <Box sx={{display:"flex", justifyContent:"space-between"}}>
-                <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
+                {data ? (
+                    <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
+                ) : (
+                    <Skeleton animation="wave" width={230} height={60}/>
+                )}
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
+                    {data? (
                     <Button variant="contained" onClick={handleOpenDCAModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>DCA</Typography>
-                    </Button>
+                    </Button>) : (
+                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                    )}
+                    {data? (
                     <Button variant="contained" onClick={handleOpenBuyModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>Buy</Typography>
-                    </Button>
+                    </Button>) : (
+                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                    )}
+                    {data? (
                     <Button variant="contained" onClick={handleOpenSellModal} sx={{marginRight:"20px", width:"110px"}}>
                         <Typography sx={{fontWeight:"bold"}}>Sell</Typography>
-                    </Button>
+                    </Button>) : (
+                        <Skeleton animation="wave" sx={{marginRight:"20px"}} width={110} height={60}/>
+                    )}
                 </Box>
             </Box>
             <Box sx={{display:"flex", justifyContent:"space-around", marginTop:"20px"}}>
-                <Box>
-                    <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
-                    <Typography variant="body1">Market Cap</Typography>
-                </Box>
-                <Box>
-                    <Typography variant="h6">0.95%</Typography>
-                    <Typography variant="body1">Streaming Fee</Typography>
-                </Box>
-                <Box>
-                    <Typography variant="h6">September 9th 2022</Typography>
-                    <Typography variant="body1">Inception Date</Typography>
-                </Box>
+                {data? (
+                    <Box>
+                        <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
+                        <Typography variant="body1">Market Cap</Typography>
+                    </Box>
+                ) : (
+                    <Skeleton animation="wave" width={150} height={60}/>
+                )}
+                {data? (
+                    <Box>
+                        <Typography variant="h6">0.95%</Typography>
+                        <Typography variant="body1">Streaming Fee</Typography>
+                    </Box>
+                ) : (
+                    <Skeleton animation="wave" width={150} height={60}/>
+                )}
+                {data? (
+                    <Box>
+                        <Typography variant="h6">September 9th 2022</Typography>
+                        <Typography variant="body1">Inception Date</Typography>
+                    </Box>
+                ) : (
+                    <Skeleton animation="wave" width={150} height={60}/>
+                )}
             </Box>
 
-            <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
-                
-                <Typography variant="body1">Current Price</Typography>
-                <Box sx={{display:"flex"}}>
-                    <Typography variant="h2">
-                        ${numberWithCommas(data?.price)}
-                        <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
-                    </Typography>
-                </Box>
-                <MyAreaChart/>
-                <Grid container sx={{marginTop: '20px'}}>
-                    <Grid item xs={3}>
-                        <Typography sx={{color:"#9B97B3"}}>Token</Typography>
-                    </Grid>
-                    <Grid container item xs={9}>
-                        {headers.map((header) => (
-                            <Grid key={header} item xs={2.4}>
-                                <Typography sx={{color:"#9B97B3"}}>{header}</Typography>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Grid>
-                <Paper>
-                    <Grid container sx={{padding:"15px"}}>
+            {data && componentPriceChange? (
+                <Card sx={{marginTop:"20px", padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
+                    <Typography variant="body1">Current Price</Typography>
+                    <Box sx={{display:"flex"}}>
+                        <Typography variant="h2">
+                            ${numberWithCommas(data?.price)}
+                            <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
+                        </Typography>
+                    </Box>
+                    <MyAreaChart/>
+                    <Grid container sx={{marginTop: '20px'}}>
                         <Grid item xs={3}>
-                            <Typography sx={{fontWeight:"bold"}}>{data?.name}</Typography>
+                            <Typography sx={{color:"#9B97B3"}}>Token</Typography>
                         </Grid>
                         <Grid container item xs={9}>
-                            <Grid item xs={2.4}></Grid>
-                            <Grid item xs={2.4}></Grid>
-                            <Grid item xs={2.4}></Grid> 
-                            <Grid item xs={2.4}>
-                                <Typography sx={{color:"#22AB94"}}>mock%</Typography>
-                            </Grid>
-                            <Grid item xs={2.4}>
-                                <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>
-                            </Grid>
+                            {headers.map((header) => (
+                                <Grid key={header} item xs={2.4}>
+                                    <Typography sx={{color:"#9B97B3"}}>{header}</Typography>
+                                </Grid>
+                            ))}
                         </Grid>
                     </Grid>
-                    <Box sx={{backgroundColor:theme.palette.secondary.light, height:"29px", display:"flex", alignItems:"center"}}>
-                        <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px", color:"gray"}}>Underlying Index</Typography>
-                    </Box>
-                    {data?.components.map((token,idx) => (
-                        <Grid container key={idx} sx={{padding:"15px"}}>
+                    <Paper>
+                        <Grid container sx={{padding:"15px"}}>
                             <Grid item xs={3}>
-                                <Box sx={{display:"flex"}}>
-                                    <img 
-                                        src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
-                                        style={{width:"20px", height:"20px", borderRadius:"50%"}}
-                                    />
-                                    <Typography sx={{fontWeight:"bold", paddingLeft: "20px"}}>
-                                        {token.name}
-                                    </Typography>
-                                </Box>
+                                <Typography sx={{fontWeight:"bold"}}>{data?.name}</Typography>
                             </Grid>
                             <Grid container item xs={9}>
-                                <Grid item xs={2.4} sx={{display:"flex"}}>
-                                    <Typography>{token.unit.toFixed(2)} &nbsp;</Typography>
-                                    <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
+                                <Grid item xs={2.4}></Grid>
+                                <Grid item xs={2.4}></Grid>
+                                <Grid item xs={2.4}></Grid> 
+                                <Grid item xs={2.4}>
+                                    <Typography sx={{color:"#22AB94"}}>mock%</Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography>${numberWithCommas(token.price)}</Typography>
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <Typography>{token.ratio.toFixed(2)}%</Typography>
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <Typography>mock%</Typography>
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(token.pricePerSet)}</Typography>
+                                    <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>
                                 </Grid>
                             </Grid>
-                            <Box
-                                // sx={{backgroundColor: mockColorCurrency[token.symbol], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
-                                sx={{backgroundColor: paletteColorCode[idx % 6], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
-                            />
                         </Grid>
-                    ))}
-                </Paper>
-            </Card>
+                        <Box sx={{backgroundColor:theme.palette.secondary.light, height:"29px", display:"flex", alignItems:"center"}}>
+                            <Typography variant="body2" sx={{fontWeight:"bold", padding:"15px", color:"gray"}}>Underlying Index</Typography>
+                        </Box>
+                        {data?.components.map((token,idx) => (
+                            <Grid container key={idx} sx={{padding:"15px"}}>
+                                <Grid item xs={3}>
+                                    <Box sx={{display:"flex"}}>
+                                        <img 
+                                            src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
+                                            style={{width:"20px", height:"20px", borderRadius:"50%"}}
+                                        />
+                                        <Typography sx={{fontWeight:"bold", paddingLeft: "20px"}}>
+                                            {token.name}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid container item xs={9}>
+                                    <Grid item xs={2.4} sx={{display:"flex"}}>
+                                        <Typography>{token.unit.toFixed(2)} &nbsp;</Typography>
+                                        <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
+                                    </Grid>
+                                    <Grid item xs={2.4}>
+                                        <Typography>
+                                            ${numberWithCommas(token.price)}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2.4}>
+                                        <Typography>
+                                            {token.ratio.toFixed(2)}%
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2.4}>
+                                        <Typography sx={componentPriceChange?.[idx] >= 0 ? priceUpStyle : priceDownStyle}>
+                                            {componentPriceChange?.[idx].toFixed(2)}%
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2.4}>
+                                        <Typography sx={{fontWeight:"bold"}}>
+                                            ${numberWithCommas(token.pricePerSet)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Box
+                                    sx={{backgroundColor: paletteColorCode[idx % 6], width: `${token.ratio}%`, height:"6px", borderRadius:"20px"}}
+                                />
+                            </Grid>
+                        ))}
+                    </Paper>
+                </Card>
+            ) : (
+                <Skeleton animation="wave" variant="rounded" height={300}/>
+            )}
             <BuyModal
                 open={showBuyModal}
                 onClose={handleCloseBuyModal}
@@ -256,7 +299,6 @@ const IndexDetail = () => {
                 onClose={handleCloseDCAModal}
                 dcaModal={true}
             />
-            </Box>
         </Container>
     )
 }

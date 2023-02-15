@@ -8,16 +8,13 @@ import DeployCard from "./setupIndex/DeployCard";
 import SetupIndexCard from "./setupIndex/SetupIndexCard";
 import { useEffect } from "react";
 import { usePrepareContractWrite, useProvider, useAccount, useContractWrite, Address, useWaitForTransaction } from "wagmi";
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { useNavigate } from "react-router-dom";
-import { RouteName } from "../../../constants/constants";
+import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS, RouteName } from "../../../constants/constants";
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { BigNumber, ethers } from "ethers";
 import { mockPriceOfComponents } from "../../../constants/mock";
 import { LoadingButton } from "@mui/lab";
 import { erc20Service } from "../../../services/erc20Service";
-
-const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
 
 const CreateIndex = () => {
     const navigate = useNavigate()

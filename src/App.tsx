@@ -71,7 +71,7 @@ const avalancheFujiChain: Chain = {
 
 const { chains, provider, webSocketProvider } = configureChains(
     // [ avalancheChain, avalancheFujiChain, ],
-    [ avalancheFujiChain, avalancheChain, wagmiChain.goerli ],
+    [ avalancheFujiChain, avalancheChain ],
     [
       infuraProvider({
         apiKey: INFURA_API_KEY

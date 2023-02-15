@@ -82,7 +82,7 @@ const DeployCard = (props: IProps) => {
                             src={component.asset?.logoURI}
                             style={{width:"45px", height:"45px", borderRadius:"50%"}}
                         />
-                        <Box sx={{width:"100%"}}>
+                        <Box sx={{width:"100%", marginLeft:"10px"}}>
                             <Typography>{component.asset?.name}</Typography>
                             <Typography>{component.allocation} %</Typography>
                             <LinearProgress variant="determinate" value={component.allocation}/>

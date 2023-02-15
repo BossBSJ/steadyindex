@@ -13,12 +13,7 @@ interface token {
     }
 }
 
-//await Promise.all[A(), B()] => gotArr
-// fetchToken({
-//     address : ""
-// })
-
-export const useTokens = (tokens: readonly `0x${string}`[] | undefined) => { //fix type `0x${string}`[]
+export const useTokens = (tokens: readonly `0x${string}`[] | undefined) => {
 
     const [tokenDatas, setTokenDatas] = useState<token[]>([])
 

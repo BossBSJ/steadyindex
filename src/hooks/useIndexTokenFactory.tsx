@@ -9,8 +9,7 @@ import { usePriceIndexes } from "./usePriceIndexes"
 import { mockPriceOfComponents } from "../constants/mock"
 import { createIndexOnTable } from "../utils/createIndexOnTable"
 import { erc20Service } from "../services/erc20Service"
-
-const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
+import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 
 export const useIndexTokenFactory = () => {
     const [index, setIndex] = useState<IndexOnTable[]>()
@@ -18,7 +17,8 @@ export const useIndexTokenFactory = () => {
     const getIndexTokensRead  = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
-        functionName: "getIndexTokens"
+        functionName: "getIndexTokens",
+
     })
 
     const indexTokenAddress = getIndexTokensRead.data

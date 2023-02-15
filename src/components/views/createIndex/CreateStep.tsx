@@ -1,5 +1,6 @@
 import { Button, Container, Typography } from "@mui/material"
 import { Box } from "@mui/system"
+import { useBlockNumber } from "wagmi"
 import theme from "../../../theme"
 
 type IProps = {

@@ -1,7 +1,8 @@
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
-import { useContractRead, useToken, useTransaction } from "wagmi"
+import { useBlockNumber, useContractRead, useToken, useTransaction } from "wagmi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
+import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 import { mockPriceOfComponents } from "../constants/mock"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { erc20Service } from "../services/erc20Service"
@@ -9,11 +10,10 @@ import { createIndexOnTable } from "../utils/createIndexOnTable"
 import { useComponentIndex } from "./useComponentIndex"
 import { usePriceIndex } from "./usePriceIndex"
 
-const INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS = process.env.REACT_APP_INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS 
-
 export const useIndexDetail = (idx: number) => {
     
     const [index, setIndex] = useState<IndexOnTable>()
+    const [componentPercentChange, setComponentPercentChange] = useState<number[]>()
 
     const getAddressIndex = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
@@ -35,11 +35,13 @@ export const useIndexDetail = (idx: number) => {
     
     useEffect(() => {
         if(!componentData || !tokenData || !priceIndex || !unitsNum) return
+
         const getIndexDetail = async () => {
             const totalSupply = Number(tokenData?.totalSupply.formatted)
             const marketCap = totalSupply * priceIndex
 
             let components = []
+            let componentPercentChange = []
             for(let i = 0; i < componentData.length; i++){
                 const componentPrice:number = await erc20Service.fetchERC20Price(componentData[i].address)
                 components.push({
@@ -51,7 +53,11 @@ export const useIndexDetail = (idx: number) => {
                     price: componentPrice,
                     pricePerSet: unitsNum[i] * componentPrice
                 })
+
+                const percentChange = await erc20Service.getPriceChangeOneDay(componentData[i].address)
+                componentPercentChange.push(percentChange)
             }
+            setComponentPercentChange(componentPercentChange)
             const indexDetail = 
                 createIndexOnTable(
                     idx, 
@@ -71,5 +77,5 @@ export const useIndexDetail = (idx: number) => {
     },[componentData, tokenData, priceIndex, unitsNum, address])
 
 
-    return { index }
+    return { index, componentPercentChange }
 }
