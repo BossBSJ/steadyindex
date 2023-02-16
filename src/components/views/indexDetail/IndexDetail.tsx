@@ -134,7 +134,6 @@ const IndexDetail = () => {
         setData(index)
         setComponentPriceChange(componentPercentChange)
     },[index, componentPercentChange])
-
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>

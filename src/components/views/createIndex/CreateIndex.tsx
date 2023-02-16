@@ -37,11 +37,11 @@ const CreateIndex = () => {
             let unitList:BigNumber[] = []
             for(let i = 0; i < componentList.length; i++){
                 let amount = 0
+                const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
                 if(startPrice === ""){
                     continue
                 }
                 else {
-                    const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
                     amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice
                 }
                 const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
@@ -67,13 +67,13 @@ const CreateIndex = () => {
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "createIndexToken",
         args: [addressList, unitList, address, indexName, indexSymbol],
-        enabled: (page === 3)
+        enabled: (page === 3 && addressList.length === unitList.length)
     })
 
     const { data, write } = useContractWrite(config)
 
     const [openSnackBar, setOpenSnackBar] = useState(false)
-    
+
     const handleCloseSnackBar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
