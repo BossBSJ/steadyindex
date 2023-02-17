@@ -31,11 +31,16 @@ export const usePriceIndex = (indexAddress: Address | undefined) => {
 
             let price = 0
             let unitsNum = []
+            let prepareFetchPrice = []
             for(let i = 0; i < units.length; i++){
-                const tokenPrice:number = await erc20Service.fetchERC20Price(componentData[i].address)
+                const tokenPrice = erc20Service.fetchERC20Price(componentData[i].address)
+                prepareFetchPrice.push(tokenPrice)
+            }
+            const tokenPrices = await Promise.all(prepareFetchPrice)
+            for(let i = 0; i < units.length; i++){
                 const unit = Number(units[i]._hex) / 10**componentData[i].decimals
                 unitsNum.push(unit)
-                price = price + unit * tokenPrice
+                price = price + unit * tokenPrices[i]
             }
             setPriceIndex(price)
             setUnitsNum(unitsNum)

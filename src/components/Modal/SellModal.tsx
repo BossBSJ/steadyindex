@@ -29,7 +29,7 @@ const SellModal = (props: IProps) => {
                 <Box>
                     <Typography variant="caption">Sell</Typography>
                     <Box sx={{display:"flex" ,justifyContent:"space-between", alignItems:"center"}}>
-                        <Typography>DPI</Typography>
+                        <Typography>TI1</Typography>
                         <TextField
                             type="number"
                             placeholder="0.0"

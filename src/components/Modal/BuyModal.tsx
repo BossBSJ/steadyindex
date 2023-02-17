@@ -44,7 +44,7 @@ const BuyModal = (props: IProps) => {
                 <Box>
                     <Typography variant="caption">Receive</Typography>
                     <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                        <Typography>DPI</Typography>
+                        <Typography>TI1</Typography>
                         <TextField
                             type="number"
                             placeholder="0.0"

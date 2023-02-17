@@ -37,9 +37,16 @@ export const useIndexTokenFactory = () => {
                 const totalSupply = Number(tokenDatas[i].totalSupply.formatted)
                 const marketCap = totalSupply * priceIndexes[i]
 
+                let prepareTokenPrice = []
+                for(let j = 0; j < componentDatas[i].length; j++){
+                    const tokenPrice = erc20Service.fetchERC20Price(componentDatas[i][j].address)
+                    prepareTokenPrice.push(tokenPrice)
+                }
+                const tokenPrices = await Promise.all(prepareTokenPrice)
+
                 let components = []
                 for(let j = 0; j < componentDatas[i].length; j++){
-                    const tokenPrice:number = await erc20Service.fetchERC20Price(componentDatas[i][j].address)
+                    const tokenPrice = tokenPrices[j]
                     components.push({
                         address: componentDatas[i][j].address,
                         name: componentDatas[i][j].name,

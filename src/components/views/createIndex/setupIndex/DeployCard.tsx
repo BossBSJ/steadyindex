@@ -46,16 +46,16 @@ const DeployCard = (props: IProps) => {
                     </Box>
                 </Card>
                 
-                <Card sx={{padding:"10px", width:"123px"}}>
-                    {/* <Box sx={{border: 1,borderStyle:"dashed", borderRadius:"16px", borderColor:"#666666", display:"flex", flexDirection:"column", textAlign:"center", alignItems:"center"}}>
+                {/* <Card sx={{padding:"10px", width:"123px"}}>
+                    <Box sx={{border: 1,borderStyle:"dashed", borderRadius:"16px", borderColor:"#666666", display:"flex", flexDirection:"column", textAlign:"center", alignItems:"center"}}>
                         <MonetizationOnIcon sx={{fontSize:"46px", color:"#666666"}}/>
                         <Typography variant="caption" sx={{color:"gray"}}>
                             Drag {'&'} Drop or browse your index cover
                         </Typography>
-                    </Box> */}
+                    </Box>
                     <input type="file" accept="image/*" onChange={handleChangePicture}/>
                     <img src={pictureToken} style={{width:"70px"}}/>
-                </Card>
+                </Card> */}
             </Box>
             <Box sx={{padding:"20px", overflow:"auto", maxHeight:"400px"}}>
                 {componentList.map((component, idx:number) => (

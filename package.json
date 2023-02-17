@@ -23,6 +23,7 @@
     "assert": "^2.0.0",
     "axios": "^1.2.2",
     "color-thief-react": "^2.1.0",
+    "dayjs": "^1.11.7",
     "ethers": "^5.7.2",
     "moralis": "^2.12.0",
     "react": "^18.2.0",

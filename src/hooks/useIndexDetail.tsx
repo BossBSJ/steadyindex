@@ -1,19 +1,22 @@
+import axios from "axios"
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
-import { useBlockNumber, useContractRead, useToken, useTransaction } from "wagmi"
-import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
+import { Address, useBlockNumber, useContractRead, useToken, useTransaction } from "wagmi"
+import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 import { mockPriceOfComponents } from "../constants/mock"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { erc20Service } from "../services/erc20Service"
 import { createIndexOnTable } from "../utils/createIndexOnTable"
 import { useComponentIndex } from "./useComponentIndex"
+import { useCreateIndexDate } from "./useCreateIndexDate"
 import { usePriceIndex } from "./usePriceIndex"
 
 export const useIndexDetail = (idx: number) => {
     
     const [index, setIndex] = useState<IndexOnTable>()
     const [componentPercentChange, setComponentPercentChange] = useState<number[]>()
+    const [address, setAddress] = useState<Address>()
 
     const getAddressIndex = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
@@ -22,7 +25,10 @@ export const useIndexDetail = (idx: number) => {
         args: [BigNumber.from(idx)]
     })
 
-    const address = getAddressIndex.data
+    useEffect(() => {
+        if(!getAddressIndex) return
+        setAddress(getAddressIndex.data)
+    }, [getAddressIndex])
 
     const token = useToken({
         address: address
@@ -32,6 +38,8 @@ export const useIndexDetail = (idx: number) => {
     const { priceIndex, unitsNum } = usePriceIndex(address)
 
     const { componentData } = useComponentIndex(address)
+
+    const { createdDate } = useCreateIndexDate(address)
     
     useEffect(() => {
         if(!componentData || !tokenData || !priceIndex || !unitsNum) return
@@ -42,8 +50,20 @@ export const useIndexDetail = (idx: number) => {
 
             let components = []
             let componentPercentChange = []
+            let prepareComponentPrices = []
+            let preparePercentChanges = []
             for(let i = 0; i < componentData.length; i++){
-                const componentPrice:number = await erc20Service.fetchERC20Price(componentData[i].address)
+                const componentPrice = erc20Service.fetchERC20Price(componentData[i].address)
+                prepareComponentPrices.push(componentPrice)
+
+                const percentChange = erc20Service.getPriceChangeOneDay(componentData[i].address)
+                preparePercentChanges.push(percentChange)
+            }
+            const componentPrices = await Promise.all(prepareComponentPrices)
+            const PercentChanges = await Promise.all(preparePercentChanges)
+            
+            for(let i = 0; i < componentPrices.length; i++){
+                const componentPrice = componentPrices[i]
                 components.push({
                     address: componentData[i].address,
                     name: componentData[i].name,
@@ -53,8 +73,7 @@ export const useIndexDetail = (idx: number) => {
                     price: componentPrice,
                     pricePerSet: unitsNum[i] * componentPrice
                 })
-
-                const percentChange = await erc20Service.getPriceChangeOneDay(componentData[i].address)
+                const percentChange = PercentChanges[i]
                 componentPercentChange.push(percentChange)
             }
             setComponentPercentChange(componentPercentChange)
@@ -77,5 +96,5 @@ export const useIndexDetail = (idx: number) => {
     },[componentData, tokenData, priceIndex, unitsNum, address])
 
 
-    return { index, componentPercentChange }
+    return { index, componentPercentChange, createdDate }
 }

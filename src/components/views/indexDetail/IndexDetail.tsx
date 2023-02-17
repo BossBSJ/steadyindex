@@ -125,15 +125,14 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    const { index, componentPercentChange } = useIndexDetail(Number(indexId))
+    const { index, componentPercentChange, createdDate } = useIndexDetail(Number(indexId))
 
     const [data, setData] = useState<IndexOnTable | undefined>(index)
-    const [componentPriceChange, setComponentPriceChange] = useState<number[] | undefined>()
 
     useEffect(() => {
         setData(index)
-        setComponentPriceChange(componentPercentChange)
     },[index, componentPercentChange])
+    
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
             <NavLink to="/" style={{textDecoration:"none" ,color:"#787485"}}>
@@ -177,7 +176,7 @@ const IndexDetail = () => {
                 )}
                 {data? (
                     <Box>
-                        <Typography variant="h6">September 9th 2022</Typography>
+                        <Typography variant="h6">{createdDate}</Typography>
                         <Typography variant="body1">Inception Date</Typography>
                     </Box>
                 ) : (
@@ -185,7 +184,7 @@ const IndexDetail = () => {
                 )}
             </Box>
 
-            {data && componentPriceChange? (
+            {data && componentPercentChange? (
                 <Card sx={{padding:"15px", backgroundColor:"rgba(255,255,255,0.75)", borderRadius:"16px", border:"2px solid", borderColor:"white",}}>
                     <Typography variant="body1">Current Price</Typography>
                     <Box sx={{display:"flex"}}>
@@ -256,8 +255,8 @@ const IndexDetail = () => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={2.4}>
-                                        <Typography sx={componentPriceChange?.[idx] >= 0 ? priceUpStyle : priceDownStyle}>
-                                            {componentPriceChange?.[idx].toFixed(2)}%
+                                        <Typography sx={componentPercentChange?.[idx] >= 0 ? priceUpStyle : priceDownStyle}>
+                                            {componentPercentChange?.[idx].toFixed(2)}%
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={2.4}>
