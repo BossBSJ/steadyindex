@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { Address } from "wagmi";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 
-export const useCreateIndexDate =  (indexAddress: Address | undefined) => {
+export const useDateCreateIndex =  (indexAddress: Address | undefined) => {
 
     const [createdDate, setCreatedDate] = useState<string>()
+    const [unformatCreatedDate, setUnformatCreatedDate] = useState<dayjs.Dayjs>()
 
     useEffect(() => {
         if(!indexAddress) return
@@ -29,12 +30,13 @@ export const useCreateIndexDate =  (indexAddress: Address | undefined) => {
                 params: {chain: "avalanche testnet"}
             })
 
-            const date = dayjs(response.data.timestamp).format("D MMMM YYYY")
-            setCreatedDate(date)
+            const date = dayjs(response.data.timestamp)
+            setCreatedDate(date.format("D MMMM YYYY"))
+            setUnformatCreatedDate(date)
         }
         getDate()
     }, [indexAddress])
 
 
-    return { createdDate }
+    return { createdDate, unformatCreatedDate }
 }

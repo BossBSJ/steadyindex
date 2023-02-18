@@ -42,7 +42,7 @@ export const useIndexTokenFactory = () => {
                     const tokenPrice = erc20Service.fetchERC20Price(componentDatas[i][j].address)
                     prepareTokenPrice.push(tokenPrice)
                 }
-                const tokenPrices = await Promise.all(prepareTokenPrice)
+                const tokenPrices = await Promise.all(prepareTokenPrice) //*
 
                 let components = []
                 for(let j = 0; j < componentDatas[i].length; j++){

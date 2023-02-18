@@ -50,8 +50,6 @@ class ERC20Service {
         })
 
         const oneDayAgoPrice = await this.fetchERC20Price(erc20address, response.data.block)
-        // console.log(oneDayAgoPrice, currnetPrice)
-        // console.log((currnetPrice - oneDayAgoPrice) / currnetPrice * 100)
         const percentChange = (currnetPrice - oneDayAgoPrice) / currnetPrice * 100
         return percentChange
     }

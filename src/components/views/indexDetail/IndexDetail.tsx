@@ -18,76 +18,11 @@ import { useIndexDetail } from "../../../hooks/useIndexDetail";
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { mockColorCurrency } from "../../../constants/mock";
 import { paletteColorCode } from "../../../constants/constants";
+import MyAreaChart from "./MyAreaChart";
 
 const headers = [
     "Quantity per Set", "Token Price", "Current Alloc / Strategic Alloc", "1 Day Percent Change", "Total Price per Set"
 ]
-
-const mockHistoryPrice = [
-    {
-        date:"13th Nov",
-        price: 70.8
-    },
-    {
-        date:"14th Nov",
-        price: 80
-    },
-    {
-        date:"15th Nov",
-        price: 90
-    },
-    {
-        date:"16th Nov",
-        price: 85
-    },
-    {
-        date:"17th Nov",
-        price: 87
-    },
-    {
-        date:"18th Nov",
-        price: 500
-    },
-]
-
-
-
-const MyAreaChart = () => {
-
-    const areaColor = "rgba(0, 95, 255, 0.5)"
-
-    const CustomToolTip = ({ active, payload, label }: any) => {
-        if(active && payload && payload.length){
-            return(
-                <Box sx={{padding: "10px", borderRadius:"10.5px", backgroundColor:"#005FFF", color:"white"}}>
-                    <Typography>{payload[0].value}</Typography>
-                </Box>
-            )
-        }
-        return null
-    }
-
-    return(
-        <AreaChart
-            width={1123}
-            height={300}
-            data={mockHistoryPrice}
-            
-        >
-            <XAxis dataKey="date" />
-            {/* <Tooltip content={<CustomToolTip/>}/> */}
-            <Tooltip/>
-            <Legend />
-            <Area
-                type="monotone"
-                dataKey="price"
-                stroke={areaColor}
-                fill={areaColor}
-                activeDot={{ r: 3 }}
-            />
-        </AreaChart>
-    )
-}
 
 const priceUpStyle = {
     color: "#22AB94"
@@ -125,13 +60,21 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    const { index, componentPercentChange, createdDate } = useIndexDetail(Number(indexId))
+    const { index, componentPercentChange, createdDate, historyPrice } = useIndexDetail(Number(indexId))
 
     const [data, setData] = useState<IndexOnTable | undefined>(index)
+    const [historyPriceData, setHistoryPriceData] = useState<Object[]>()
+
+    useEffect(() => {
+        if(!historyPrice) return
+        setHistoryPriceData(historyPrice)
+    }, [historyPrice])
+
 
     useEffect(() => {
         setData(index)
-    },[index, componentPercentChange])
+        // setHistoryPriceData(historyPriceData)
+    },[index])
     
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
@@ -168,7 +111,11 @@ const IndexDetail = () => {
             <Box sx={{display:"flex", justifyContent:"space-around", py:"20px"}}>
                 {data? (
                     <Box>
-                        <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
+                        {data?.marketCap? (
+                            <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
+                        ) : (
+                            <Typography variant="h6">0</Typography>
+                        )}
                         <Typography variant="body1">Market Cap</Typography>
                     </Box>
                 ) : (
@@ -193,7 +140,11 @@ const IndexDetail = () => {
                             <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
                         </Typography>
                     </Box>
-                    <MyAreaChart/>
+                    {historyPriceData ? (
+                        <MyAreaChart historyPrice={historyPriceData}/>
+                    ) : (
+                        <Skeleton/>
+                    )}
                     <Grid container sx={{marginTop: '20px'}}>
                         <Grid item xs={3}>
                             <Typography sx={{color:"#9B97B3"}}>Token</Typography>
