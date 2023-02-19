@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { Area, AreaChart, Legend, XAxis, Tooltip, YAxis } from "recharts"
+import { historyPrice } from "../../../interfaces/historyPrice.interface"
 
 const mockHistoryPrice = [
     // {
@@ -30,7 +31,7 @@ const mockHistoryPrice = [
 ]
 
 type IProps = {
-    historyPrice: object[]
+    historyPrice: historyPrice[]
 }
 
 const MyAreaChart = (props: IProps) => {
@@ -38,32 +39,16 @@ const MyAreaChart = (props: IProps) => {
     const { historyPrice } = props
 
     const areaColor = "rgba(0, 95, 255, 0.5)"
-
-    const CustomToolTip = ({ active, payload, label }: any) => {
-        if(active && payload && payload.length){
-            return(
-                <Box sx={{padding: "10px", borderRadius:"10.5px", backgroundColor:"#005FFF", color:"white"}}>
-                    <Typography>{payload[0].value}</Typography>
-                </Box>
-            )
-        }
-        return null
-    }
-
-    console.log(historyPrice)
-
+    
     return(
         <AreaChart
             width={1123}
-            // width={1000}
             height={300}
             data={historyPrice}
         >
             <XAxis dataKey="date" />
             <YAxis dataKey="price" />
-            {/* <Tooltip content={<CustomToolTip/>}/> */}
             <Tooltip/>
-            <Legend />
             <Area
                 type="monotone"
                 dataKey="price"

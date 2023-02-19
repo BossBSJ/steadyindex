@@ -1,12 +1,8 @@
 import { Box, Card, Grid, Typography, Container, Paper, SelectChangeEvent, Select, MenuItem, Link, ButtonGroup, Button } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { numberWithCommas } from "../utils/numberWithCommas";
 import { useNavigate } from "react-router-dom";
 import { paletteColorCode, RouteName } from "../constants/constants";
-import theme from "../theme";
-import { useIndexTokenFactory } from "../hooks/useIndexTokenFactory";
-import { mockColorCurrency } from "../constants/mock";
 import { IndexOnTable } from "../interfaces/indexOnTable.interface";
 
 const priceDownStyle = {
@@ -27,6 +23,7 @@ const priceUpStyle = {
 
 const headers = [
     "Market Cap", "Price", "1 Day", "1 Week", "1 Month", "All-time"
+    // "Market Cap", "Price"
 ]
 
 type IProps = {

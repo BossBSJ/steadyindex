@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { erc20ABI, useContractRead, useContractReads, useToken } from "wagmi"
-import { readContract, fetchToken } from '@wagmi/core'
-import { ERC20_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
+import { Address } from '@wagmi/core'
+import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { useTokens } from "./useTokens"
 import { useComponentIndexes } from "./useComponentIndexes"
@@ -11,17 +11,9 @@ import { createIndexOnTable } from "../utils/createIndexOnTable"
 import { erc20Service } from "../services/erc20Service"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 
-export const useIndexTokenFactory = () => {
+export const useIndexTokenFactory = (indexTokenAddress:readonly Address[] | undefined) => {
+
     const [index, setIndex] = useState<IndexOnTable[]>()
-
-    const getIndexTokensRead  = useContractRead({
-        address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
-        abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
-        functionName: "getIndexTokens",
-
-    })
-
-    const indexTokenAddress = getIndexTokensRead.data
 
     const { tokenDatas } = useTokens(indexTokenAddress)
 
@@ -30,7 +22,7 @@ export const useIndexTokenFactory = () => {
     const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress)
 
     useEffect(() => {
-        if(!tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
+        if(!indexTokenAddress || !tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return
         const getIndexTokens = async () => {
             let indexArr = []
             for(let i = 0; i < tokenDatas.length; i++){
@@ -75,8 +67,7 @@ export const useIndexTokenFactory = () => {
             setIndex(indexArr)
         }
         getIndexTokens()
-    },[tokenDatas, componentDatas, priceIndexes, unitsNumArr])
-
+    },[indexTokenAddress, tokenDatas, componentDatas, priceIndexes, unitsNumArr])
 
     return { index }
 }

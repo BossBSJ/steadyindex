@@ -26,7 +26,7 @@ export const useDateCreateIndex =  (indexAddress: Address | undefined) => {
                     "X-API-Key": process.env.REACT_APP_MORALIS_API_KEY
                 },
                 method: "GET",
-                url: `https://deep-index.moralis.io/api/v2/block/${blockNumberCreated}`,
+                url: `https://deep-index.moralis.io/api/v2/block/${(Number(blockNumberCreated._hex))}`,
                 params: {chain: "avalanche testnet"}
             })
 

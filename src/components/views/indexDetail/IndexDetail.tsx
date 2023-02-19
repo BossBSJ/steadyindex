@@ -19,6 +19,9 @@ import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { mockColorCurrency } from "../../../constants/mock";
 import { paletteColorCode } from "../../../constants/constants";
 import MyAreaChart from "./MyAreaChart";
+import { historyPrice } from "../../../interfaces/historyPrice.interface";
+import { useContractRead } from "wagmi";
+import { INDEX_TOKEN_CONTRACT_ABI } from "../../../constants/abi";
 
 const headers = [
     "Quantity per Set", "Token Price", "Current Alloc / Strategic Alloc", "1 Day Percent Change", "Total Price per Set"
@@ -31,6 +34,18 @@ const priceUpStyle = {
 const priceDownStyle = {
     color: "#DF4857"
 }
+
+const priceUpSpanStyle = {
+    fontSize: "16px",
+    color: "#22AB94"
+}
+
+const priceDownSpanStyle = {
+    fontSize: "16px",
+    color: "#DF4857"
+}
+
+
 
 const IndexDetail = () => {
 
@@ -63,7 +78,7 @@ const IndexDetail = () => {
     const { index, componentPercentChange, createdDate, historyPrice } = useIndexDetail(Number(indexId))
 
     const [data, setData] = useState<IndexOnTable | undefined>(index)
-    const [historyPriceData, setHistoryPriceData] = useState<Object[]>()
+    const [historyPriceData, setHistoryPriceData] = useState<historyPrice[]>()
 
     useEffect(() => {
         if(!historyPrice) return
@@ -73,8 +88,14 @@ const IndexDetail = () => {
 
     useEffect(() => {
         setData(index)
-        // setHistoryPriceData(historyPriceData)
     },[index])
+
+    const readContract = useContractRead({
+        address: "0x492518b9A37D26DB3630447Cc6867cdA05C5f965",
+        abi: INDEX_TOKEN_CONTRACT_ABI,
+        functionName: "getPositions"
+    })
+    // console.log(readContract.data)
     
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
@@ -137,7 +158,7 @@ const IndexDetail = () => {
                     <Box sx={{display:"flex"}}>
                         <Typography variant="h2">
                             ${numberWithCommas(data?.price)}
-                            <span style={{fontSize:"16px", color:"#22AB94"}}>+1.9%</span>
+                            <span style={data.dayChange >= 0 ? priceUpSpanStyle : priceDownSpanStyle}>{data.dayChange.toFixed(2)}%</span>
                         </Typography>
                     </Box>
                     {historyPriceData ? (
@@ -167,7 +188,9 @@ const IndexDetail = () => {
                                 <Grid item xs={2.4}></Grid>
                                 <Grid item xs={2.4}></Grid> 
                                 <Grid item xs={2.4}>
-                                    <Typography sx={{color:"#22AB94"}}>mock%</Typography>
+                                    <Typography sx={data.dayChange >= 0 ? priceUpStyle : priceDownStyle}>
+                                        {data.dayChange.toFixed(2)}%
+                                    </Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
                                     <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>

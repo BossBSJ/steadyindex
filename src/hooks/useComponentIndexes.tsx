@@ -44,7 +44,7 @@ export const useComponentIndexes = (tokenAddresses: readonly Address[] | undefin
             setComponentDatas(componentArr)
         }
         getComponents()
-    },[])
+    },[tokenAddresses])
 
     return { componentDatas }
 }

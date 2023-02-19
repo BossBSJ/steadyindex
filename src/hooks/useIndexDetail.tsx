@@ -5,6 +5,7 @@ import { Address, useBlockNumber, useContractRead, useToken, useTransaction } fr
 import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 import { mockPriceOfComponents } from "../constants/mock"
+import { historyPrice } from "../interfaces/historyPrice.interface"
 import { IndexOnTable } from "../interfaces/indexOnTable.interface"
 import { erc20Service } from "../services/erc20Service"
 import { createIndexOnTable } from "../utils/createIndexOnTable"
@@ -18,7 +19,9 @@ export const useIndexDetail = (idx: number) => {
     const [index, setIndex] = useState<IndexOnTable>()
     const [componentPercentChange, setComponentPercentChange] = useState<number[]>()
     const [address, setAddress] = useState<Address>()
-    const [historyPrice, setHistoryPrice] = useState<object[]>()
+
+    const [historyPrice, setHistoryPrice] = useState<historyPrice[]>()
+
 
     const getAddressIndex = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
@@ -28,7 +31,7 @@ export const useIndexDetail = (idx: number) => {
     })
 
     useEffect(() => {
-        if(!getAddressIndex) return
+        if(!getAddressIndex ) return
         setAddress(getAddressIndex.data)
     }, [getAddressIndex])
 
@@ -49,19 +52,21 @@ export const useIndexDetail = (idx: number) => {
 
     const { beforePrice } = useHistoricalPriceIndex(address, componentData)
 
+
+
     useEffect(() => {
         if(!beforePrice || !priceIndex) return
         let historyPrice = beforePrice
         historyPrice.push({
             date: dayjs().format("D MMMM"),
-            price: priceIndex.toFixed(2)
+            price: Number(priceIndex.toFixed(2))
         })
         setHistoryPrice(historyPrice)
     }, [beforePrice, priceIndex])
 
 
     useEffect(() => {
-        if(!componentData || !tokenData || !priceIndex || !unitsNum) return
+        if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice) return
 
         const getIndexDetail = async () => {
             const totalSupply = Number(tokenData?.totalSupply.formatted)
@@ -71,16 +76,21 @@ export const useIndexDetail = (idx: number) => {
             let componentPercentChange = []
             let prepareComponentPrices = []
             let preparePercentChanges = []
+            let componentPrices = []
+            let percentChanges = []
             for(let i = 0; i < componentData.length; i++){
-                const componentPrice = erc20Service.fetchERC20Price(componentData[i].address)
-                prepareComponentPrices.push(componentPrice)
+                const componentPrice = await erc20Service.fetchERC20Price(componentData[i].address)
+                componentPrices.push(componentPrice)
+                // prepareComponentPrices.push(componentPrice)
 
-                const percentChange = erc20Service.getPriceChangeOneDay(componentData[i].address)
-                preparePercentChanges.push(percentChange)
+                const percentChange = await erc20Service.getPriceChangeOneDay(componentData[i].address)
+                percentChanges.push(percentChange)
+                // preparePercentChanges.push(percentChange)
             }
-            const componentPrices = await Promise.all(prepareComponentPrices) //*
-            const percentChanges = await Promise.all(preparePercentChanges) //*
+            // const componentPrices = await Promise.all(prepareComponentPrices) //*
+            // const percentChanges = await Promise.all(preparePercentChanges) //*
             
+            //now im doing strategic ratio
             for(let i = 0; i < componentPrices.length; i++){
                 const componentPrice = componentPrices[i]
                 components.push({
@@ -92,10 +102,17 @@ export const useIndexDetail = (idx: number) => {
                     price: componentPrice,
                     pricePerSet: unitsNum[i] * componentPrice
                 })
+                
                 const percentChange = percentChanges[i]
                 componentPercentChange.push(percentChange)
             }
             setComponentPercentChange(componentPercentChange)
+
+            let dayChange = 0
+            let allTimeChange = 0
+            if(historyPrice.length > 1)
+                dayChange = (priceIndex - historyPrice[historyPrice.length - 1].price )/ 100 * priceIndex
+
             const indexDetail = 
                 createIndexOnTable(
                     idx, 
@@ -103,7 +120,7 @@ export const useIndexDetail = (idx: number) => {
                     tokenData.symbol, 
                     marketCap,
                     priceIndex,
-                    0,
+                    dayChange,
                     0,
                     0,
                     0,
@@ -112,7 +129,7 @@ export const useIndexDetail = (idx: number) => {
             setIndex(indexDetail)
     }
     getIndexDetail()
-    },[componentData, tokenData, priceIndex, unitsNum, address])
+    },[componentData, tokenData, priceIndex, unitsNum, address, historyPrice])
 
 
     return { index, componentPercentChange, createdDate, historyPrice }

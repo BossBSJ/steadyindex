@@ -45,7 +45,7 @@ export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) 
             setUnitsNumArr(unitsNumArr)
         }
         getPrices()
-    },[componentDatas])
+    },[indexAddresses, componentDatas])
 
     return { priceIndexes, unitsNumArr }
 

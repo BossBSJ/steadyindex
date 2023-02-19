@@ -5,10 +5,11 @@ import { useDateCreateIndex } from "./useDateCreateIndex"
 import axios from "axios"
 import { indexService } from "../services/indexService"
 import { token } from "../interfaces/token.interface"
+import { historyPrice } from "../interfaces/historyPrice.interface"
 
 
 export const useHistoricalPriceIndex = (indexAddress:Address | undefined, componentData?: token[]) => {
-    const [beforePrice, setBeforePrice] = useState<Object[]>()
+    const [beforePrice, setBeforePrice] = useState<historyPrice[]>()
 
     const { unformatCreatedDate } = useDateCreateIndex(indexAddress)
 
@@ -56,7 +57,7 @@ export const useHistoricalPriceIndex = (indexAddress:Address | undefined, compon
                 const date = dayjs.unix(historicalTimestamps[i]).format("D MMMM")
                 indexPrices.push({
                     date: date,
-                    price: indexPrice?.toFixed(2)
+                    price: Number(indexPrice?.toFixed(2))
                 })
             }
             // const indexPrices = await Promise.all(prepareIndexPrices)

@@ -1,4 +1,4 @@
-import { fetchToken } from "@wagmi/core"
+import { fetchToken, Address } from "@wagmi/core"
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
 
@@ -13,7 +13,7 @@ interface token {
     }
 }
 
-export const useTokens = (tokens: readonly `0x${string}`[] | undefined) => {
+export const useTokens = (tokens: readonly Address[] | undefined) => {
 
     const [tokenDatas, setTokenDatas] = useState<token[]>([])
 
@@ -32,7 +32,7 @@ export const useTokens = (tokens: readonly `0x${string}`[] | undefined) => {
             setTokenDatas(tokenArr)
         }
         fetchTokens()
-    }, [])
+    }, [tokens])
 
     return { tokenDatas }
 }

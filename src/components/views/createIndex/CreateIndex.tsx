@@ -28,6 +28,7 @@ const CreateIndex = () => {
 
     const [addressList, setAddressList] = useState<Address[]>([])
     const [unitList, setUnitList] = useState<BigNumber[]>([])
+    const [strategicUnitList, setStrategicUnitList] = useState<BigNumber[]>([])
 
     const account = useAccount()
     const address = account.address ?? '0x'
@@ -35,6 +36,7 @@ const CreateIndex = () => {
     useEffect(() => {
         const prepareUnits = async () => { 
             let unitList:BigNumber[] = []
+            let strategicUnitList:BigNumber[] = []
             for(let i = 0; i < componentList.length; i++){
                 let amount = 0
                 const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
@@ -45,9 +47,12 @@ const CreateIndex = () => {
                     amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice
                 }
                 const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
+                const strategicUnit = ethers.utils.parseUnits(componentList[i].allocation.toFixed(18).toString(), 18)
                 unitList.push(unit)
+                strategicUnitList.push(strategicUnit)
             }
             setUnitList(unitList)
+            setStrategicUnitList(strategicUnitList)
         }
     
         const prepareAddresses = () => {
@@ -62,11 +67,12 @@ const CreateIndex = () => {
     
     }, [componentList, startPrice])
 
+
     const { config } = usePrepareContractWrite({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "createIndexToken",
-        args: [addressList, unitList, address, indexName, indexSymbol],
+        args: [addressList, unitList, strategicUnitList, address, indexName, indexSymbol],
         enabled: (page === 3 && addressList.length === unitList.length)
     })
 
