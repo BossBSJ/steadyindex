@@ -11,15 +11,15 @@ import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface";
 
 const SelectIndex = () => {
+    const [indexTokenAddress, setIndexTokenAddress] = useState<readonly Address[] >()
+    const [allIndex, setAllIndex] = useState<IndexOnTable[]>()
 
     const getIndexTokensRead  = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "getIndexs",
-
     })
 
-    const [indexTokenAddress, setIndexTokenAddress] = useState<readonly Address[] | undefined>(getIndexTokensRead.data)
 
     useEffect(() => {
         if(!getIndexTokensRead) return
@@ -31,7 +31,6 @@ const SelectIndex = () => {
 
     const { index } = useIndexTokenFactory(indexTokenAddress)
 
-    const [allIndex, setAllIndex] = useState<IndexOnTable[] | undefined>(index)
 
     useEffect(() => {
         if(!index) return

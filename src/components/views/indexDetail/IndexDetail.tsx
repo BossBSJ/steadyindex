@@ -7,13 +7,6 @@ import theme from "../../../theme";
 import { numberWithCommas } from "../../../utils/numberWithCommas";
 import BuyModal from "../../Modal/BuyModal";
 import SellModal from "../../Modal/SellModal";
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    Tooltip,
-    Legend,
-} from "recharts";
 import { useIndexDetail } from "../../../hooks/useIndexDetail";
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { mockColorCurrency } from "../../../constants/mock";

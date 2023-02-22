@@ -11,23 +11,24 @@ import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 
 const MyPort = () => {
     
+    const [accountAddress, setAccountAddress] = useState<Address>()
+    const [indexTokenAddressFiltered, setIndexTokenAddressFiltered] = useState<readonly Address[]>()
+    const [myIndex, setMyIndex] = useState<IndexOnTable[] | undefined>()
+
+    
+    const getAccountAddress = useAccount()
+    useEffect(() => {
+        if(!getAccountAddress) return
+        setAccountAddress(getAccountAddress.address)
+    }, [getAccountAddress])
+
+
     const getIndexTokensRead  = useContractRead({
         address: INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS,
         abi: INDEX_TOKEN_FACTORY_CONTRACT_ABI,
         functionName: "getIndexs",
 
     })
-    
-    const getAccountAddress = useAccount()
-
-    const [accountAddress, setAccountAddress] = useState<Address>()
-
-    useEffect(() => {
-        if(!getAccountAddress) return
-        setAccountAddress(getAccountAddress.address)
-    }, [getAccountAddress])
-
-    const [indexTokenAddressFiltered, setIndexTokenAddressFiltered] = useState<readonly Address[] | undefined>()
 
     useEffect(() => {
         if(!accountAddress || !getIndexTokensRead.data) return
@@ -55,8 +56,6 @@ const MyPort = () => {
 
 
     const { index } = useIndexTokenFactory(indexTokenAddressFiltered) 
-
-    const [myIndex, setMyIndex] = useState<IndexOnTable[] | undefined>(index)
 
     useEffect(() => {
         if(!index) return
