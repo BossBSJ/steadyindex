@@ -51,7 +51,8 @@ export const useIndexTokenFactory = (indexTokenAddress:readonly Address[] | unde
                 }
                 indexArr.push(
                     createIndexOnTable(
-                        i, 
+                        i,
+                        tokenDatas[i].address, 
                         tokenDatas[i].name, 
                         tokenDatas[i].symbol, 
                         marketCap,

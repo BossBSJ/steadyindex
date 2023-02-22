@@ -1,7 +1,8 @@
 import { Address } from "wagmi";
 
 export interface IndexOnTable {
-    id: number,
+    id:number,
+    address: Address,
     name: string,
     symbol: string,
     marketCap: number,

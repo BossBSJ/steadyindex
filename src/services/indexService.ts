@@ -26,7 +26,7 @@ class IndexService {
             const unit = await readContract({
                 address: indexAddress,
                 abi: INDEX_TOKEN_CONTRACT_ABI,
-                functionName: "getPostionUnit",
+                functionName: "getPositionUnit",
                 args: [componentData[i].address]
             })
             prepareGetPositionUnit.push(unit)

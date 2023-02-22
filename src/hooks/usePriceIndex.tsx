@@ -22,13 +22,13 @@ export const usePriceIndex = (indexAddress: Address | undefined, blockNumber?: n
                 const unit = await readContract({
                     address: indexAddress,
                     abi: INDEX_TOKEN_CONTRACT_ABI,
-                    functionName: "getPostionUnit",
+                    functionName: "getPositionUnit",
                     args: [componentData[i].address]
                 })
                 prepareGetPositionUnit.push(unit)
             }
             const units = await Promise.all(prepareGetPositionUnit)
-
+            // console.log(units)
             let price = 0
             let unitsNum = []
             // let prepareFetchPrice = []

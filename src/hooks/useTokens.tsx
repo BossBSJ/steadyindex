@@ -3,7 +3,7 @@ import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
 
 interface token {
-    address: string
+    address: Address
     decimals: number
     name: string
     symbol: string

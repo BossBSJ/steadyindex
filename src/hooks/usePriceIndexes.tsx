@@ -23,7 +23,7 @@ export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) 
                     const unit = readContract({
                         address: indexAddresses[i],
                         abi: INDEX_TOKEN_CONTRACT_ABI,
-                        functionName: "getPostionUnit",
+                        functionName: "getPositionUnit",
                         args: [componentDatas[i][j].address]
                     })
                     prepateGetPositionUnit.push(unit)

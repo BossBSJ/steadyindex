@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
 import { Address, useBlockNumber, useContractRead, useToken, useTransaction } from "wagmi"
+import { readContract } from '@wagmi/core'
 import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../constants/abi"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../constants/constants"
 import { mockPriceOfComponents } from "../constants/mock"
@@ -52,8 +53,7 @@ export const useIndexDetail = (idx: number) => {
 
     const { beforePrice } = useHistoricalPriceIndex(address, componentData)
 
-
-
+    
     useEffect(() => {
         if(!beforePrice || !priceIndex) return
         let historyPrice = beforePrice
@@ -64,12 +64,24 @@ export const useIndexDetail = (idx: number) => {
         setHistoryPrice(historyPrice)
     }, [beforePrice, priceIndex])
 
+    const getTotalSupply = useContractRead({
+        address: address,
+        abi: INDEX_TOKEN_CONTRACT_ABI,
+        functionName: "totalSupply",
+    })
+
 
     useEffect(() => {
-        if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice) return
+        if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice || !address) return
 
         const getIndexDetail = async () => {
-            const totalSupply = Number(tokenData?.totalSupply.formatted)
+            const getTotalSupply = await readContract({
+                address: address,
+                abi: INDEX_TOKEN_CONTRACT_ABI,
+                functionName: "totalSupply",
+            })
+            const totalSupply = Number(getTotalSupply._hex) / (10**tokenData.decimals)
+
             const marketCap = totalSupply * priceIndex
 
             let components = []
@@ -115,7 +127,8 @@ export const useIndexDetail = (idx: number) => {
 
             const indexDetail = 
                 createIndexOnTable(
-                    idx, 
+                    idx,
+                    tokenData.address, 
                     tokenData.name, 
                     tokenData.symbol, 
                     marketCap,

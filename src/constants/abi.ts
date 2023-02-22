@@ -520,19 +520,6 @@ export const INDEX_TOKEN_CONTRACT_ABI = [
     },
     {
         "inputs": [],
-        "name": "getAllPositionUnit",
-        "outputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "getComponents",
         "outputs": [
         {
@@ -576,12 +563,31 @@ export const INDEX_TOKEN_CONTRACT_ABI = [
             "type": "address"
         }
         ],
-        "name": "getPositionRatio",
+        "name": "getPositionStrategicUnit",
         "outputs": [
         {
-            "internalType": "int256",
+            "internalType": "uint256",
             "name": "",
-            "type": "int256"
+            "type": "uint256"
+        }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_component",
+            "type": "address"
+        }
+        ],
+        "name": "getPositionUnit",
+        "outputs": [
+        {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
         }
         ],
         "stateMutability": "view",
@@ -604,33 +610,14 @@ export const INDEX_TOKEN_CONTRACT_ABI = [
                 "type": "uint256"
             },
             {
-                "internalType": "int256",
-                "name": "ratio",
-                "type": "int256"
+                "internalType": "uint256",
+                "name": "strategicUnit",
+                "type": "uint256"
             }
             ],
             "internalType": "struct IIndexToken.Position[]",
             "name": "",
             "type": "tuple[]"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "address",
-            "name": "_component",
-            "type": "address"
-        }
-        ],
-        "name": "getPostionUnit",
-        "outputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
         }
         ],
         "stateMutability": "view",
@@ -877,6 +864,241 @@ export const INDEX_TOKEN_CONTRACT_ABI = [
     {
         "inputs": [],
         "name": "unlock",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+    ] as const
+
+export const CONTROLLER_CONTRACT_ABI = [
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+        {
+            "indexed": false,
+            "internalType": "address",
+            "name": "_admin",
+            "type": "address"
+        },
+        {
+            "indexed": false,
+            "internalType": "address",
+            "name": "_oldAdmin",
+            "type": "address"
+        }
+        ],
+        "name": "AdminEdited",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+        {
+            "indexed": false,
+            "internalType": "address",
+            "name": "_indexToken",
+            "type": "address"
+        },
+        {
+            "indexed": false,
+            "internalType": "int256",
+            "name": "_quantity",
+            "type": "int256"
+        },
+        {
+            "indexed": false,
+            "internalType": "int256",
+            "name": "_cost",
+            "type": "int256"
+        }
+        ],
+        "name": "IssueIndexToken",
+        "type": "event"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_indexToken",
+            "type": "address"
+        }
+        ],
+        "name": "addIndex",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "admin",
+        "outputs": [
+        {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_indexToken",
+            "type": "address"
+        },
+        {
+            "internalType": "uint256",
+            "name": "_indexTokenAmount",
+            "type": "uint256"
+        },
+        {
+            "internalType": "address",
+            "name": "_tokenIn",
+            "type": "address"
+        }
+        ],
+        "name": "getAmountInForIndexToken",
+        "outputs": [
+        {
+            "internalType": "uint256",
+            "name": "tokenInAmount",
+            "type": "uint256"
+        },
+        {
+            "internalType": "address[]",
+            "name": "tokenOuts",
+            "type": "address[]"
+        },
+        {
+            "internalType": "uint256[]",
+            "name": "amountOuts",
+            "type": "uint256[]"
+        }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "indexTokenFactory",
+        "outputs": [
+        {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_indexTokenFactory",
+            "type": "address"
+        },
+        {
+            "internalType": "contract IMultiAssetSwapper",
+            "name": "_multiAssetSwaper",
+            "type": "address"
+        }
+        ],
+        "name": "initialize",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_indexToken",
+            "type": "address"
+        },
+        {
+            "internalType": "uint256",
+            "name": "_indexTokenAmount",
+            "type": "uint256"
+        },
+        {
+            "internalType": "address",
+            "name": "_tokenIn",
+            "type": "address"
+        },
+        {
+            "internalType": "address",
+            "name": "_to",
+            "type": "address"
+        }
+        ],
+        "name": "issueIndexToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "multiAssetSwaper",
+        "outputs": [
+        {
+            "internalType": "contract IMultiAssetSwapper",
+            "name": "",
+            "type": "address"
+        }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_indexToken",
+            "type": "address"
+        },
+        {
+            "internalType": "uint256",
+            "name": "_indexTokenAmount",
+            "type": "uint256"
+        },
+        {
+            "internalType": "address",
+            "name": "_tokenOut",
+            "type": "address"
+        },
+        {
+            "internalType": "uint256",
+            "name": "_minAmountOut",
+            "type": "uint256"
+        },
+        {
+            "internalType": "address",
+            "name": "_to",
+            "type": "address"
+        }
+        ],
+        "name": "redeemIndexToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+        {
+            "internalType": "address",
+            "name": "_admin",
+            "type": "address"
+        }
+        ],
+        "name": "setAdmin",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

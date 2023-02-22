@@ -1,7 +1,8 @@
 import { Address } from "wagmi";
 
 export function createIndexOnTable(
-    id: number,
+    id:number,
+    address: Address,
     name: string,
     symbol: string,
     marketCap: number,
@@ -12,5 +13,5 @@ export function createIndexOnTable(
     allTimeChange: number,
     components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet: number}>,
 ){
-    return { id, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
+    return { id, address, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
 }

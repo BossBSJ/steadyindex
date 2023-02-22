@@ -47,7 +47,8 @@ const ChartAllocation = () => {
                 />
             ))}
             </Pie>
-            <Tooltip content={<CustomToolTip/>}/>
+            {/* <Tooltip content={<CustomToolTip/>}/> */}
+            <Tooltip/>
         </PieChart>
     )
 }

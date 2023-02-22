@@ -1,38 +1,149 @@
-import styled from "@emotion/styled";
+
 import { Button, ButtonGroup, Card, CardHeader, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { ChangeEvent, useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import theme from "../../theme";
+import { IndexOnTable } from "../../interfaces/indexOnTable.interface";
+import { Address, erc20ABI, useAccount, useBalance, useContractRead, useWaitForTransaction } from "wagmi";
+import { readContract, prepareWriteContract, writeContract, waitForTransaction } from '@wagmi/core'
+import { CONTROLLER_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../constants/constants";
+import { CONTROLLER_CONTRACT_ABI } from "../../constants/abi";
+import { ethers } from "ethers";
+import { LoadingButton } from "@mui/lab";
+
 
 type IProps = {
     open: boolean
     onClose: () => void
     dcaModal: boolean
+    index?: IndexOnTable
 }
 
 const BuyModal = (props: IProps) => {
-    const { open, onClose, dcaModal } = props
+    const { open, onClose, dcaModal, index } = props
     const [checked, setChecked] = useState<boolean>(dcaModal);
+    const [periodDCA, setPeriodDCA] = useState<string>('')
+
+    const [amountIndexBuy, setAmountIndexBuy] = useState<number>(0)
+    const [amountUSDCBuy, setAmountUSDCBuy] = useState<number>(0)
+
+    const [address, setAddress] = useState<Address>()
+    const [usdcBalance, setUsdcBalance] = useState<number>()
+    const [checkApprove, setCheckApprove] = useState<boolean>(false)
+
+    const [hashApprove, setHashApprove] = useState<Address>()
+    const [hashBuy, setHashBuy] = useState<Address>()
 
     const handleChangeSwitch = (event: ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked)
     }
 
-    const [currency, setCurrency] = useState<string>('USD')
-    const handleCurrencyChange = (event: SelectChangeEvent) => {
-        setCurrency(event.target.value)
-    }
-
-    const [periodDCA, setPeriodDCA] = useState<string>('')
     const handleChoosePeriod = (plan:string) => {
         if(periodDCA === plan){
             setPeriodDCA('')
         }else {
             setPeriodDCA(plan)
         }
-        
     }
+
+    const handleChangeAmountIndexBuy = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setAmountIndexBuy(+event.target.value)
+    }
+
+    useEffect(() => {
+        if(!index) return
+        setAmountUSDCBuy(index?.price * amountIndexBuy)
+
+    }, [amountIndexBuy])
+
+    // const handleChangeAmountUSDCBuy = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setAmountUSDCBuy(+event.target.value)
+    // }
+
+    //approve usdc for buying index
+    const handleApproveUsdc = async () => {
+        const maxInt = ethers.BigNumber.from(2).pow(256).sub(1)
+
+        const config = await prepareWriteContract({
+            address: USDC_CONTRACT_ADDRESS,
+            abi: erc20ABI,
+            functionName: "approve",
+            args: [CONTROLLER_CONTRACT_ADDRESS, maxInt],
+        })
+
+        const data = await writeContract(config)
+
+        setHashApprove(data.hash)
+    }
+
+    const waitingApproveUsdc = useWaitForTransaction({
+        hash: hashApprove,
+        onSuccess(){
+            setCheckApprove(true)
+        },
+        enabled: hashApprove !== undefined
+    })
+
+    //buy index
+    const handleBuyIndex = async () => {
+        const _amountIndexBuy = ethers.utils.parseUnits(String(amountIndexBuy), 18)
+
+        if(!index?.address || !address) return
+        const config = await prepareWriteContract({
+            address: CONTROLLER_CONTRACT_ADDRESS,
+            abi: CONTROLLER_CONTRACT_ABI,
+            functionName:"issueIndexToken",
+            args: [index?.address, _amountIndexBuy, USDC_CONTRACT_ADDRESS, address]
+        })
+
+        const data = await writeContract(config)
+        setHashBuy(data.hash)
+    }
+
+    const waitingBuyIndex = useWaitForTransaction({
+        hash: hashBuy,
+        onSuccess(data){
+            console.log(data)
+        },
+        enabled: hashBuy !== undefined
+    })
+
+    // get balance USDC
+    const getAddress = useAccount()
+
+    useEffect(() => {
+        if(!getAddress) return
+        setAddress(getAddress.address)
+    }, [getAddress])
+
+    const getUsdcBalance = useBalance({
+        address: address,
+        token: USDC_CONTRACT_ADDRESS
+    })
+
+    useEffect(() => {
+        if(!getUsdcBalance) return
+        setUsdcBalance(Number(getUsdcBalance.data?.formatted))
+    }, [getUsdcBalance])
+
+    // check allowance
+    useEffect(() => {
+        if(!address) return
+        const checkAllowance = async () => {
+            const allowance = await readContract({
+                address: USDC_CONTRACT_ADDRESS,
+                abi: erc20ABI,
+                functionName: "allowance",
+                args: [address , CONTROLLER_CONTRACT_ADDRESS]
+            })
+            if(Number(allowance._hex) > 0)
+                setCheckApprove(true)
+            else
+                setCheckApprove(false)
+        }
+        checkAllowance()
+    }, [address])
 
     return(
         <Modal
@@ -44,38 +155,36 @@ const BuyModal = (props: IProps) => {
                 <Box>
                     <Typography variant="caption">Receive</Typography>
                     <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                        <Typography>TI1</Typography>
+                        <Typography>{index?.symbol}</Typography>
                         <TextField
                             type="number"
                             placeholder="0.0"
                             inputProps={{
                                 sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
                             }}
+                            onChange={handleChangeAmountIndexBuy}
                         />
                     </Box>
                 </Box>
                 <Box>
-                    <Typography variant="caption">Pay</Typography>
+                    <Box sx={{display:"flex", justifyContent:"space-between" }}>
+                        <Typography variant="caption">Pay</Typography>
+                        <Typography variant="caption">Balance: {usdcBalance} USDC</Typography>
+                    </Box>
                     <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                        <Select value={currency} onChange={handleCurrencyChange} IconComponent={ExpandMoreIcon} variant="standard"
-                            sx={{float:"right", background:"white", borderRadius:"8px", backgroundColor:"#F3F3FF"}}
-                        >
-                            <MenuItem value={"USD"}>
-                                <Typography>USD</Typography>
-                            </MenuItem>
-                            <MenuItem value={"ETH"}>
-                                <Typography>BTC</Typography>
-                            </MenuItem>
-                            <MenuItem value={"BTC"}>
-                                <Typography>ETH</Typography>
-                            </MenuItem>
-                        </Select>
+                        <Typography>USDC</Typography>
                         <TextField
                             type="number"
                             placeholder="0.0"
                             inputProps={{
                                 sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
                             }}
+                            value={
+                                !amountUSDCBuy
+                                ? ""
+                                : amountUSDCBuy
+                            }
+                            disabled={true}
                         />
                     </Box>
                 </Box>
@@ -126,11 +235,28 @@ const BuyModal = (props: IProps) => {
                         />
                         <Typography>est. 3.2 {periodDCA}</Typography>
                     </Box>
-                </Box>}
+                </Box>
+                }
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                    <Button onClick={onClose} variant="contained" sx={{width:"320px"}}>
-                        <Typography sx={{fontWeight:"bold"}}>BUY DPI</Typography>
-                    </Button>
+                    {checkApprove ? (
+                        <LoadingButton 
+                            loading={waitingBuyIndex.isLoading}
+                            onClick={handleBuyIndex} 
+                            variant="contained" 
+                            sx={{width:"320px"}}
+                        >
+                            <Typography sx={{fontWeight:"bold"}}>BUY {index?.symbol}</Typography>
+                        </LoadingButton>
+                    ) : (
+                        <LoadingButton 
+                            loading={waitingApproveUsdc.isLoading}
+                            onClick={handleApproveUsdc} 
+                            variant="contained" 
+                            sx={{width:"320px"}}
+                        >
+                            <Typography sx={{fontWeight:"bold"}}>APPROVE YOUR USDC FOR TRADING</Typography>
+                        </LoadingButton>
+                    )}
                 </Box>
             </Card>
         </Modal>

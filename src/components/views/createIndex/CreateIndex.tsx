@@ -98,8 +98,7 @@ const CreateIndex = () => {
 
     const handleOnNext = async () => {
         
-        if(page === 3) 
-        {
+        if(page === 3) {   
             write?.()
             // navigate(RouteName.default)
             return

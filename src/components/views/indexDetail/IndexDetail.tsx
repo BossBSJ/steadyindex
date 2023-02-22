@@ -52,26 +52,26 @@ const IndexDetail = () => {
     let { indexId } = useParams()
 
     const [showBuyModal, setShowBuyModal] = useState<boolean>(false)
-    const handleOpenBuyModal = () =>{
+    const handleOpenBuyModal = () => {
         setShowBuyModal(true)
     }
-    const handleCloseBuyModal = () =>{
+    const handleCloseBuyModal = () => {
         setShowBuyModal(false)
     }
 
     const [showDCAModal, setShowDCAModal] = useState<boolean>(false)
-    const handleOpenDCAModal = () =>{
+    const handleOpenDCAModal = () => {
         setShowDCAModal(true)
     }
-    const handleCloseDCAModal = () =>{
+    const handleCloseDCAModal = () => {
         setShowDCAModal(false)
     }
 
     const [showSellModal, setShowSellModal] = useState<boolean>(false)
-    const handleOpenSellModal = () =>{
+    const handleOpenSellModal = () => {
         setShowSellModal(true)
     }
-    const handleCloseSellModal = () =>{
+    const handleCloseSellModal = () => {
         setShowSellModal(false)
     }
 
@@ -89,13 +89,6 @@ const IndexDetail = () => {
     useEffect(() => {
         setData(index)
     },[index])
-
-    const readContract = useContractRead({
-        address: "0x492518b9A37D26DB3630447Cc6867cdA05C5f965",
-        abi: INDEX_TOKEN_CONTRACT_ABI,
-        functionName: "getPositions"
-    })
-    // console.log(readContract.data)
     
     return(
         <Container sx={{marginTop:"40px", marginBottom:"40px",}}>
@@ -253,10 +246,12 @@ const IndexDetail = () => {
                 open={showBuyModal}
                 onClose={handleCloseBuyModal}
                 dcaModal={false}
+                index={data}
             />
             <SellModal
                 open={showSellModal}
                 onClose={handleCloseSellModal}
+                index={data}
             />
             <BuyModal
                 open={showDCAModal}
