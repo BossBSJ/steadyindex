@@ -1,9 +1,10 @@
 import { Box, Card, Grid, Typography, Container, Paper, SelectChangeEvent, Select, MenuItem, Link, ButtonGroup, Button, Skeleton } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { numberWithCommas } from "../utils/numberWithCommas";
 import { useNavigate } from "react-router-dom";
 import { paletteColorCode, RouteName } from "../constants/constants";
 import { IndexOnTable } from "../interfaces/indexOnTable.interface";
+import theme from "../theme";
 
 const priceDownStyle = {
     backgroundColor:"#F23645",
@@ -25,48 +26,65 @@ const headers = [
     // "Market Cap", "Price", "1 Day", "1 Week", "1 Month", "All-time"
     "Market Cap", "Price", "Asset Underlying"
 ]
-
+//typeTable, setTypeTable
 type IProps = {
-    index: IndexOnTable[] | undefined
+    createdIndex: IndexOnTable[] | undefined
+    holdIndex?: IndexOnTable[] | undefined
     isMyPortPage: boolean
+    typeTable: string
+    setTypeTable: Dispatch<SetStateAction<string>>
 }
 
 const IndexTable = (props: IProps) => {
-    const { isMyPortPage, index } = props
-    const navigate = useNavigate()
-    const [currency, setCurrency] = useState<string>('USD')
-    const [typeTable, setTypeTable] = useState<string>('All')
+    const { isMyPortPage, createdIndex, typeTable, setTypeTable, holdIndex } = props
 
-    const handleCurrencyChange = (event: SelectChangeEvent) => {
-        setCurrency(event.target.value)
-    }
+    const [index, setIndex] = useState<IndexOnTable[] | undefined>(createdIndex)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!createdIndex) return
+        setIndex(createdIndex)
+    },[createdIndex])
 
     const handleOnTypeTable = (_typeTable:string) =>{
         setTypeTable(_typeTable)
+        if(_typeTable === 'Created'){
+            setIndex(createdIndex)
+        }
+        else if(_typeTable === 'Wallet'){
+            setIndex(holdIndex)
+        }
     }
 
     return (
         <Card sx={{marginTop: "20px", padding:"15px", backgroundColor:"rgba(255, 253, 251, 0.48)", border:"2px solid", borderColor:"white", marginBottom:"40px"}}>
-            {/* <Box sx={{display:"flex", justifyContent:"space-between"}}>
+            <Box sx={{display:"flex", justifyContent:"space-between"}}>
                 {isMyPortPage? <ButtonGroup sx={{borderRadius:"8px",}}>
                     <Button 
                         variant="text" 
-                        sx={typeTable === 'All'?{background:theme.palette.gradient.primary, color:"white"}:{}}
-                        onClick={() => handleOnTypeTable('All')}
-                    >
-                        All Index
+                        sx={typeTable === 'Wallet'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                        onClick={() => handleOnTypeTable('Wallet')}
+                    >                            
+                        My Wallet
                     </Button>
                     <Button 
                         variant="text" 
-                        sx={typeTable === 'My'?{background:theme.palette.gradient.primary, color:"white"}:{}}
-                        onClick={() => handleOnTypeTable('My')}
+                        sx={typeTable === 'Created'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                        onClick={() => handleOnTypeTable('Created')}
+                    >
+                        Created Index
+                    </Button>
+                    <Button 
+                        variant="text" 
+                        sx={typeTable === 'Investment'?{background:theme.palette.gradient.primary, color:"white"}:{}}
+                        onClick={() => handleOnTypeTable('Investment')}
                     >                            
-                        My Index
+                        My Investment
                     </Button>
                 </ButtonGroup>:
                 <Box></Box>
                 }
-            </Box> */}
+            </Box>
             <Grid container>
                 <Grid item xs={3}>
                     <Typography variant="body1" sx={{color:"#82858A"}}>Name</Typography>

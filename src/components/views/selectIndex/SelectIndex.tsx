@@ -11,6 +11,8 @@ import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface";
 
 const SelectIndex = () => {
+    const [typeTable, setTypeTable] = useState<string>('Created Index')
+
     const [indexTokenAddress, setIndexTokenAddress] = useState<readonly Address[] >()
     const [allIndex, setAllIndex] = useState<IndexOnTable[]>()
 
@@ -41,7 +43,12 @@ const SelectIndex = () => {
 
         <Container>
             <DescriptionPaper/>
-            <IndexTable index={allIndex} isMyPortPage={false}/>
+            <IndexTable 
+                createdIndex={allIndex} 
+                isMyPortPage={false}
+                setTypeTable={setTypeTable}
+                typeTable={typeTable}
+            />
         </Container>
     )
 }

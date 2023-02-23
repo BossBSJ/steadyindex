@@ -13,16 +13,18 @@ import MyPieChart from "./MyPieChart";
 
 const PortCard = () => {
 
-    const [address, setAddress] = useState<Address>()
+    const [accountAddress, setAccountAddress] = useState<Address>()
     const [allIndexTokenAddress, setAllIndexTokenAddress] = useState<readonly Address[]>()
     const [indexHoldAddress, setIndexHoldAddress] = useState<Address[]>()
     const [amountIndexes, setAmountIndexes] = useState<number[]>()
+    const [netWorth, setNetWorth] = useState<number>()
     const [indexAllocation, setIndexAllocation] = useState<indexAllocate[]>()
+    const [tokenAllocation, setTokenAllocation] = useState<any>()
 
     const getAddress = useAccount()
     useEffect(() => {
         if(!getAddress) return
-        setAddress(getAddress.address)
+        setAccountAddress(getAddress.address)
     }, [getAddress])
 
     const getIndexTokensRead  = useContractRead({
@@ -38,15 +40,15 @@ const PortCard = () => {
 
 
     useEffect(() => {
-        if(!address || !allIndexTokenAddress) return
+        if(!accountAddress || !allIndexTokenAddress) return
         const getIndexHold = async () => {
-            const indexHoldAddress:Address[] = []
-            const amountIndexes = []
+            let indexHoldAddress:Address[] = []
+            let amountIndexes = []
 
             for(let i = 0; i < allIndexTokenAddress.length; i++){
                 const indexTokenAddress = allIndexTokenAddress[i]
                 const indexBalance = await fetchBalance({
-                    address: address,
+                    address: accountAddress,
                     token: indexTokenAddress
                 })
                 if(Number(indexBalance.formatted) > 0){
@@ -58,7 +60,7 @@ const PortCard = () => {
             setAmountIndexes(amountIndexes)
         }
         getIndexHold()
-    }, [address, allIndexTokenAddress])
+    }, [accountAddress, allIndexTokenAddress])
 
     const { index } = useIndexTokenFactory(indexHoldAddress)
 
@@ -71,6 +73,8 @@ const PortCard = () => {
         }
 
         let indexAllocation:indexAllocate[] = []
+        let netWorth = 0
+        let tokenAllocation:any = {}
         for(let i = 0; i < amountIndexes?.length; i++){
             indexAllocation.push({
                 name: index[i].name,
@@ -79,12 +83,26 @@ const PortCard = () => {
                 value: amountIndexes[i] * index[i].price,
                 ratio: (amountIndexes[i] * index[i].price) / sumValue * 100
             })
+            netWorth = netWorth + (amountIndexes[i] * index[i].price)
+
+            const components = index[i].components
+            for(let j = 0; j < components.length; j++){
+                if(!tokenAllocation[components[j].symbol]){
+                    tokenAllocation[components[j].symbol] = amountIndexes[i] * components[j].pricePerSet
+                }
+                else{
+                    tokenAllocation[components[j].symbol] = tokenAllocation[components[j].symbol] + (amountIndexes[i] * components[j].pricePerSet)
+                }
+            }
         }
         const sortIndexAllocaion = indexAllocation.sort((i1,i2) => i2.ratio - i1.ratio)
         setIndexAllocation(sortIndexAllocaion)
+        setTokenAllocation(tokenAllocation)
+        setNetWorth(netWorth)
     },[amountIndexes, index])
 
-    console.log(amountIndexes)
+    // console.log(tokenAllocation)
+    //price per set * amountIndexes
     
 
     return(
@@ -108,7 +126,7 @@ const PortCard = () => {
                 </Grid>
                 <Grid container>
                     <Grid item xs={8}>
-                    <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(11208.80)}</Typography>
+                    <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(netWorth)}</Typography>
                     </Grid>
                     <Grid container item xs={4}>
                         <Grid item xs={4}>
@@ -130,7 +148,7 @@ const PortCard = () => {
                         <MyPieChart indexAllocation={indexAllocation}/>
                         <Box sx={{width:"230px"}}>
                             {indexAllocation?.map((token, idx:number) => (
-                                <Box key={idx} sx={{display:"flex", justifyContent:"space-around"}}>
+                                <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
                                     <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.symbol}</Typography>
                                     <Typography>{token.ratio.toFixed(2)}%</Typography>
                                 </Box>
@@ -145,7 +163,7 @@ const PortCard = () => {
                         <Box sx={{width:"230px"}}>
                             {indexAllocation?.map((token, idx:number) => (
                                 <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
-                                    <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.name}</Typography>
+                                    <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.symbol}</Typography>
                                     <Typography>{token.ratio.toFixed(2)}%</Typography>
                                 </Box>
                             ))}
