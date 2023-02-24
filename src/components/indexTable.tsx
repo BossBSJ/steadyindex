@@ -31,20 +31,22 @@ type IProps = {
     createdIndex: IndexOnTable[] | undefined
     holdIndex?: IndexOnTable[] | undefined
     isMyPortPage: boolean
-    typeTable: string
+    typeTable?: string
     setTypeTable: Dispatch<SetStateAction<string>>
 }
 
 const IndexTable = (props: IProps) => {
     const { isMyPortPage, createdIndex, typeTable, setTypeTable, holdIndex } = props
 
-    const [index, setIndex] = useState<IndexOnTable[] | undefined>(createdIndex)
+    const [index, setIndex] = useState<IndexOnTable[] | undefined>(holdIndex)
     const navigate = useNavigate()
 
     useEffect(() => {
-        if(!createdIndex) return
-        setIndex(createdIndex)
-    },[createdIndex])
+        if(!holdIndex)
+            setIndex(createdIndex)
+        else
+            setIndex(holdIndex)
+    },[holdIndex, createdIndex])
 
     const handleOnTypeTable = (_typeTable:string) =>{
         setTypeTable(_typeTable)
@@ -53,6 +55,9 @@ const IndexTable = (props: IProps) => {
         }
         else if(_typeTable === 'Wallet'){
             setIndex(holdIndex)
+        }
+        else if(_typeTable === 'Investment'){
+            setIndex([])
         }
     }
 
