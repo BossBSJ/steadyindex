@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IndexOnTable } from "../../interfaces/indexOnTable.interface";
 import { Address, useAccount, useBalance, useWaitForTransaction } from "wagmi";
 import { CONTROLLER_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../constants/constants";
-import { readContract, prepareWriteContract, writeContract } from "@wagmi/core";
+import { readContract, prepareWriteContract, writeContract, fetchBalance } from "@wagmi/core";
 import { CONTROLLER_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI } from "../../constants/abi";
 import { ethers } from "ethers";
 import { LoadingButton } from "@mui/lab";
@@ -88,27 +88,29 @@ const SellModal = (props: IProps) => {
         hash: hashSell,
         onSuccess(data){
             console.log(data)
+            getIndexBalance()
         },
         enabled: hashSell !== undefined
     })
 
     //get balance Index
     const getAddress = useAccount()
-
     useEffect(() => {
         if(!getAddress) return
         setAddress(getAddress.address)
     }, [getAddress])
 
-    const getIndexBalance = useBalance({
-        address: address,
-        token: index?.address
-    })
-
+    const getIndexBalance = async () => {
+        if(!address || !index) return
+        const indexBalance = await fetchBalance({
+            address: address,
+            token: index?.address
+        })
+        setIndexBalance(Number(indexBalance.formatted))
+    }
     useEffect(() => {
-        if(!getIndexBalance) return
-        setIndexBalance(Number(getIndexBalance.data?.formatted))
-    }, [getIndexBalance])
+        getIndexBalance()
+    },[address, hashSell, index]) 
 
     //check allowance
     useEffect(() => {

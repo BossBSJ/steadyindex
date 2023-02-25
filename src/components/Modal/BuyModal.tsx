@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import theme from "../../theme";
 import { IndexOnTable } from "../../interfaces/indexOnTable.interface";
 import { Address, erc20ABI, useAccount, useBalance, useContractRead, useWaitForTransaction } from "wagmi";
-import { readContract, prepareWriteContract, writeContract, waitForTransaction } from '@wagmi/core'
+import { readContract, prepareWriteContract, writeContract, fetchBalance } from '@wagmi/core'
 import { CONTROLLER_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../constants/constants";
 import { CONTROLLER_CONTRACT_ABI } from "../../constants/abi";
 import { ethers } from "ethers";
@@ -105,27 +105,29 @@ const BuyModal = (props: IProps) => {
         hash: hashBuy,
         onSuccess(data){
             console.log(data)
+            getUsdcBalance()
         },
         enabled: hashBuy !== undefined
     })
 
     // get balance USDC
     const getAddress = useAccount()
-
     useEffect(() => {
         if(!getAddress) return
         setAddress(getAddress.address)
     }, [getAddress])
 
-    const getUsdcBalance = useBalance({
-        address: address,
-        token: USDC_CONTRACT_ADDRESS
-    })
-
+    const getUsdcBalance = async () => {
+        if(!address || !index) return
+        const indexBalance = await fetchBalance({
+            address: address,
+            token: USDC_CONTRACT_ADDRESS
+        })
+        setUsdcBalance(Number(indexBalance.formatted))
+    }
     useEffect(() => {
-        if(!getUsdcBalance) return
-        setUsdcBalance(Number(getUsdcBalance.data?.formatted))
-    }, [getUsdcBalance])
+        getUsdcBalance()
+    },[address, hashBuy, index])
 
     // check allowance
     useEffect(() => {
