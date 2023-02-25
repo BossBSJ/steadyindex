@@ -8,8 +8,6 @@ import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { allocation } from "../../../interfaces/allocation.interface";
 
 
-//balance, value, ratio
-
 type IProps = {
     indexAllocation? : allocation[]
 }
