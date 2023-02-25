@@ -5,12 +5,13 @@ import { Address, useAccount, useBalance, useContractRead } from "wagmi";
 import { fetchBalance } from '@wagmi/core'
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS, paletteColorCode } from "../../../constants/constants";
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
-import { indexAllocate } from "../../../interfaces/indexAllocate.interface";
+import { allocation } from "../../../interfaces/allocation.interface";
+
 
 //balance, value, ratio
 
 type IProps = {
-    indexAllocation? : indexAllocate[]
+    indexAllocation? : allocation[]
 }
 
 const MyPieChart = (props: IProps) => {

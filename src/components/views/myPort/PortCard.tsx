@@ -7,8 +7,8 @@ import { Address, useAccount, useContractRead } from "wagmi";
 import { INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { fetchBalance } from "@wagmi/core";
 import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory";
-import { indexAllocate } from "../../../interfaces/indexAllocate.interface";
 import MyPieChart from "./MyPieChart";
+import { allocation } from "../../../interfaces/allocation.interface";
 
 
 const PortCard = () => {
@@ -18,8 +18,8 @@ const PortCard = () => {
     const [indexHoldAddress, setIndexHoldAddress] = useState<Address[]>()
     const [amountIndexes, setAmountIndexes] = useState<number[]>()
     const [netWorth, setNetWorth] = useState<number>()
-    const [indexAllocation, setIndexAllocation] = useState<indexAllocate[]>()
-    const [tokenAllocation, setTokenAllocation] = useState<any>()
+    const [indexAllocation, setIndexAllocation] = useState<allocation[]>()
+    const [tokenAllocation, setTokenAllocation] = useState<allocation[]>()
 
     const getAddress = useAccount()
     useEffect(() => {
@@ -72,13 +72,14 @@ const PortCard = () => {
             sumValue = sumValue + (amountIndexes[i] * index[i].price)
         }
 
-        let indexAllocation:indexAllocate[] = []
+        let indexAllocation:allocation[] = []
         let netWorth = 0
-        let tokenAllocation:any = {}
+        let tokenAllocation:allocation[] = []
         for(let i = 0; i < amountIndexes?.length; i++){
             indexAllocation.push({
                 name: index[i].name,
                 symbol: index[i].symbol,
+                address: index[i].address,
                 balance: amountIndexes[i],
                 value: amountIndexes[i] * index[i].price,
                 ratio: (amountIndexes[i] * index[i].price) / sumValue * 100
@@ -87,22 +88,35 @@ const PortCard = () => {
 
             const components = index[i].components
             for(let j = 0; j < components.length; j++){
-                if(!tokenAllocation[components[j].symbol]){
-                    tokenAllocation[components[j].symbol] = amountIndexes[i] * components[j].pricePerSet
-                }
-                else{
-                    tokenAllocation[components[j].symbol] = tokenAllocation[components[j].symbol] + (amountIndexes[i] * components[j].pricePerSet)
+                let tmp = tokenAllocation.find(obj => {
+                    return (obj.address === components[j].address)
+                })
+                if(!tmp){
+                    tokenAllocation.push({
+                        name: components[j].name,
+                        symbol: components[j].symbol,
+                        address: components[j].address,
+                        balance: amountIndexes[i] * components[j].unit,
+                        value: amountIndexes[i] * components[j].pricePerSet,
+                        ratio: (amountIndexes[i] * components[j].pricePerSet) / sumValue * 100
+                    })
+                } else {
+                    tmp.balance = tmp.balance + (amountIndexes[i] * components[j].unit)
+                    tmp.value = tmp.value + (amountIndexes[i] * components[j].pricePerSet)
+                    tmp.ratio = tmp.value / sumValue * 100
                 }
             }
+
         }
+        setNetWorth(netWorth)
+
         const sortIndexAllocaion = indexAllocation.sort((i1,i2) => i2.ratio - i1.ratio)
         setIndexAllocation(sortIndexAllocaion)
-        setTokenAllocation(tokenAllocation)
-        setNetWorth(netWorth)
+
+        const sortTokenAllocation = tokenAllocation.sort((i1,i2) => i2.ratio - i1.ratio)
+        setTokenAllocation(sortTokenAllocation)
     },[amountIndexes, index])
 
-    // console.log(tokenAllocation)
-    //price per set * amountIndexes
     
 
     return(
@@ -159,11 +173,19 @@ const PortCard = () => {
                 <Box>
                     <Typography sx={{fontWeight:"bold"}}>Tokens Allocation</Typography>
                     <Box sx={{display:"flex"}}>
-                        <MyPieChart indexAllocation={indexAllocation}/>
+                        <MyPieChart indexAllocation={tokenAllocation}/>
                         <Box sx={{width:"230px"}}>
-                            {indexAllocation?.map((token, idx:number) => (
+                            {tokenAllocation?.map((token, idx:number) => (
                                 <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
-                                    <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.symbol}</Typography>
+                                    <Box sx={{display:"flex"}}>
+                                        <img 
+                                            src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
+                                            style={{width:"20px", height:"20px", borderRadius:"50%"}}
+                                        />
+                                        <Typography variant="body2" sx={{fontWeight:"bold", marginLeft:"5px"}}>
+                                            {token.symbol}
+                                        </Typography>
+                                    </Box>
                                     <Typography>{token.ratio.toFixed(2)}%</Typography>
                                 </Box>
                             ))}
