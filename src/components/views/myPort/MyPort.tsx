@@ -8,12 +8,14 @@ import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../../../constants/constan
 import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { useEffect, useState } from "react"
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
+import { element } from "@rainbow-me/rainbowkit/dist/css/reset.css"
 
 const MyPort = () => {
     const [typeTable, setTypeTable] = useState<string>('Wallet')
 
     const [accountAddress, setAccountAddress] = useState<Address>()
     const [allIndexTokenAddress, setAllIndexTokenAddress] = useState<readonly Address[]>()
+    const [allIndexToken, setAllIndexToken] = useState<IndexOnTable[] | undefined>()
     const [createdIndexAddress, setCreatedIndexAddress] = useState<readonly Address[]>()
     const [createdIndex, setCreatedIndex] = useState<IndexOnTable[] | undefined>()
     const [indexHoldAddress, setIndexHoldAddress] = useState<Address[]>()
@@ -37,6 +39,12 @@ const MyPort = () => {
 
     }, [getIndexTokensRead])
 
+    const getAllIndex = useIndexTokenFactory(allIndexTokenAddress)
+    useEffect(() => {
+        if(!getAllIndex) return
+        setAllIndexToken(getAllIndex.index)
+    },[getAllIndex])
+
     useEffect(() => {
         if(!accountAddress || !allIndexTokenAddress) return
         const getIndexCreatedAddress = async () => {
@@ -56,7 +64,6 @@ const MyPort = () => {
                     createdIndexAddress.push(indexTokens[i])
             }
             setCreatedIndexAddress(createdIndexAddress)
-            
         }
 
         const getIndexHold = async () => {
@@ -78,23 +85,13 @@ const MyPort = () => {
         getIndexHold()
     }, [allIndexTokenAddress, accountAddress])
 
-
-    const getCreatedIndex = useIndexTokenFactory(createdIndexAddress) 
-
     useEffect(() => {
-        if(!getCreatedIndex) return
-        setCreatedIndex(getCreatedIndex.index)
-    }, [getCreatedIndex])
-
-    const getHoldIndex = useIndexTokenFactory(indexHoldAddress)
-    useEffect(() => {
-        if(!getHoldIndex) return
-        setIndexHold(getHoldIndex.index)
-    }, [getHoldIndex])
-
-    // const handleOnTypeTable = (_typeTable:string) =>{
-    //     setTypeTable(_typeTable)
-    // }
+        if(!allIndexToken || !indexHoldAddress || !createdIndexAddress) return
+        let createdIndex = allIndexToken.filter(element => createdIndexAddress.includes(element.address))
+        let holdIndex = allIndexToken.filter(element => indexHoldAddress.includes(element.address))
+        setCreatedIndex(createdIndex)
+        setIndexHold(holdIndex)
+    },[allIndexToken,indexHoldAddress, createdIndexAddress])
 
 
     return(
