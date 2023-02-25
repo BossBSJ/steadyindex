@@ -41,11 +41,15 @@ const IndexTable = (props: IProps) => {
     const [index, setIndex] = useState<IndexOnTable[] | undefined>(holdIndex)
     const navigate = useNavigate()
 
+    // console.log("holdIndex", holdIndex)
+    // console.log("createdIndex", createdIndex)
+
     useEffect(() => {
         if(!holdIndex)
             setIndex(createdIndex)
-        else
+        else {
             setIndex(holdIndex)
+        }
     },[holdIndex, createdIndex])
 
     const handleOnTypeTable = (_typeTable:string) =>{

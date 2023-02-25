@@ -64,11 +64,13 @@ export const useIndexDetail = (idx: number) => {
         setHistoryPrice(historyPrice)
     }, [beforePrice, priceIndex])
 
-    const getTotalSupply = useContractRead({
-        address: address,
-        abi: INDEX_TOKEN_CONTRACT_ABI,
-        functionName: "totalSupply",
-    })
+    // const getTotalSupply = useContractRead({
+    //     address: address,
+    //     abi: INDEX_TOKEN_CONTRACT_ABI,
+    //     functionName: "getPositionUnit",
+    //     args: ["0xB6076C93701D6a07266c31066B298AeC6dd65c2d"]
+    // })
+    // console.log(getTotalSupply.data)
 
 
     useEffect(() => {
@@ -102,7 +104,6 @@ export const useIndexDetail = (idx: number) => {
             // const componentPrices = await Promise.all(prepareComponentPrices) //*
             // const percentChanges = await Promise.all(preparePercentChanges) //*
             
-            //now im doing strategic ratio
             for(let i = 0; i < componentPrices.length; i++){
                 const componentPrice = componentPrices[i]
                 components.push({
