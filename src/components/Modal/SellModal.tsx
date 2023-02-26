@@ -157,7 +157,7 @@ const SellModal = (props: IProps) => {
                 </Box>
                 <Box>
                     <Typography variant="caption">Recieve</Typography>
-                    <Box sx={{display:"flex" ,justifyContent:"space-between", marginBottom:"20px"}}>
+                    <Box sx={{display:"flex" ,justifyContent:"space-between", marginBottom:"20px", alignItems:"center"}}>
                         <Typography>USDC</Typography>
                         <TextField
                             type="number"
@@ -181,8 +181,9 @@ const SellModal = (props: IProps) => {
                             onClick={handleSellIndex} 
                             variant="contained" 
                             sx={{width:"320px"}}
+                            disabled={!amountIndexSell}
                         >
-                            <Typography sx={{fontWeight:"bold"}}>SELL DPI</Typography>
+                            <Typography sx={{fontWeight:"bold"}}>SELL {index?.symbol}</Typography>
                         </LoadingButton>
                     ) : (
                         <LoadingButton

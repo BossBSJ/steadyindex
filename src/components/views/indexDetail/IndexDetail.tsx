@@ -15,6 +15,7 @@ import MyAreaChart from "./MyAreaChart";
 import { historyPrice } from "../../../interfaces/historyPrice.interface";
 import { useContractRead } from "wagmi";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../../../constants/abi";
+import DCAModal from "../../Modal/DCAModal";
 
 const headers = [
     "Quantity per Set", "Token Price", "Current Alloc / Strategic Alloc", "1 Day Percent Change", "Total Price per Set"
@@ -68,7 +69,7 @@ const IndexDetail = () => {
         setShowSellModal(false)
     }
 
-    const { index, componentPercentChange, createdDate, historyPrice } = useIndexDetail(Number(indexId))
+    const { index, componentPercentChange, createdDate, historyPrice } = useIndexDetail(Number(indexId)) 
 
     const [data, setData] = useState<IndexOnTable | undefined>(index)
     const [historyPriceData, setHistoryPriceData] = useState<historyPrice[]>()
@@ -238,7 +239,7 @@ const IndexDetail = () => {
             <BuyModal
                 open={showBuyModal}
                 onClose={handleCloseBuyModal}
-                dcaModal={false}
+                // dcaModal={false}
                 index={data}
             />
             <SellModal
@@ -246,10 +247,11 @@ const IndexDetail = () => {
                 onClose={handleCloseSellModal}
                 index={data}
             />
-            <BuyModal
+            <DCAModal
                 open={showDCAModal}
                 onClose={handleCloseDCAModal}
-                dcaModal={true}
+                // dcaModal={true}
+                index={data}
             />
         </Container>
     )

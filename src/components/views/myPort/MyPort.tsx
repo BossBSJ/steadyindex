@@ -66,7 +66,7 @@ const MyPort = () => {
             setCreatedIndexAddress(createdIndexAddress)
         }
 
-        const getIndexHold = async () => {
+        const getIndexHoldAddress = async () => {
             let indexHoldAddress:Address[] = []
             for(let i = 0; i < allIndexTokenAddress.length; i++){
                 const indexTokenAddress = allIndexTokenAddress[i]
@@ -82,7 +82,7 @@ const MyPort = () => {
         }
 
         getIndexCreatedAddress()
-        getIndexHold()
+        getIndexHoldAddress()
     }, [allIndexTokenAddress, accountAddress])
 
     useEffect(() => {

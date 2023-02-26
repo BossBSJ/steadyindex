@@ -16,14 +16,12 @@ import { LoadingButton } from "@mui/lab";
 type IProps = {
     open: boolean
     onClose: () => void
-    dcaModal: boolean
+    // dcaModal: boolean
     index?: IndexOnTable
 }
 
 const BuyModal = (props: IProps) => {
-    const { open, onClose, dcaModal, index } = props
-    const [checked, setChecked] = useState<boolean>(dcaModal);
-    const [periodDCA, setPeriodDCA] = useState<string>('')
+    const { open, onClose, index } = props
 
     const [amountIndexBuy, setAmountIndexBuy] = useState<number>(0)
     const [amountUSDCBuy, setAmountUSDCBuy] = useState<number>(0)
@@ -35,18 +33,6 @@ const BuyModal = (props: IProps) => {
     const [hashApprove, setHashApprove] = useState<Address>()
     const [hashBuy, setHashBuy] = useState<Address>()
 
-    const handleChangeSwitch = (event: ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked)
-    }
-
-    const handleChoosePeriod = (plan:string) => {
-        if(periodDCA === plan){
-            setPeriodDCA('')
-        }else {
-            setPeriodDCA(plan)
-        }
-    }
-
     const handleChangeAmountIndexBuy = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setAmountIndexBuy(+event.target.value)
     }
@@ -56,10 +42,6 @@ const BuyModal = (props: IProps) => {
         setAmountUSDCBuy(index?.price * amountIndexBuy)
 
     }, [amountIndexBuy])
-
-    // const handleChangeAmountUSDCBuy = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setAmountUSDCBuy(+event.target.value)
-    // }
 
     //approve usdc for buying index
     const handleApproveUsdc = async () => {
@@ -156,7 +138,7 @@ const BuyModal = (props: IProps) => {
                 <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>Buy</Typography>
                 <Box>
                     <Typography variant="caption">Receive</Typography>
-                    <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
+                    <Box sx={{display:"flex" ,justifyContent:"space-between", alignItems:"center"}}>
                         <Typography>{index?.symbol}</Typography>
                         <TextField
                             type="number"
@@ -173,7 +155,7 @@ const BuyModal = (props: IProps) => {
                         <Typography variant="caption">Pay</Typography>
                         <Typography variant="caption">Balance: {usdcBalance} USDC</Typography>
                     </Box>
-                    <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
+                    <Box sx={{display:"flex" ,justifyContent:"space-between", marginBottom:"20px",alignItems:"center"}}>
                         <Typography>USDC</Typography>
                         <TextField
                             type="number"
@@ -190,55 +172,6 @@ const BuyModal = (props: IProps) => {
                         />
                     </Box>
                 </Box>
-                <Box sx={{display:"flex" ,justifyContent:"space-between"}}>
-                    <Typography sx={{fontWeight:"bold"}}>DCA With DPI</Typography>
-                    <Switch
-                        checked={checked}
-                        onChange={handleChangeSwitch}
-                    />
-                </Box>
-                {checked &&
-                <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                    <ButtonGroup sx={{borderRadius:"8px",}}>
-                        <Button 
-                            variant="text" 
-                            sx={periodDCA === 'Day'?{background:theme.palette.gradient.primary, color:"white"}:{}}
-                            onClick={() => handleChoosePeriod('Day')}
-                        >
-                            Day
-                        </Button>
-                        <Button 
-                            variant="text" 
-                            sx={periodDCA === 'Weekly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
-                            onClick={() => handleChoosePeriod('Weekly')}
-                        >                            
-                            Weekly
-                        </Button>
-                        <Button 
-                            variant="text" 
-                            sx={periodDCA === 'Monthly'?{background:theme.palette.gradient.primary, color:"white"}:{}}
-                            onClick={() => handleChoosePeriod('Monthly')}
-                        >                            
-                            Monthly
-                        </Button>
-                    </ButtonGroup>
-                </Box>
-                }
-                {periodDCA != '' && checked &&
-                <Box>
-                    <Typography sx={{fontWeight:"bold"}}>Deposit to our vault</Typography>
-                    <Box sx={{display:"flex", justifyContent:"space-between"}}>
-                        <TextField
-                                type="number"
-                                placeholder="0.0"
-                                inputProps={{
-                                    sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
-                                }}
-                        />
-                        <Typography>est. 3.2 {periodDCA}</Typography>
-                    </Box>
-                </Box>
-                }
                 <Box sx={{display:"flex", justifyContent:"space-around"}}>
                     {checkApprove ? (
                         <LoadingButton 
@@ -246,6 +179,7 @@ const BuyModal = (props: IProps) => {
                             onClick={handleBuyIndex} 
                             variant="contained" 
                             sx={{width:"320px"}}
+                            disabled={!amountIndexBuy}
                         >
                             <Typography sx={{fontWeight:"bold"}}>BUY {index?.symbol}</Typography>
                         </LoadingButton>
