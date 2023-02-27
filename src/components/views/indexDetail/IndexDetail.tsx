@@ -91,7 +91,10 @@ const IndexDetail = () => {
             </NavLink>
             <Box sx={{display:"flex", justifyContent:"space-between"}}>
                 {data ? (
-                    <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
+                    <Box>
+                        <Typography  variant="h4" sx={{fontWeight:"bold"}}>{data?.name}</Typography>
+                        <Typography component="span">{data.address}</Typography>
+                    </Box>
                 ) : (
                     <Skeleton animation="wave" variant="rounded" width={230} height={60}/>
                 )}
@@ -239,7 +242,6 @@ const IndexDetail = () => {
             <BuyModal
                 open={showBuyModal}
                 onClose={handleCloseBuyModal}
-                // dcaModal={false}
                 index={data}
             />
             <SellModal
@@ -250,7 +252,6 @@ const IndexDetail = () => {
             <DCAModal
                 open={showDCAModal}
                 onClose={handleCloseDCAModal}
-                // dcaModal={true}
                 index={data}
             />
         </Container>
