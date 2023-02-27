@@ -4,8 +4,8 @@ import { readContract, fetchBalance } from '@wagmi/core'
 import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory"
 import IndexTable from "../../IndexTable"
 import PortCard from "./PortCard"
-import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../../../constants/constants";
-import { INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
+import { DCA_MANAGER_CONTRACT_ADDRESS, INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS } from "../../../constants/constants";
+import { DCA_MANAGER_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY_CONTRACT_ABI } from "../../../constants/abi";
 import { useEffect, useState } from "react"
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { element } from "@rainbow-me/rainbowkit/dist/css/reset.css"
@@ -93,6 +93,18 @@ const MyPort = () => {
         setIndexHold(holdIndex)
     },[allIndexToken,indexHoldAddress, createdIndexAddress])
 
+
+    const investmentsForAccount = async () => {
+        if(!accountAddress) return
+        const getInvestmentsForAccount = await readContract({
+            address: DCA_MANAGER_CONTRACT_ADDRESS,
+            abi: DCA_MANAGER_CONTRACT_ABI,
+            functionName:"InvestmentsForAccount",
+            args: [accountAddress]
+        })
+        // console.log(getInvestmentsForAccount[0])
+    }
+    investmentsForAccount()
 
     return(
         <Container>
