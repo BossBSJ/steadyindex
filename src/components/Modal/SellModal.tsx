@@ -110,7 +110,7 @@ const SellModal = (props: IProps) => {
     }
     useEffect(() => {
         getIndexBalance()
-    },[address, hashSell, index]) 
+    },[address, hashSell, index, open]) 
 
     //check allowance
     useEffect(() => {

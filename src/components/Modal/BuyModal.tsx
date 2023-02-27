@@ -109,7 +109,7 @@ const BuyModal = (props: IProps) => {
     }
     useEffect(() => {
         getUsdcBalance()
-    },[address, hashBuy, index])
+    },[address, hashBuy, index, open])
 
     // check allowance
     useEffect(() => {
