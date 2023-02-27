@@ -19,12 +19,21 @@ const MyPieChart = (props: IProps) => {
     
     const CustomToolTip = ({ active, payload, label }: any) => {
         if(active && payload && payload.length){
+            const data = payload[0].payload.payload
             return(
-                <Box sx={{padding: "10px", backgroundColor: "rgba(0,0,0,0.7)", color:"white"}}>
+                <Box sx={{padding: "10px", backgroundColor: "rgba(0,0,0,0.7)", color:"white", width:"150px", borderRadius:"5px"}}>
                     <Typography sx={{fontWeight:"bold"}}>{payload[0].name}</Typography>
                     <Box sx={{display:"flex", justifyContent:"space-between"}}>
+                        <Typography>Balance:</Typography>
+                        <Typography>{data.balance.toFixed(2)}</Typography>
+                    </Box>
+                    <Box sx={{display:"flex", justifyContent:"space-between"}}>
+                        <Typography>Value:</Typography>
+                        <Typography>{data.value.toFixed(2)}</Typography>
+                    </Box>
+                    <Box sx={{display:"flex", justifyContent:"space-between"}}>
                         <Typography>Ratio:</Typography>
-                        <Typography>{payload[0].value.toFixed(2)}%</Typography>
+                        <Typography>{data.ratio.toFixed(2)}%</Typography>
                     </Box>
                 </Box>
             )
