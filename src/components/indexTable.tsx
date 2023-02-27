@@ -22,10 +22,6 @@ const priceUpStyle = {
     textAlign:"center",
 }
 
-const headers = [
-    // "Market Cap", "Price", "1 Day", "1 Week", "1 Month", "All-time"
-    "Market Cap", "Price", "Asset Underlying"
-]
 //typeTable, setTypeTable
 type IProps = {
     createdIndex: IndexOnTable[] | undefined
@@ -40,9 +36,6 @@ const IndexTable = (props: IProps) => {
 
     const [index, setIndex] = useState<IndexOnTable[] | undefined>(holdIndex)
     const navigate = useNavigate()
-
-    // console.log("holdIndex", holdIndex)
-    // console.log("createdIndex", createdIndex)
 
     useEffect(() => {
         if(!holdIndex)
@@ -94,16 +87,12 @@ const IndexTable = (props: IProps) => {
                 <Box></Box>
                 }
             </Box>
+            {typeTable !== "Investment"? (
             <Grid container>
                 <Grid item xs={3}>
                     <Typography variant="body1" sx={{color:"#82858A"}}>Name</Typography>
                 </Grid>
                 <Grid container item xs={9} spacing={3}>
-                    {/* {headers.map((header) => (
-                        <Grid key={header} item xs={3}>
-                            <Typography variant="body1" sx={{color:"#82858A"}}>{header}</Typography>
-                        </Grid>
-                    ))} */}
                     <Grid item xs={2}>
                             <Typography variant="body1" sx={{color:"#82858A"}}>Market Cap</Typography>
                     </Grid>
@@ -115,6 +104,30 @@ const IndexTable = (props: IProps) => {
                     </Grid>
                 </Grid>
             </Grid>
+            ) : (
+                <Grid container>
+                    <Grid item xs={3}>
+                        <Typography variant="body1" sx={{color:"#82858A"}}>Name</Typography>
+                    </Grid>
+                    <Grid container item xs={9} spacing={3}>
+                        <Grid item xs={2}>
+                                <Typography variant="body1" sx={{color:"#82858A"}}>Market Cap</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Typography variant="body1" sx={{color:"#82858A"}}>Price</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Typography variant="body1" sx={{color:"#82858A"}}>Port Value</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Typography variant="body1" sx={{color:"#82858A"}}>Invest/Period</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Typography variant="body1" sx={{color:"#82858A"}}>Periods</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            )}
             {index ? (
                 <Paper sx={{backgroundColor:"rgba(255, 255, 255, 0.75)"}}>
                     {index?.map((row, idx) => (
@@ -146,26 +159,6 @@ const IndexTable = (props: IProps) => {
                                         ${numberWithCommas(row.price)}
                                     </Box>
                                 </Grid>
-                                {/* <Grid item xs={2}  >
-                                    <Box sx={row.dayChange >= 0? priceUpStyle : priceDownStyle}>
-                                        {row.dayChange >= 0? "+":""}{row.dayChange}%
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={2} >
-                                    <Box sx={row.weekChange >= 0? priceUpStyle : priceDownStyle}>
-                                        {row.weekChange >= 0? "+":""}{row.weekChange}%
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={2} >
-                                    <Box sx={row.monthChange >= 0? priceUpStyle : priceDownStyle}>
-                                        {row.monthChange >= 0? "+":""}{row.monthChange}%
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={2} >
-                                    <Box sx={row.allTimeChange >= 0? priceUpStyle : priceDownStyle}>
-                                        {row.allTimeChange >= 0? "+":""}{row.allTimeChange}%
-                                    </Box>
-                                </Grid> */}
                                 <Grid item xs={8} sx={{display:"flex"}}>
                                 {(row.components.slice(0,4)).map((token, idx) => (
                                     <Box key={idx} sx={{marginRight:"15px", display:"flex"}}>
@@ -218,6 +211,13 @@ const IndexTable = (props: IProps) => {
                 </Paper>
             ) : ( //styling skeleton
                 <Skeleton animation="wave" variant="rounded" height={116}/>
+            )}
+            {typeTable === "Investment"? (
+                <Paper sx={{backgroundColor:"rgba(255, 255, 255, 0.75)"}}>
+                    
+                </Paper>
+            ) : (
+                <Box></Box>
             )}
         </Card>
     )
