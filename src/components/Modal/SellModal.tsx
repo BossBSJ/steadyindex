@@ -135,7 +135,7 @@ const SellModal = (props: IProps) => {
             open={open}
             onClose={onClose}
         >
-            <Card sx={{backgroundColor:"#F3F3FF", padding: "20px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)", height: "40vh", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+            <Card sx={{backgroundColor:"#F3F3FF", padding: "20px", position:"absolute", left:"50%", top:"50%", transform: "translate(-50%, -50%)", minHeight: "40vh", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                 <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>Sell</Typography>
                 <Box>
                     <Box sx={{display:"flex", justifyContent:"space-between" }}>

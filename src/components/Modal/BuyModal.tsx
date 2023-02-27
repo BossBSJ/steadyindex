@@ -1,5 +1,5 @@
 
-import { Button, ButtonGroup, Card, CardHeader, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Typography } from "@mui/material"
+import { Button, ButtonGroup, Card, CardHeader, InputBase, MenuItem, Modal, Paper, Select, SelectChangeEvent, Switch, TextField, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { ChangeEvent, useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -11,6 +11,7 @@ import { CONTROLLER_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../consta
 import { CONTROLLER_CONTRACT_ABI } from "../../constants/abi";
 import { ethers } from "ethers";
 import { LoadingButton } from "@mui/lab";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 
 type IProps = {
@@ -152,7 +153,12 @@ const BuyModal = (props: IProps) => {
                 </Box>
                 <Box>
                     <Box sx={{display:"flex", justifyContent:"space-between" }}>
-                        <Typography variant="caption">Pay</Typography>
+                        <Box sx={{display:"flex",justifyContent:"space-between", width:"50px", alignItems:"center"}}>
+                            <Typography variant="caption">Pay</Typography>
+                            <Tooltip title="Fee 0.25%" sx={{marginLeft:"5px"}}>
+                                <InfoOutlinedIcon sx={{fontSize:"medium", color:"gray"}}/>
+                            </Tooltip>
+                        </Box>
                         <Typography variant="caption">Balance: {usdcBalance} USDC</Typography>
                     </Box>
                     <Box sx={{display:"flex" ,justifyContent:"space-between", marginBottom:"20px",alignItems:"center"}}>
@@ -172,7 +178,13 @@ const BuyModal = (props: IProps) => {
                         />
                     </Box>
                 </Box>
-                <Box sx={{display:"flex", justifyContent:"space-around"}}>
+                
+                <Box sx={{display:"flex", justifyContent:"space-around", flexDirection:"column"}}>
+                    {/* <Box sx={{display:"flex", justifyContent:"space-around"}}>
+                        <Tooltip title="Fee 0.25%">
+                            <InfoOutlinedIcon sx={{fontSize:"large"}}/>
+                        </Tooltip>
+                    </Box> */}
                     {checkApprove ? (
                         <LoadingButton 
                             loading={waitingBuyIndex.isLoading}
@@ -182,6 +194,7 @@ const BuyModal = (props: IProps) => {
                             disabled={!amountIndexBuy}
                         >
                             <Typography sx={{fontWeight:"bold"}}>BUY {index?.symbol}</Typography>
+                            
                         </LoadingButton>
                     ) : (
                         <LoadingButton 
