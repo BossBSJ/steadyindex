@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material"
+import { Box, Container, Skeleton } from "@mui/material"
 import { Address, useAccount, useContractRead } from "wagmi"
 import { readContract, fetchBalance } from '@wagmi/core'
 import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory"
@@ -9,6 +9,8 @@ import { DCA_MANAGER_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI, INDEX_TOKEN_FACTORY
 import { useEffect, useState } from "react"
 import { IndexOnTable } from "../../../interfaces/indexOnTable.interface"
 import { element } from "@rainbow-me/rainbowkit/dist/css/reset.css"
+import { useInvestment } from "../../../hooks/useInvestment"
+import { Investment } from "../../../interfaces/investment.interface"
 
 const MyPort = () => {
     const [typeTable, setTypeTable] = useState<string>('Wallet')
@@ -20,6 +22,8 @@ const MyPort = () => {
     const [createdIndex, setCreatedIndex] = useState<IndexOnTable[] | undefined>()
     const [indexHoldAddress, setIndexHoldAddress] = useState<Address[]>()
     const [indexHold, setIndexHold] = useState<IndexOnTable[] | undefined>()
+
+    const [investmentIndex, setInvestment] = useState<Investment[]>()
     
     const getAccountAddress = useAccount()
     useEffect(() => {
@@ -94,28 +98,30 @@ const MyPort = () => {
     },[allIndexToken,indexHoldAddress, createdIndexAddress])
 
 
-    const investmentsForAccount = async () => {
-        if(!accountAddress) return
-        const getInvestmentsForAccount = await readContract({
-            address: DCA_MANAGER_CONTRACT_ADDRESS,
-            abi: DCA_MANAGER_CONTRACT_ABI,
-            functionName:"InvestmentsForAccount",
-            args: [accountAddress]
-        })
-        // console.log(getInvestmentsForAccount[0])
-    }
-    investmentsForAccount()
+    const getInvestmentIndex = useInvestment(accountAddress)
+    useEffect(() => {
+        if(!getInvestmentIndex) return
+        setInvestment(getInvestmentIndex.investmentIndex)
+    },[getInvestmentIndex])
 
     return(
         <Container>
-            <PortCard/>
-            <IndexTable 
+            {investmentIndex? (
+                <PortCard investmentIndex={investmentIndex}/>
+            ) : (
+                <Skeleton animation="wave" variant="rounded" height={287} sx={{padding:"15px",marginTop:"20px"}}/>
+            )}
+            {createdIndex && createdIndex?
+            (<IndexTable 
                 createdIndex={createdIndex} 
                 holdIndex={indexHold}
                 isMyPortPage={true}
                 setTypeTable={setTypeTable}
                 typeTable={typeTable}
             />
+            ) : (
+                <Skeleton animation="wave" variant="rounded" height={450} sx={{padding:"15px",marginTop:"20px"}}/>
+            )}
         </Container>
     )
 }

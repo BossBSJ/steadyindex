@@ -20,6 +20,7 @@ const DCAModal = (props: IProps) => {
     const { open, onClose, index } = props
 
     const [amountIndex, setAmountIndex] = useState<number>(0)
+    const [amountUsdcPerPeriod, setAmountUsdcPerPeriod] = useState<number>(0)
     const [periodDCA, setPeriodDCA] = useState<string>('')
 
     const [address, setAddress] = useState<Address>()
@@ -39,6 +40,10 @@ const DCAModal = (props: IProps) => {
 
     const handleChangeAmountIndex = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setAmountIndex(+event.target.value)
+    }
+
+    const handleChangeAmountUsdcPerPeriod = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setAmountUsdcPerPeriod(+event.target.value)
     }
 
 
@@ -75,7 +80,7 @@ const DCAModal = (props: IProps) => {
             functionName: "manager"
         })
 
-        const _amountIndex = ethers.utils.parseUnits(String(amountIndex), 18)
+        const _amountIndex = ethers.utils.parseUnits(String(amountUsdcPerPeriod / index.price), 18) //change to getAmountInForIndexToken????
 
         let cycle = 0
         if(periodDCA === 'Day')
@@ -87,11 +92,13 @@ const DCAModal = (props: IProps) => {
 
         const _cycle = ethers.BigNumber.from(cycle)
 
+        const _amountUsdcPerPeriod = ethers.utils.parseUnits(String(amountUsdcPerPeriod), 6)
+
         const config = await prepareWriteContract({
             address: DCA_MANAGER_CONTRACT_ADDRESS,
             abi: DCA_MANAGER_CONTRACT_ABI,
             functionName: "subscription",
-            args: [trustedAddress, index.address, _amountIndex, USDC_CONTRACT_ADDRESS, _cycle]
+            args: [trustedAddress, index.address, _amountIndex, USDC_CONTRACT_ADDRESS, _amountUsdcPerPeriod, _cycle]
         })
 
         const data = await writeContract(config)
@@ -154,18 +161,18 @@ const DCAModal = (props: IProps) => {
                 <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}}>DCA</Typography>
                 <Box>
                     <Box sx={{display:"flex", justifyContent:"space-between" }}>
-                        <Typography variant="caption">DCA {"(Per period)"}</Typography>
+                        <Typography variant="caption">Invest per period</Typography>
                         <Typography variant="caption">Balance: {usdcBalance} USDC</Typography>
                     </Box>
                     <Box sx={{display:"flex" ,justifyContent:"space-between", alignItems:"center"}}>
-                        <Typography>{index?.symbol}</Typography>
+                        <Typography>USDC</Typography>
                         <TextField
                             type="number"
                             placeholder="0.0"
                             inputProps={{
                                 sx: {textAlign: "right","&::placeholder": {textAlign: "right",}},
                             }}
-                            onChange={handleChangeAmountIndex}
+                            onChange={handleChangeAmountUsdcPerPeriod}
                         />
                     </Box>
                 </Box>
@@ -201,7 +208,7 @@ const DCAModal = (props: IProps) => {
                             onClick={handleSubscription} 
                             variant="contained" 
                             sx={{width:"320px"}}
-                            disabled={!periodDCA || !amountIndex}
+                            disabled={!periodDCA || !amountUsdcPerPeriod}
                         >
                             <Typography sx={{fontWeight:"bold"}}>Create Investment {index?.symbol}</Typography>
                         </LoadingButton>

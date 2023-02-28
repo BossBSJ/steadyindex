@@ -1133,7 +1133,7 @@ export const CONTROLLER_CONTRACT_ABI = [
     }
   ] as const
 
-export const DCA_MANAGER_CONTRACT_ABI = [
+export const DCA_MANAGER_CONTRACT_ABI =  [
   {
     "inputs": [
       {
@@ -1171,6 +1171,11 @@ export const DCA_MANAGER_CONTRACT_ABI = [
             "internalType": "address",
             "name": "tokenIn",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenInAmount",
+            "type": "uint256"
           },
           {
             "internalType": "address",
@@ -1295,6 +1300,11 @@ export const DCA_MANAGER_CONTRACT_ABI = [
         "type": "address"
       },
       {
+        "internalType": "uint256",
+        "name": "tokenInAmount",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "indexTokenAddr",
         "type": "address"
@@ -1358,6 +1368,11 @@ export const DCA_MANAGER_CONTRACT_ABI = [
         "internalType": "address",
         "name": "_tokenIn",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenInAmount",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",

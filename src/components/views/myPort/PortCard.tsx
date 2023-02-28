@@ -9,17 +9,41 @@ import { fetchBalance } from "@wagmi/core";
 import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory";
 import MyPieChart from "./MyPieChart";
 import { allocation } from "../../../interfaces/allocation.interface";
+import { Investment } from "../../../interfaces/investment.interface";
 
 
-const PortCard = () => {
+type IProps = {
+    investmentIndex?: Investment[]
+}
+
+const PortCard = (props: IProps) => {
+
+    const { investmentIndex } = props
 
     const [accountAddress, setAccountAddress] = useState<Address>()
     const [allIndexTokenAddress, setAllIndexTokenAddress] = useState<readonly Address[]>()
     const [indexHoldAddress, setIndexHoldAddress] = useState<Address[]>()
     const [amountIndexes, setAmountIndexes] = useState<number[]>()
+    const [dcaPerMonth, setDcaPerMonth] = useState<number>()
     const [netWorth, setNetWorth] = useState<number>()
     const [indexAllocation, setIndexAllocation] = useState<allocation[]>()
     const [tokenAllocation, setTokenAllocation] = useState<allocation[]>()
+
+    useEffect(() => {
+        if(!investmentIndex) return
+        let dcaPerMonth = 0
+        for(let i = 0; i < investmentIndex.length; i++){
+            const cycle = investmentIndex[i].period
+            if(cycle === "Day"){
+                dcaPerMonth = dcaPerMonth + (30 * investmentIndex[i].investPerPeriod)
+            } else if(cycle === "Weekly") {
+                dcaPerMonth = dcaPerMonth + (4 * investmentIndex[i].investPerPeriod)
+            } else if(cycle === "Monthly") {
+                dcaPerMonth = dcaPerMonth + (investmentIndex[i].investPerPeriod)
+            }
+        }
+        setDcaPerMonth(dcaPerMonth)
+    }, [investmentIndex])
 
     const getAddress = useAccount()
     useEffect(() => {
@@ -127,15 +151,15 @@ const PortCard = () => {
                         <Typography variant="h6" sx={{textDecoration:"underline #005FFF 2px"}}>Net worth</Typography>
                     </Grid>
                     <Grid container item xs={4}>
-                        <Grid item xs={4}>
+                        <Grid item xs={6}>
                             <Typography sx={{textDecoration:"underline #4A47FA 2px"}}>Indexes</Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={6}>
                             <Typography sx={{textDecoration:"underline #07A6FF 2px"}}>DCA / Month</Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        {/* <Grid item xs={4}>
                             <Typography sx={{textDecoration:"underline #3CDCFF 2px"}}>NPL</Typography>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Grid>
                 <Grid container>
@@ -143,15 +167,15 @@ const PortCard = () => {
                     <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(netWorth)}</Typography>
                     </Grid>
                     <Grid container item xs={4}>
-                        <Grid item xs={4}>
+                        <Grid item xs={6}>
                             <Typography variant="h6" sx={{fontWeight:"bold"}}>{index?.length}</Typography>
                         </Grid>
-                        <Grid item xs={4}>
-                            <Typography variant="h6" sx={{fontWeight:"bold"}}>${numberWithCommas(208)}</Typography>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" sx={{fontWeight:"bold"}}>${numberWithCommas(dcaPerMonth)}</Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        {/* <Grid item xs={4}>
                             <Typography variant="h6" sx={{fontWeight:"bold"}}>+ 16.2%</Typography>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Grid>
             </Box>

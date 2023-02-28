@@ -5,7 +5,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { ComponentList } from "../../../../interfaces/component.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
-import { useColor } from 'color-thief-react'
 
 const lockedStyle = {
     cursor: "pointer"
