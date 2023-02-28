@@ -180,11 +180,6 @@ const BuyModal = (props: IProps) => {
                 </Box>
                 
                 <Box sx={{display:"flex", justifyContent:"space-around", flexDirection:"column"}}>
-                    {/* <Box sx={{display:"flex", justifyContent:"space-around"}}>
-                        <Tooltip title="Fee 0.25%">
-                            <InfoOutlinedIcon sx={{fontSize:"large"}}/>
-                        </Tooltip>
-                    </Box> */}
                     {checkApprove ? (
                         <LoadingButton 
                             loading={waitingBuyIndex.isLoading}
