@@ -27,7 +27,7 @@ const SellModal = (props: IProps) => {
     const [amountUSDCSell, setAmountUSDCSell] = useState<number>(0)
 
     const [address, setAddress] = useState<Address>()
-    const [indexBalance, setIndexBalance] = useState<number>()
+    const [indexBalance, setIndexBalance] = useState<string>()
     const [checkApprove, setCheckApprove] = useState<boolean>(false)
 
     const [hashApprove, setHashApprove] = useState<Address>()
@@ -72,6 +72,8 @@ const SellModal = (props: IProps) => {
         const _amountIndexSell = ethers.utils.parseUnits(String(amountIndexSell), 18)
         const _minAmountOut = ethers.utils.parseUnits("0")
 
+        console.log([index?.address, _amountIndexSell.toString(), USDC_CONTRACT_ADDRESS, _minAmountOut, address])
+
         if(!index?.address || !address) return
         const config = await prepareWriteContract({
             address: CONTROLLER_CONTRACT_ADDRESS,
@@ -106,7 +108,7 @@ const SellModal = (props: IProps) => {
             address: address,
             token: index?.address
         })
-        setIndexBalance(Number(indexBalance.formatted))
+        setIndexBalance(indexBalance.formatted)
     }
     useEffect(() => {
         getIndexBalance()

@@ -22,8 +22,7 @@ import {
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { chain as wagmiChain } from 'wagmi'
-import { goerli } from '@wagmi/chains';
+import { localhost } from '@wagmi/chains';
 
 
 const INFURA_API_KEY = process.env.REACT_APP_INFURA_API_KEY || ''
@@ -71,12 +70,12 @@ const avalancheFujiChain: Chain = {
 
 const { chains, provider, webSocketProvider } = configureChains(
     // [ avalancheChain, avalancheFujiChain, ],
-    [ avalancheFujiChain, avalancheChain ],
+    [ avalancheFujiChain, avalancheChain],
     [
       infuraProvider({
         apiKey: INFURA_API_KEY
       }),
-      publicProvider(),
+      // publicProvider(),
       jsonRpcProvider({
         rpc: (chain) => ({
           http: chain.rpcUrls.default

@@ -17,30 +17,44 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 type IProps = {
     open: boolean
     onClose: () => void
-    // dcaModal: boolean
     index?: IndexOnTable
 }
 
 const BuyModal = (props: IProps) => {
     const { open, onClose, index } = props
 
-    const [amountIndexBuy, setAmountIndexBuy] = useState<number>(0)
-    const [amountUSDCBuy, setAmountUSDCBuy] = useState<number>(0)
+    const [amountIndexBuy, setAmountIndexBuy] = useState<string>()
+    const [amountUSDCBuy, setAmountUSDCBuy] = useState<number>()
 
     const [address, setAddress] = useState<Address>()
-    const [usdcBalance, setUsdcBalance] = useState<number>()
+    const [usdcBalance, setUsdcBalance] = useState<string>()
     const [checkApprove, setCheckApprove] = useState<boolean>(false)
 
     const [hashApprove, setHashApprove] = useState<Address>()
     const [hashBuy, setHashBuy] = useState<Address>()
 
     const handleChangeAmountIndexBuy = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setAmountIndexBuy(+event.target.value)
+        setAmountIndexBuy(event.target.value)
     }
 
     useEffect(() => {
         if(!index) return
-        setAmountUSDCBuy(index?.price * amountIndexBuy)
+        const getAmountInForIndexToken = async () => {
+            if(amountIndexBuy && amountIndexBuy !== '0'){
+                const _amountIndexBuy = ethers.utils.parseUnits(amountIndexBuy)
+                const amountUsdcIn = await readContract({
+                    address: CONTROLLER_CONTRACT_ADDRESS,
+                    abi: CONTROLLER_CONTRACT_ABI,
+                    functionName: "getAmountInForIndexToken",
+                    args: [index.address, _amountIndexBuy, USDC_CONTRACT_ADDRESS]
+                })
+                // console.log(Number(amountUsdcIn.tokenInAmount._hex))
+                setAmountUSDCBuy(Number(amountUsdcIn.tokenInAmount._hex) / 10**6)
+            } else {
+                setAmountUSDCBuy(0)
+            }
+        }
+        getAmountInForIndexToken()
 
     }, [amountIndexBuy])
 
@@ -106,7 +120,7 @@ const BuyModal = (props: IProps) => {
             address: address,
             token: USDC_CONTRACT_ADDRESS
         })
-        setUsdcBalance(Number(indexBalance.formatted))
+        setUsdcBalance(indexBalance.formatted)
     }
     useEffect(() => {
         getUsdcBalance()
@@ -186,7 +200,7 @@ const BuyModal = (props: IProps) => {
                             onClick={handleBuyIndex} 
                             variant="contained" 
                             sx={{width:"320px"}}
-                            disabled={!amountIndexBuy}
+                            disabled={!amountIndexBuy || amountIndexBuy === '0'}
                         >
                             <Typography sx={{fontWeight:"bold"}}>BUY {index?.symbol}</Typography>
                             

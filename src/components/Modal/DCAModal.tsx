@@ -24,7 +24,7 @@ const DCAModal = (props: IProps) => {
     const [periodDCA, setPeriodDCA] = useState<string>('')
 
     const [address, setAddress] = useState<Address>()
-    const [usdcBalance, setUsdcBalance] = useState<number>()
+    const [usdcBalance, setUsdcBalance] = useState<string>()
     const [checkApprove, setCheckApprove] = useState<boolean>(false)
 
     const [hashApprove, setHashApprove] = useState<Address>()
@@ -128,7 +128,7 @@ const DCAModal = (props: IProps) => {
             address: address,
             token: USDC_CONTRACT_ADDRESS
         })
-        setUsdcBalance(Number(indexBalance.formatted))
+        setUsdcBalance(indexBalance.formatted)
     }
     useEffect(() => {
         getUsdcBalance()
