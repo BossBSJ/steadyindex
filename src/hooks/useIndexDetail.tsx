@@ -64,15 +64,6 @@ export const useIndexDetail = (idx: number) => {
         setHistoryPrice(historyPrice)
     }, [beforePrice, priceIndex])
 
-    // const getTotalSupply = useContractRead({
-    //     address: address,
-    //     abi: INDEX_TOKEN_CONTRACT_ABI,
-    //     functionName: "getPositionUnit",
-    //     args: ["0xB6076C93701D6a07266c31066B298AeC6dd65c2d"]
-    // })
-    // console.log(getTotalSupply.data)
-
-
     useEffect(() => {
         if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice || !address) return
 

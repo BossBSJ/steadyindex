@@ -12,7 +12,6 @@ import { DCA_MANAGER_CONTRACT_ABI, INDEX_TOKEN_CONTRACT_ABI } from "../../consta
 type IProps = {
     open: boolean
     onClose: () => void
-    // dcaModal: boolean
     index?: IndexOnTable
 }
 

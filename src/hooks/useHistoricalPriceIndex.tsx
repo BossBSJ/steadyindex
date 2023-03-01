@@ -24,7 +24,6 @@ export const useHistoricalPriceIndex = (indexAddress:Address | undefined, compon
             if(dayDiff > 10)
                 dayDiff = 10
 
-            // dayDiff = 10
             let historicalTimestamps = []
             for(let i = 0; i < dayDiff; i++){
                 const historicalTimestamp = dateInTimeStampInSecond - 86400 * (i+1)
