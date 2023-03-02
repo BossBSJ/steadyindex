@@ -67,6 +67,22 @@ const avalancheFujiChain: Chain = {
   },
 };
 
+const forkAvalanche: Chain = {
+  id: 99999,
+  name: 'forkAvalanche',
+  network: 'localhost',
+  iconUrl: avaxLogo,
+  iconBackground: '#fff',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Avalanche',
+    symbol: 'AVAX',
+  },
+  rpcUrls: {
+    default: 'http://127.0.0.1:8545/'
+  },
+}
+
 
 const { chains, provider, webSocketProvider } = configureChains(
     // [ avalancheChain, avalancheFujiChain, ],
@@ -75,7 +91,7 @@ const { chains, provider, webSocketProvider } = configureChains(
       infuraProvider({
         apiKey: INFURA_API_KEY
       }),
-      // publicProvider(),
+      publicProvider(),
       jsonRpcProvider({
         rpc: (chain) => ({
           http: chain.rpcUrls.default
