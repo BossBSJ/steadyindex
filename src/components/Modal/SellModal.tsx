@@ -23,7 +23,7 @@ const SellModal = (props: IProps) => {
 
     const { open, onClose, index } = props
 
-    const [amountIndexSell, setAmountIndexSell] = useState<number>(0)
+    const [amountIndexSell, setAmountIndexSell] = useState<string>("0")
     const [amountUSDCSell, setAmountUSDCSell] = useState<number>(0)
 
     const [address, setAddress] = useState<Address>()
@@ -34,12 +34,12 @@ const SellModal = (props: IProps) => {
     const [hashSell, setHashSell] = useState<Address>()
 
     const handleChangeAmountIndexSell = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setAmountIndexSell(+event.target.value)
+        setAmountIndexSell(event.target.value)
     }
 
     useEffect(() => {
         if(!index) return
-        setAmountUSDCSell(index.price * amountIndexSell)
+        setAmountUSDCSell(index.price * (+amountIndexSell))
     }, [amountIndexSell])
 
     //approve index for sell
@@ -71,8 +71,6 @@ const SellModal = (props: IProps) => {
     const handleSellIndex = async () => {
         const _amountIndexSell = ethers.utils.parseUnits(String(amountIndexSell), 18)
         const _minAmountOut = ethers.utils.parseUnits("0")
-
-        console.log([index?.address, _amountIndexSell.toString(), USDC_CONTRACT_ADDRESS, _minAmountOut, address])
 
         if(!index?.address || !address) return
         const config = await prepareWriteContract({

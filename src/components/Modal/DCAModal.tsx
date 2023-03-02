@@ -131,7 +131,7 @@ const DCAModal = (props: IProps) => {
     }
     useEffect(() => {
         getUsdcBalance()
-    },[address, index])
+    },[address, index, open])
 
     //check allowance
     useEffect(() => {
