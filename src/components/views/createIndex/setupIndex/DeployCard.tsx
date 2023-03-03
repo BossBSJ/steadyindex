@@ -22,13 +22,8 @@ type IProps = {
 const DeployCard = (props: IProps) => {
 
     const {indexName, indexSymbol, startPrice, componentList, onwerAddress} = props
-    const [pictureToken, setPictureToken] = useState<any>(undefined)
+    console.log(startPrice)
     
-    const handleChangePicture = (event:React.ChangeEvent<HTMLInputElement>) => {
-        if(!event.target.files?.[0]) return
-        setPictureToken(URL.createObjectURL(event.target.files?.[0]))
-    }
-
 
     return (
         <Box>

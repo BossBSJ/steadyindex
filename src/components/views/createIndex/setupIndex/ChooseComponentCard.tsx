@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { ComponentList } from "../../../../interfaces/component.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
+import { tokens } from "../../../../constants/tokens";
 
 const lockedStyle = {
     cursor: "pointer"
@@ -43,18 +44,23 @@ const ChooseComponentCard = (props:IProps) => {
 
     useEffect(() => {
         async function getTokenList() {
-            const URL = "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/mc.tokenlist.json"
-            await axios.get(URL)
-                .then(function(response){
-                    const tmp:Asset[] = response.data.tokens
-                    const asset = tmp.filter(function(elem){
-                        return elem.chainId === CHAIN_FUJI //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
-                    })
-                    setAssets(asset)
-                })
-                .catch(function(error){
-                    return error
-                })
+            // const URL = "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/mc.tokenlist.json"
+            // await axios.get(URL)
+            //     .then(function(response){
+            //         const tmp:Asset[] = response.data.tokens
+            //         const asset = tmp.filter(function(elem){
+            //             return elem.chainId === CHAIN_AVALANCE //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
+            //         })
+            //         setAssets(asset)
+            //     })
+            //     .catch(function(error){
+            //         return error
+            //     })
+            const tmp:Asset[] = tokens
+            const asset = tmp.filter(function(elem){
+                return elem.chainId === CHAIN_AVALANCE //43113 = Avalanche Fuji Testnet, 43114 = Avalanche mainet
+            })
+            setAssets(asset)
         }
         getTokenList()
     }, [])
@@ -197,8 +203,8 @@ const ChooseComponentCard = (props:IProps) => {
                             >
                                 <Box sx={{display:"flex"}}>
                                     <img 
-                                        // src={option.logoURI}
-                                        src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${asset.address}/logo.png`}
+                                        src={asset.logoURI}
+                                        // src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${asset.address}/logo.png`}
                                         style={{width:"24px", height:"24px", borderRadius:"50%"}}
                                     />
                                     <Typography sx={{fontWeight:"bold", paddingLeft: "15px"}}>

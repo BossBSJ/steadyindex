@@ -86,7 +86,7 @@ const forkAvalanche: Chain = {
 
 const { chains, provider, webSocketProvider } = configureChains(
     // [ avalancheChain, avalancheFujiChain, ],
-    [ avalancheFujiChain, avalancheChain],
+    [ forkAvalanche, avalancheFujiChain, avalancheChain],
     [
       infuraProvider({
         apiKey: INFURA_API_KEY

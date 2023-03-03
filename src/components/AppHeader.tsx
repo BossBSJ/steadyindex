@@ -20,7 +20,7 @@ const AppHeader = () => {
                             style={{width:"125px", height:"51px"}}
                         />
                 </Box>
-                <Box sx={{display:"flex", justifyContent:"space-around", width:"750px"}}>
+                <Box sx={{display:"flex", justifyContent:"space-around", width:"60vw"}}>
                     <Typography
                         sx={{padding:"40px", cursor:"pointer", color:theme.palette.primary.main}}
                         onClick={() => {navigate(RouteName.myPort)}}

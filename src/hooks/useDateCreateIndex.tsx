@@ -19,7 +19,6 @@ export const useDateCreateIndex =  (indexAddress: Address | undefined) => {
                 functionName: "startBlock"
             })
 
-
             const response = await axios.request({
                 headers: {
                     Accept: "application/json", 
@@ -27,7 +26,8 @@ export const useDateCreateIndex =  (indexAddress: Address | undefined) => {
                 },
                 method: "GET",
                 url: `https://deep-index.moralis.io/api/v2/block/${(Number(blockNumberCreated._hex))}`,
-                params: {chain: "avalanche testnet"}
+                // params: {chain: "avalanche testnet"} //
+                params: {chain: "avalanche"}
             })
 
             const date = dayjs(response.data.timestamp)

@@ -30,11 +30,13 @@ export const useIndexTokenFactory = (indexTokenAddress:readonly Address[] | unde
                 const marketCap = totalSupply * priceIndexes[i]
 
                 let prepareTokenPrice = []
+                let tokenPrices = []
                 for(let j = 0; j < componentDatas[i].length; j++){
-                    const tokenPrice = erc20Service.fetchERC20Price(componentDatas[i][j].address)
-                    prepareTokenPrice.push(tokenPrice)
+                    const tokenPrice = await erc20Service.fetchERC20Price(componentDatas[i][j].address)
+                    tokenPrices.push(tokenPrice)
+                    // prepareTokenPrice.push(tokenPrice)
                 }
-                const tokenPrices = await Promise.all(prepareTokenPrice) //*
+                // const tokenPrices = await Promise.all(prepareTokenPrice) //*
 
                 let components = []
                 for(let j = 0; j < componentDatas[i].length; j++){

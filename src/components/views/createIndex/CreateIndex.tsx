@@ -51,6 +51,7 @@ const CreateIndex = () => {
                 unitList.push(unit)
                 strategicUnitList.push(strategicUnit)
             }
+            console.log(unitList)
             setUnitList(unitList)
             setStrategicUnitList(strategicUnitList)
         }
