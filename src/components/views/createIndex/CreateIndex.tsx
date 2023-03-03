@@ -39,19 +39,19 @@ const CreateIndex = () => {
             let strategicUnitList:BigNumber[] = []
             for(let i = 0; i < componentList.length; i++){
                 let amount = 0
-                const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
+                // const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
+                const tokenPrice = componentList[i].price
                 if(startPrice === ""){
                     continue
                 }
                 else {
-                    amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice
+                    amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice //get tokenprice ไม่ทัน
                 }
                 const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
                 const strategicUnit = ethers.utils.parseUnits(componentList[i].allocation.toFixed(18).toString(), 18)
                 unitList.push(unit)
                 strategicUnitList.push(strategicUnit)
             }
-            console.log(unitList)
             setUnitList(unitList)
             setStrategicUnitList(strategicUnitList)
         }

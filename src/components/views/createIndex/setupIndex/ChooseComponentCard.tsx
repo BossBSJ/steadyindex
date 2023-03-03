@@ -6,6 +6,7 @@ import { ComponentList } from "../../../../interfaces/component.interface";
 import axios from "axios";
 import { Asset } from "../../../../interfaces/asset.interface";
 import { tokens } from "../../../../constants/tokens";
+import { erc20Service } from "../../../../services/erc20Service";
 
 const lockedStyle = {
     cursor: "pointer"
@@ -92,12 +93,13 @@ const ChooseComponentCard = (props:IProps) => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
-    const handleAddToken = (asset:Asset) => {
+    const handleAddToken = async (asset:Asset) => {
         let newComponentList = [...componentList]
         newComponentList.push({
             asset: asset,
             allocation: 0,
-            locked: false
+            locked: false,
+            price: await erc20Service.fetchERC20Price(asset.address)
         })
         
         //change allocation in every token
