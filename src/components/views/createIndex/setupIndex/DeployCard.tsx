@@ -22,7 +22,6 @@ type IProps = {
 const DeployCard = (props: IProps) => {
 
     const {indexName, indexSymbol, startPrice, componentList, onwerAddress} = props
-    console.log(startPrice)
     
 
     return (

@@ -15,6 +15,7 @@ import { BigNumber, ethers } from "ethers";
 import { mockPriceOfComponents } from "../../../constants/mock";
 import { LoadingButton } from "@mui/lab";
 import { erc20Service } from "../../../services/erc20Service";
+import { calculateRatios } from "../../../utils/calculateRatios";
 
 const CreateIndex = () => {
     const navigate = useNavigate()
@@ -45,10 +46,10 @@ const CreateIndex = () => {
                     continue
                 }
                 else {
-                    amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice //get tokenprice ไม่ทัน
+                    amount = (+startPrice) * (componentList[i].allocation / 100) / tokenPrice
                 }
                 const unit = ethers.utils.parseUnits(amount.toFixed(componentList[i].asset.decimals).toString(), componentList[i].asset.decimals)
-                const strategicUnit = ethers.utils.parseUnits(componentList[i].allocation.toFixed(18).toString(), 18)
+                const strategicUnit = ethers.utils.parseUnits(componentList[i].allocation.toString(), 18)
                 unitList.push(unit)
                 strategicUnitList.push(strategicUnit)
             }
