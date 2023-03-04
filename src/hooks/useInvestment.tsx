@@ -1,4 +1,4 @@
-import { readContract } from "@wagmi/core";
+import { readContract, fetchBalance } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { Address } from "wagmi";
@@ -53,11 +53,16 @@ export const useInvestment = (accountAddress?:Address) => {
     }, [getIndex])
 
     useEffect(() => {
-        if(!index || !investAccount) return
+        if(!index || !investAccount || !accountAddress) return
+
+        const getInvestmentIndex = async () => {
 
         let investmentIndex:Investment[] = []
         for(let i = 0; i < index.length; i++){
-            const portValue = 0
+            const indexBalance = await fetchBalance({
+                address: accountAddress,
+                token: index[i].address
+            })
             const investPerPeriod = Number(investAccount[i].tokenInAmount._hex) / 10**6
             const period = () => {
                 const cycleSecond = Number(investAccount[i].cycle._hex)
@@ -73,12 +78,14 @@ export const useInvestment = (accountAddress?:Address) => {
 
             investmentIndex.push({
                 index: index[i],
-                portValue: portValue,
+                portValue: Number(indexBalance.formatted) * index[i].price,
                 investPerPeriod: investPerPeriod,
                 period: period()
             })
         }
         setInvestmentIndex(investmentIndex)
+    }
+    getInvestmentIndex()
     }, [index,investAccount])
 
     return { investmentIndex }

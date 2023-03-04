@@ -130,7 +130,6 @@ const ChooseComponentCard = (props: IProps) => {
 
     //change allocation in every token
     const length = newComponentList.length;
-    console.log(calculateRatios(newComponentList));
     const newAllocation = 100 / length;
 
     // setComponentList(
