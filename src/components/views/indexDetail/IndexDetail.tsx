@@ -217,6 +217,9 @@ const IndexDetail = () => {
                                         <Typography>
                                             {token.ratio.toFixed(2)}%
                                         </Typography>
+                                        <Typography component="span" variant="caption" sx={{color: "gray"}}>
+                                            /{token.strategicUnits.toFixed(2)}%
+                                        </Typography>
                                     </Grid>
                                     <Grid item xs={2.4}>
                                         <Typography sx={componentPercentChange?.[idx] >= 0 ? priceUpStyle : priceDownStyle}>

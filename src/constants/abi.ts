@@ -1254,6 +1254,25 @@ export const DCA_MANAGER_CONTRACT_ABI =  [
     "inputs": [
       {
         "internalType": "address",
+        "name": "_truestedAddr",
+        "type": "address"
+      }
+    ],
+    "name": "getInvestorsForTrustedAddr",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_account",
         "type": "address"
       },
@@ -1342,30 +1361,6 @@ export const DCA_MANAGER_CONTRACT_ABI =  [
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "investorsRegistered",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",

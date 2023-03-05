@@ -48,7 +48,8 @@ export const useIndexTokenFactory = (indexTokenAddress:readonly Address[] | unde
                         ratio: unitsNumArr[i][j] * tokenPrice / priceIndexes[i] * 100,
                         unit: unitsNumArr[i][j],
                         price: tokenPrice,
-                        pricePerSet: unitsNumArr[i][j] * tokenPrice
+                        pricePerSet: unitsNumArr[i][j] * tokenPrice,
+                        strategicUnits: 0
                     })
                 }
                 indexArr.push(

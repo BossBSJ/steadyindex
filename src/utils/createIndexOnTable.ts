@@ -11,7 +11,7 @@ export function createIndexOnTable(
     weekChange: number,
     monthChange: number,
     allTimeChange: number,
-    components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet: number}>,
+    components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet: number, strategicUnits:number}>,
 ){
     return { id, address, name, symbol, marketCap, price, dayChange, weekChange, monthChange, allTimeChange, components}
 }

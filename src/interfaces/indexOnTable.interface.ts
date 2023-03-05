@@ -11,5 +11,5 @@ export interface IndexOnTable {
     weekChange: number,
     monthChange: number,
     allTimeChange: number,
-    components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number}>,
+    components: Array<{address: Address,name: string, symbol:string, ratio: number, unit:number, price:number, pricePerSet:number, strategicUnits:number}>,
 }

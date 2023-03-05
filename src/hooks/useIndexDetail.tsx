@@ -45,14 +45,13 @@ export const useIndexDetail = (idx: number) => {
     const tokenData = token.data
     const blockNumber = block.data
 
-    const { priceIndex, unitsNum } = usePriceIndex(address, blockNumber)
+    const { priceIndex, unitsNum, strategicUnits } = usePriceIndex(address, blockNumber)
 
     const { componentData } = useComponentIndex(address)
 
     const { createdDate } = useDateCreateIndex(address)
 
     const { beforePrice } = useHistoricalPriceIndex(address, componentData)
-
     
     useEffect(() => {
         if(!beforePrice || !priceIndex) return
@@ -65,7 +64,7 @@ export const useIndexDetail = (idx: number) => {
     }, [beforePrice, priceIndex])
 
     useEffect(() => {
-        if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice || !address) return
+        if(!componentData || !tokenData || !priceIndex || !unitsNum || !historyPrice || !address || !strategicUnits) return
 
         const getIndexDetail = async () => {
             const getTotalSupply = await readContract({
@@ -104,7 +103,8 @@ export const useIndexDetail = (idx: number) => {
                     ratio: unitsNum[i] * componentPrice / priceIndex * 100,
                     unit: unitsNum[i],
                     price: componentPrice,
-                    pricePerSet: unitsNum[i] * componentPrice
+                    pricePerSet: unitsNum[i] * componentPrice,
+                    strategicUnits: strategicUnits[i]
                 })
                 
                 const percentChange = percentChanges[i]
@@ -134,7 +134,7 @@ export const useIndexDetail = (idx: number) => {
             setIndex(indexDetail)
     }
     getIndexDetail()
-    },[componentData, tokenData, priceIndex, unitsNum, address, historyPrice])
+    },[componentData, tokenData, priceIndex, unitsNum, address, historyPrice, strategicUnits])
 
 
     return { index, componentPercentChange, createdDate, historyPrice }
