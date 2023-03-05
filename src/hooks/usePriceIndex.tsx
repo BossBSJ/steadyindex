@@ -23,7 +23,6 @@ export const usePriceIndex = (indexAddress: Address | undefined, blockNumber?: n
                 abi: INDEX_TOKEN_CONTRACT_ABI,
                 functionName: "getPositions"
             })
-            console.log(positions)
 
             // const prepareGetPositionUnit = []
             // for(let i = 0; i < componentData?.length; i++){
