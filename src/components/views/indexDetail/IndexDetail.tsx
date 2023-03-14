@@ -124,7 +124,7 @@ const IndexDetail = () => {
                 {data? (
                     <Box>
                         {data?.marketCap? (
-                            <Typography variant="h6">{toA(data?.marketCap)}</Typography>
+                            <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
                         ) : (
                             <Typography variant="h6">0</Typography>
                         )}
@@ -148,7 +148,7 @@ const IndexDetail = () => {
                     <Typography variant="body1">Current Price</Typography>
                     <Box sx={{display:"flex"}}>
                         <Typography variant="h2">
-                            ${toA(data?.price)}
+                            ${numberWithCommas(data?.price)}
                             <span style={data.dayChange >= 0 ? priceUpSpanStyle : priceDownSpanStyle}>{data.dayChange.toFixed(2)}%</span>
                         </Typography>
                     </Box>
@@ -184,7 +184,7 @@ const IndexDetail = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography sx={{fontWeight:"bold"}}>${toA(index?.price)}</Typography>
+                                    <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -230,7 +230,7 @@ const IndexDetail = () => {
                                     </Grid>
                                     <Grid item xs={2.4}>
                                         <Typography sx={{fontWeight:"bold"}}>
-                                            ${toA(token.pricePerSet)}
+                                            ${numberWithCommas(token.pricePerSet)}
                                         </Typography>
                                     </Grid>
                                 </Grid>

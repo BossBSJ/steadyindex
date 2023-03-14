@@ -13,6 +13,7 @@ import { ethers } from "ethers";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { useInvestment } from "../hooks/useInvestment";
 import { toA } from "../utils/display";
+import { numberWithCommas } from "../utils/numberWithCommas";
 
 
 const priceDownStyle = {
@@ -199,12 +200,12 @@ const IndexTable = (props: IProps) => {
                             <Grid container item xs={9} spacing={3}>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${toA(row.marketCap)}
+                                        ${numberWithCommas(row.marketCap)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2} sx={{fontWeight:'bold'}}>
                                     <Box>
-                                        ${toA(row.price)}
+                                        ${numberWithCommas(row.price)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={8} sx={{display:"flex"}}>
@@ -282,22 +283,22 @@ const IndexTable = (props: IProps) => {
                             <Grid container item xs={9} spacing={3}>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${toA(item.index?.marketCap)}
+                                        ${numberWithCommas(item.index?.marketCap)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2} sx={{fontWeight:'bold'}}>
                                     <Box>
-                                        ${toA(item.index?.price)}
+                                        ${numberWithCommas(item.index?.price)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${toA(item.portValue)}
+                                        ${numberWithCommas(item.portValue)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${toA(item.investPerPeriod)}
+                                        ${numberWithCommas(item.investPerPeriod)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
