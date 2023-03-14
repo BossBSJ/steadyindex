@@ -5,12 +5,11 @@ import { useComponentIndexes } from "./useComponentIndexes";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { mockPriceOfComponents } from "../constants/mock";
 import { erc20Service } from "../services/erc20Service";
+import { token } from "../interfaces/token.interface";
 
-export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined) => {
+export const usePriceIndexes = (indexAddresses: readonly Address[] | undefined, componentDatas: token[][] | undefined) => {
     const [priceIndexes, setPriceIndexes] = useState<number[]>()
     const [unitsNumArr, setUnitsNumArr] = useState<number[][]>()
-
-    const { componentDatas } = useComponentIndexes(indexAddresses)
 
     useEffect(() => {
         if(!indexAddresses || !componentDatas) return

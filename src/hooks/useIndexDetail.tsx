@@ -45,9 +45,9 @@ export const useIndexDetail = (idx: number) => {
     const tokenData = token.data
     const blockNumber = block.data
 
-    const { priceIndex, unitsNum, strategicUnits } = usePriceIndex(address, blockNumber)
-
     const { componentData } = useComponentIndex(address)
+
+    const { priceIndex, unitsNum, strategicUnits } = usePriceIndex(address, componentData,blockNumber)
 
     const { createdDate } = useDateCreateIndex(address)
 

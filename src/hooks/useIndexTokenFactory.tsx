@@ -19,7 +19,7 @@ export const useIndexTokenFactory = (indexTokenAddress:readonly Address[] | unde
 
     const { componentDatas } = useComponentIndexes(indexTokenAddress)
 
-    const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress)
+    const { priceIndexes, unitsNumArr } = usePriceIndexes(indexTokenAddress, componentDatas)
 
     useEffect(() => {
         if(!indexTokenAddress || !tokenDatas || !componentDatas || !priceIndexes || !unitsNumArr) return

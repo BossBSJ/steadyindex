@@ -6,14 +6,14 @@ import { INDEX_TOKEN_CONTRACT_ABI } from "../constants/abi";
 import { BigNumber } from "ethers";
 import { mockPriceOfComponents } from "../constants/mock";
 import { erc20Service } from "../services/erc20Service";
+import { token } from "../interfaces/token.interface";
 
-export const usePriceIndex = (indexAddress: Address | undefined, blockNumber?: number) => {
+export const usePriceIndex = (indexAddress: Address | undefined, componentData: token[] | undefined,blockNumber?: number) => {
 
     const [priceIndex, setPriceIndex] = useState<number>()
     const [unitsNum, setUnitsNum] = useState<number[]>()
     const [strategicUnits, setStrategicUnits] = useState<number[]>()
 
-    const { componentData } = useComponentIndex(indexAddress)
     
     useEffect(() => {
         if(!componentData || !indexAddress) return
@@ -23,18 +23,6 @@ export const usePriceIndex = (indexAddress: Address | undefined, blockNumber?: n
                 abi: INDEX_TOKEN_CONTRACT_ABI,
                 functionName: "getPositions"
             })
-
-            // const prepareGetPositionUnit = []
-            // for(let i = 0; i < componentData?.length; i++){
-            //     const unit = await readContract({
-            //         address: indexAddress,
-            //         abi: INDEX_TOKEN_CONTRACT_ABI,
-            //         functionName: "getPositionUnit",
-            //         args: [componentData[i].address]
-            //     })
-            //     prepareGetPositionUnit.push(unit)
-            // }
-            // const units = await Promise.all(prepareGetPositionUnit)
 
             let price = 0
             let unitsNum = []
