@@ -90,6 +90,7 @@ const DCAModal = (props: IProps) => {
             cycle = 30 * 60 * 60 * 24
 
         const _cycle = ethers.BigNumber.from(cycle)
+        // const _cycle = ethers.BigNumber.from(60) //test scripts dca
 
         const _amountUsdcPerPeriod = ethers.utils.parseUnits(String(amountUsdcPerPeriod), 6)
 

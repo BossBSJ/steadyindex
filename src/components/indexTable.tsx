@@ -1,6 +1,6 @@
 import { Box, Card, Grid, Typography, Container, Paper, SelectChangeEvent, Select, MenuItem, Link, ButtonGroup, Button, Skeleton } from "@mui/material"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { numberWithCommas } from "../utils/numberWithCommas";
+
 import { useNavigate } from "react-router-dom";
 import { DCA_MANAGER_CONTRACT_ADDRESS, paletteColorCode, RouteName } from "../constants/constants";
 import { IndexOnTable } from "../interfaces/indexOnTable.interface";
@@ -12,6 +12,7 @@ import { DCA_MANAGER_CONTRACT_ABI } from "../constants/abi";
 import { ethers } from "ethers";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { useInvestment } from "../hooks/useInvestment";
+import { toA } from "../utils/display";
 
 
 const priceDownStyle = {
@@ -198,12 +199,12 @@ const IndexTable = (props: IProps) => {
                             <Grid container item xs={9} spacing={3}>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${numberWithCommas(row.marketCap)}
+                                        ${toA(row.marketCap)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2} sx={{fontWeight:'bold'}}>
                                     <Box>
-                                        ${numberWithCommas(row.price)}
+                                        ${toA(row.price)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={8} sx={{display:"flex"}}>
@@ -281,22 +282,22 @@ const IndexTable = (props: IProps) => {
                             <Grid container item xs={9} spacing={3}>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${numberWithCommas(item.index?.marketCap)}
+                                        ${toA(item.index?.marketCap)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2} sx={{fontWeight:'bold'}}>
                                     <Box>
-                                        ${numberWithCommas(item.index?.price)}
+                                        ${toA(item.index?.price)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${numberWithCommas(item.portValue)}
+                                        ${toA(item.portValue)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Box>
-                                        ${numberWithCommas(item.investPerPeriod)}
+                                        ${toA(item.investPerPeriod)}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={2}>

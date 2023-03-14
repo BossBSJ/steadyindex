@@ -40,7 +40,6 @@ const CreateIndex = () => {
             let strategicUnitList:BigNumber[] = []
             for(let i = 0; i < componentList.length; i++){
                 let amount = 0
-                // const tokenPrice = await erc20Service.fetchERC20Price(componentList[i].asset.address)
                 const tokenPrice = componentList[i].price
                 if(startPrice === ""){
                     continue

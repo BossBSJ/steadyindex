@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { NavLink } from 'react-router-dom';
 import theme from "../../../theme";
-import { numberWithCommas } from "../../../utils/numberWithCommas";
 import BuyModal from "../../Modal/BuyModal";
 import SellModal from "../../Modal/SellModal";
 import { useIndexDetail } from "../../../hooks/useIndexDetail";
@@ -16,6 +15,8 @@ import { historyPrice } from "../../../interfaces/historyPrice.interface";
 import { useContractRead } from "wagmi";
 import { INDEX_TOKEN_CONTRACT_ABI } from "../../../constants/abi";
 import DCAModal from "../../Modal/DCAModal";
+import { toA } from "../../../utils/display";
+import { numberWithCommas } from "../../../utils/numberWithCommas";
 
 const headers = [
     "Quantity per Set", "Token Price", "Current Alloc / Strategic Alloc", "1 Day Percent Change", "Total Price per Set"
@@ -123,7 +124,7 @@ const IndexDetail = () => {
                 {data? (
                     <Box>
                         {data?.marketCap? (
-                            <Typography variant="h6">{numberWithCommas(data?.marketCap)}</Typography>
+                            <Typography variant="h6">{toA(data?.marketCap)}</Typography>
                         ) : (
                             <Typography variant="h6">0</Typography>
                         )}
@@ -147,7 +148,7 @@ const IndexDetail = () => {
                     <Typography variant="body1">Current Price</Typography>
                     <Box sx={{display:"flex"}}>
                         <Typography variant="h2">
-                            ${numberWithCommas(data?.price)}
+                            ${toA(data?.price)}
                             <span style={data.dayChange >= 0 ? priceUpSpanStyle : priceDownSpanStyle}>{data.dayChange.toFixed(2)}%</span>
                         </Typography>
                     </Box>
@@ -183,7 +184,7 @@ const IndexDetail = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={2.4}>
-                                    <Typography sx={{fontWeight:"bold"}}>${numberWithCommas(index?.price)}</Typography>
+                                    <Typography sx={{fontWeight:"bold"}}>${toA(index?.price)}</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -205,7 +206,8 @@ const IndexDetail = () => {
                                 </Grid>
                                 <Grid container item xs={9}>
                                     <Grid item xs={2.4} sx={{display:"flex"}}>
-                                        <Typography>{token.unit.toFixed(2)} &nbsp;</Typography>
+                                        {/* <Typography>{token.unit.toFixed(2)} &nbsp;</Typography> */}
+                                        <Typography>{toA(token.unit)} &nbsp;</Typography>
                                         <Typography sx={{color:"#82858A"}}>{token.symbol}</Typography>
                                     </Grid>
                                     <Grid item xs={2.4}>
@@ -228,7 +230,7 @@ const IndexDetail = () => {
                                     </Grid>
                                     <Grid item xs={2.4}>
                                         <Typography sx={{fontWeight:"bold"}}>
-                                            ${numberWithCommas(token.pricePerSet)}
+                                            ${toA(token.pricePerSet)}
                                         </Typography>
                                     </Grid>
                                 </Grid>

@@ -1,6 +1,5 @@
 import { Card, Grid, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { numberWithCommas } from "../../../utils/numberWithCommas"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS, paletteColorCode } from "../../../constants/constants";
 import { useEffect, useState } from "react";
 import { Address, useAccount, useContractRead } from "wagmi";
@@ -10,6 +9,7 @@ import { useIndexTokenFactory } from "../../../hooks/useIndexTokenFactory";
 import MyPieChart from "./MyPieChart";
 import { allocation } from "../../../interfaces/allocation.interface";
 import { Investment } from "../../../interfaces/investment.interface";
+import { toA } from "../../../utils/display";
 
 
 type IProps = {
@@ -164,14 +164,14 @@ const PortCard = (props: IProps) => {
                 </Grid>
                 <Grid container>
                     <Grid item xs={8}>
-                    <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(netWorth)}</Typography>
+                    <Typography variant="h4" sx={{fontWeight:"bold"}}>${toA(netWorth)}</Typography>
                     </Grid>
                     <Grid container item xs={4}>
                         <Grid item xs={6}>
                             <Typography variant="h6" sx={{fontWeight:"bold"}}>{index?.length}</Typography>
                         </Grid>
                         <Grid item xs={6}>
-                            <Typography variant="h6" sx={{fontWeight:"bold"}}>${numberWithCommas(dcaPerMonth)}</Typography>
+                            <Typography variant="h6" sx={{fontWeight:"bold"}}>${toA(dcaPerMonth)}</Typography>
                         </Grid>
                         {/* <Grid item xs={4}>
                             <Typography variant="h6" sx={{fontWeight:"bold"}}>+ 16.2%</Typography>
