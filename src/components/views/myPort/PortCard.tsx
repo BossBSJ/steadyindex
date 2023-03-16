@@ -1,4 +1,4 @@
-import { Card, Grid, Typography } from "@mui/material"
+import { Card, Grid, Skeleton, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { INDEX_TOKEN_FACTORY_CONTRACT_ADDRESS, paletteColorCode } from "../../../constants/constants";
 import { useEffect, useState } from "react";
@@ -145,80 +145,86 @@ const PortCard = (props: IProps) => {
     
 
     return(
-        <Card sx={{marginTop: "20px", padding:"15px",  borderRadius:"16px"}}>
-            <Box>
-                <Grid container>
-                    <Grid item xs={8}>
-                        <Typography variant="h6" sx={{textDecoration:"underline #005FFF 2px"}}>Net worth</Typography>
-                    </Grid>
-                    <Grid container item xs={4}>
-                        <Grid item xs={6}>
-                            <Typography sx={{textDecoration:"underline #4A47FA 2px"}}>Indexes</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography sx={{textDecoration:"underline #07A6FF 2px"}}>DCA / Month</Typography>
-                        </Grid>
-                        {/* <Grid item xs={4}>
-                            <Typography sx={{textDecoration:"underline #3CDCFF 2px"}}>NPL</Typography>
-                        </Grid> */}
-                    </Grid>
-                </Grid>
-                <Grid container>
-                    <Grid item xs={8}>
-                    <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(netWorth)}</Typography>
-                    </Grid>
-                    <Grid container item xs={4}>
-                        <Grid item xs={6}>
-                            <Typography variant="h6" sx={{fontWeight:"bold"}}>{index?.length}</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="h6" sx={{fontWeight:"bold"}}>${numberWithCommas(dcaPerMonth)}</Typography>
-                        </Grid>
-                        {/* <Grid item xs={4}>
-                            <Typography variant="h6" sx={{fontWeight:"bold"}}>+ 16.2%</Typography>
-                        </Grid> */}
-                    </Grid>
-                </Grid>
-            </Box>
-            <Box sx={{marginTop:"20px", display:"flex", justifyContent:"space-around"}}>
+        <Box>
+            {tokenAllocation && indexAllocation? (
+            <Card sx={{marginTop: "20px", padding:"15px",  borderRadius:"16px"}}>
                 <Box>
-                    <Typography sx={{fontWeight:"bold"}}>Indexs Allocation</Typography>
-                    <Box sx={{display:"flex", justifyContent:"space-between",}}>
-                        <MyPieChart indexAllocation={indexAllocation}/>
-                        <Box sx={{width:"230px"}}>
-                            {indexAllocation?.map((token, idx:number) => (
-                                <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
-                                    <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.symbol}</Typography>
-                                    <Typography>{token.ratio.toFixed(2)}%</Typography>
-                                </Box>
-                            ))}
-                        </Box>
-                    </Box>
+                    <Grid container>
+                        <Grid item xs={8}>
+                            <Typography variant="h6" sx={{textDecoration:"underline #005FFF 2px"}}>Net worth</Typography>
+                        </Grid>
+                        <Grid container item xs={4}>
+                            <Grid item xs={6}>
+                                <Typography sx={{textDecoration:"underline #4A47FA 2px"}}>Indexes</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography sx={{textDecoration:"underline #07A6FF 2px"}}>DCA / Month</Typography>
+                            </Grid>
+                            {/* <Grid item xs={4}>
+                                <Typography sx={{textDecoration:"underline #3CDCFF 2px"}}>NPL</Typography>
+                            </Grid> */}
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={8}>
+                        <Typography variant="h4" sx={{fontWeight:"bold"}}>${numberWithCommas(netWorth)}</Typography>
+                        </Grid>
+                        <Grid container item xs={4}>
+                            <Grid item xs={6}>
+                                <Typography variant="h6" sx={{fontWeight:"bold"}}>{index?.length}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="h6" sx={{fontWeight:"bold"}}>${numberWithCommas(dcaPerMonth)}</Typography>
+                            </Grid>
+                            {/* <Grid item xs={4}>
+                                <Typography variant="h6" sx={{fontWeight:"bold"}}>+ 16.2%</Typography>
+                            </Grid> */}
+                        </Grid>
+                    </Grid>
                 </Box>
-                <Box>
-                    <Typography sx={{fontWeight:"bold"}}>Tokens Allocation</Typography>
-                    <Box sx={{display:"flex"}}>
-                        <MyPieChart indexAllocation={tokenAllocation}/>
-                        <Box sx={{width:"230px"}}>
-                            {tokenAllocation?.map((token, idx:number) => (
-                                <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
-                                    <Box sx={{display:"flex"}}>
-                                        <img 
-                                            src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
-                                            style={{width:"20px", height:"20px", borderRadius:"50%"}}
-                                        />
-                                        <Typography variant="body2" sx={{fontWeight:"bold", marginLeft:"5px"}}>
-                                            {token.symbol}
-                                        </Typography>
+                <Box sx={{marginTop:"20px", display:"flex", justifyContent:"space-around"}}>
+                    <Box>
+                        <Typography sx={{fontWeight:"bold"}}>Indexs Allocation</Typography>
+                        <Box sx={{display:"flex", justifyContent:"space-between",}}>
+                            <MyPieChart indexAllocation={indexAllocation}/>
+                            <Box sx={{width:"230px"}}>
+                                {indexAllocation?.map((token, idx:number) => (
+                                    <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
+                                        <Typography variant="body2" sx={{fontWeight:"bold"}}>{token.symbol}</Typography>
+                                        <Typography>{token.ratio.toFixed(2)}%</Typography>
                                     </Box>
-                                    <Typography>{token.ratio.toFixed(2)}%</Typography>
-                                </Box>
-                            ))}
+                                ))}
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box>
+                        <Typography sx={{fontWeight:"bold"}}>Tokens Allocation</Typography>
+                        <Box sx={{display:"flex"}}>
+                            <MyPieChart indexAllocation={tokenAllocation}/>
+                            <Box sx={{width:"230px"}}>
+                                {tokenAllocation?.map((token, idx:number) => (
+                                    <Box key={idx} sx={{display:"flex", justifyContent:"space-between"}}>
+                                        <Box sx={{display:"flex"}}>
+                                            <img 
+                                                src={`https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${token.address}/logo.png`}
+                                                style={{width:"20px", height:"20px", borderRadius:"50%"}}
+                                            />
+                                            <Typography variant="body2" sx={{fontWeight:"bold", marginLeft:"5px"}}>
+                                                {token.symbol}
+                                            </Typography>
+                                        </Box>
+                                        <Typography>{token.ratio.toFixed(2)}%</Typography>
+                                    </Box>
+                                ))}
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
-            </Box>
-        </Card>
+            </Card>
+            ) : (
+                <Skeleton animation="wave" variant="rounded" height={287} sx={{padding:"15px",marginTop:"20px"}}/>
+            )}
+        </Box>
     )
 }
 

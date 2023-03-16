@@ -537,17 +537,17 @@ export const tokens:Asset[] =
     ],
     logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0x060556209E507d30f2167a101bFC6D256Ed2f3e1/logo.png"
     },
-    {
-    chainId: 43114,
-    address: "0x769bfeb9fAacD6Eb2746979a8dD0b7e9920aC2A4",
-    decimals: 18,
-    name: "Vector JOE",
-    symbol: "zJOE",
-    tags: [
-    "DeFi"
-    ],
-    logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0x769bfeb9fAacD6Eb2746979a8dD0b7e9920aC2A4/logo.png"
-    },
+    // {
+    // chainId: 43114,
+    // address: "0x769bfeb9fAacD6Eb2746979a8dD0b7e9920aC2A4",
+    // decimals: 18,
+    // name: "Vector JOE",
+    // symbol: "zJOE",
+    // tags: [
+    // "DeFi"
+    // ],
+    // logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0x769bfeb9fAacD6Eb2746979a8dD0b7e9920aC2A4/logo.png"
+    // },
     {
     chainId: 43114,
     address: "0xeb8343d5284caec921f035207ca94db6baaacbcd",
@@ -1138,17 +1138,17 @@ export const tokens:Asset[] =
     ],
     logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0x9A8E0217cD870783c3f2317985C57Bf570969153/logo.png"
     },
-    {
-    chainId: 43114,
-    address: "0xe7462905B79370389e8180E300F58f63D35B725F",
-    decimals: 18,
-    name: "Yield Yak JOE",
-    symbol: "yyJOE",
-    tags: [
-    "DeFi"
-    ],
-    logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0xe7462905B79370389e8180E300F58f63D35B725F/logo.png"
-    },
+    // {
+    // chainId: 43114,
+    // address: "0xe7462905B79370389e8180E300F58f63D35B725F",
+    // decimals: 18,
+    // name: "Yield Yak JOE",
+    // symbol: "yyJOE",
+    // tags: [
+    // "DeFi"
+    // ],
+    // logoURI: "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0xe7462905B79370389e8180E300F58f63D35B725F/logo.png"
+    // },
     {
     chainId: 43114,
     address: "0xe48C74833ce6f18A8e54f73f1D02B8E9f9Ff8Caa",

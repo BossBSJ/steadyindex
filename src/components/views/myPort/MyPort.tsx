@@ -106,11 +106,12 @@ const MyPort = () => {
 
     return(
         <Container>
-            {investmentIndex? (
+            {/* {investmentIndex? (
                 <PortCard investmentIndex={investmentIndex}/>
             ) : (
                 <Skeleton animation="wave" variant="rounded" height={287} sx={{padding:"15px",marginTop:"20px"}}/>
-            )}
+            )} */}
+            <PortCard investmentIndex={investmentIndex}/>
             {createdIndex && createdIndex?
             (<IndexTable 
                 createdIndex={createdIndex} 
